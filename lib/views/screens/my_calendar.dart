@@ -30,10 +30,38 @@ class MyCalendar extends ConsumerWidget {
                   CalendarView.month,
                   CalendarView.schedule,
                 ],
+                monthViewSettings: const MonthViewSettings(
+                    agendaViewHeight: 100,
+                    appointmentDisplayCount: 5,
+                    appointmentDisplayMode:
+                        MonthAppointmentDisplayMode.appointment),
                 showCurrentTimeIndicator: true,
                 showTodayButton: false,
                 showNavigationArrow: true,
                 showWeekNumber: true,
+                dataSource: CoachCalendarSource([
+                  Appointment(
+                      startTime: DateTime.now(),
+                      endTime: DateTime.now().add(const Duration(hours: 1)),
+                      subject: 'Meeting',
+                      color: Colors.blue),
+                  Appointment(
+                      startTime: DateTime.now().add(const Duration(hours: 1)),
+                      endTime: DateTime.now().add(const Duration(hours: 2)),
+                      subject: 'Meeting',
+                      color: Colors.blue),
+                  Appointment(
+                      notes: "Fun + Fitness w/ Megan",
+                      startTime: DateTime.now().add(const Duration(hours: 2)),
+                      endTime: DateTime.now().add(const Duration(hours: 3)),
+                      subject: 'Meeting',
+                      color: Colors.blue),
+                  Appointment(
+                      startTime: DateTime.now().add(const Duration(hours: 3)),
+                      endTime: DateTime.now().add(const Duration(hours: 4)),
+                      subject: 'Meeting',
+                      color: Colors.blue),
+                ]),
               ),
             ),
           );
@@ -46,5 +74,11 @@ class MyCalendar extends ConsumerWidget {
         },
       ),
     );
+  }
+}
+
+class CoachCalendarSource extends CalendarDataSource {
+  CoachCalendarSource(List<Appointment> source) {
+    appointments = source;
   }
 }

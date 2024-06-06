@@ -11,20 +11,24 @@ class DisappearingBottomNavigationBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final screens = ref.watch(screensProvider);
-    final selectedIndex = ref.watch(selectedScreenIndexProvider);
+    int selectedIndex = ref.watch(selectedScreenIndexProvider);
+    final navigationDestinations = ref.watch(navigationDestinationsProvider);
+    if (selectedIndex >= navigationDestinations.length) {
+      selectedIndex = 0;
+      GoRouter.of(context).go(screens[0].route);
+    }
     return NavigationBar(
       elevation: 0,
       backgroundColor: Colors.white,
-      destinations: screens.map((screen) {
-        return NavigationDestination(
-          icon: Icon(screen.icon),
-          label: screen.title,
-        );
-      }).toList(),
+      destinations: navigationDestinations,
       selectedIndex: selectedIndex,
       onDestinationSelected: (index) {
+        //NOTE: Since some items are desktop only, we need to map the index to the actual index in the screens list
+        final int navIndex = screens.indexWhere(
+            (element) => element.title == navigationDestinations[index].label);
+        //Now we can route to the nav Index, but must set selected index to the actual index
         ref.read(selectedScreenIndexProvider.notifier).state = index;
-        GoRouter.of(context).go(screens[index].route);
+        GoRouter.of(context).go(screens[navIndex].route);
       },
     );
   }

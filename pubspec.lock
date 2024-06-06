@@ -429,6 +429,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.1.4"
+  go_transitions:
+    dependency: "direct main"
+    description:
+      name: go_transitions
+      sha256: "32966da55daa01c37a1c03e05fa2ab9f3818a4e5b64f2f99eb02b0587e750a40"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.2"
   google_identity_services_web:
     dependency: transitive
     description:

@@ -9,21 +9,36 @@ import 'package:go_router/go_router.dart';
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
   final screens = ref.watch(screensProvider);
+  final List<GoRoute> mainScreens = [];
+  for (final screen in screens) {
+    mainScreens.add(
+      GoRoute(
+        path: screen.route,
+        builder: (context, state) {
+          return screen.content;
+        },
+      ),
+    );
+    if (screen.children != null) {
+      for (final child in screen.children!) {
+        mainScreens.add(
+          GoRoute(
+            path: child.route,
+            builder: (context, state) {
+              return child.content;
+            },
+          ),
+        );
+      }
+    }
+  }
   return GoRouter(
     routes: [
       ShellRoute(
-        builder: (context, state, child) {
-          return NavigationShell(child: child);
-        },
-        routes: screens.map((screen) {
-          return GoRoute(
-            path: screen.route,
-            builder: (context, state) {
-              return screen.content;
-            },
-          );
-        }).toList(),
-      ),
+          builder: (context, state, child) {
+            return NavigationShell(child: child);
+          },
+          routes: mainScreens),
       GoRoute(
         path: '/login',
         builder: (context, state) {
