@@ -1,6 +1,7 @@
 import 'package:dashboard/views/widgets/disappearing_bottom_navigation.dart';
 import 'package:dashboard/views/widgets/disappearing_navigation_pane.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class NavigationShell extends StatefulWidget {
   const NavigationShell({super.key, required this.child});
@@ -33,7 +34,7 @@ class _NavigationShellState extends State<NavigationShell> {
         ],
       ),
       bottomNavigationBar:
-          wideScreen ? null : const DisappearingBottomNavigationBar(),
+          !wideScreen ? null : const DisappearingBottomNavigationBar(),
     );
   }
 }

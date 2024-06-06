@@ -11,12 +11,8 @@ class DisappearingBottomNavigationBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final screens = ref.watch(screensProvider);
-    int selectedIndex = ref.watch(selectedScreenIndexProvider);
+    int selectedIndex = ref.watch(mobileSelectedScreenIndexProvider);
     final navigationDestinations = ref.watch(navigationDestinationsProvider);
-    if (selectedIndex >= navigationDestinations.length) {
-      selectedIndex = 0;
-      GoRouter.of(context).go(screens[0].route);
-    }
     return NavigationBar(
       elevation: 0,
       backgroundColor: Colors.white,

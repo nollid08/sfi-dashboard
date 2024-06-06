@@ -4,7 +4,6 @@ import 'package:dashboard/providers/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sidebarx/sidebarx.dart';
 
 class DisappearingNavigationRail extends ConsumerWidget {
   const DisappearingNavigationRail({
@@ -13,8 +12,8 @@ class DisappearingNavigationRail extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final screens = ref.watch(screensProvider);
     final selectedIndex = ref.watch(selectedScreenIndexProvider);
+    final indexedScreens = ref.watch(indexedScreensProvider);
 
     final items = ref.watch(sideBarItemsProvider);
     return AnimatedSidebar(
@@ -24,7 +23,8 @@ class DisappearingNavigationRail extends ConsumerWidget {
       autoSelectedIndex:
           false, // must be false if you want to handle state external
       onItemSelected: (index) {
-        navigateToScreenByRouteIndex(context, ref, index);
+        ref.read(selectedScreenIndexProvider.notifier).state = index;
+        GoRouter.of(context).go(indexedScreens[index].route);
       },
       itemSelectedColor:
           const Color.fromARGB(255, 10, 222, 219).withOpacity(0.35),

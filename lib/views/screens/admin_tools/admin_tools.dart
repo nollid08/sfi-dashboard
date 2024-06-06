@@ -42,10 +42,47 @@ class AdminTools extends ConsumerWidget {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              navigateToScreenByRouteName(
-                                  context, ref, '/adminTools/manageCoaches');
+                              // navigateToScreenByRouteName(
+                              //     context, ref, '/adminTools/manageCoaches');
                             },
                             child: const Text('Manage Coaches'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Card(
+              surfaceTintColor: Colors.blue,
+              child: SizedBox(
+                width: 400,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //Title
+                      const Text('Manual Booking',
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold)),
+                      const Text(
+                          'This tool allows you to manually book a session for a client. Camp creation is seperate from this. '),
+                      Expanded(
+                        child: Container(),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              // navigateToScreenByRouteName(
+                              //     context, ref, '/adminTools/manualBooking');
+                            },
+                            child: const Text('Manual Booking'),
                           ),
                         ],
                       ),
