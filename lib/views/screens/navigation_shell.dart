@@ -34,7 +34,7 @@ class _NavigationShellState extends State<NavigationShell> {
         ],
       ),
       bottomNavigationBar:
-          !wideScreen ? null : const DisappearingBottomNavigationBar(),
+          wideScreen ? null : const DisappearingBottomNavigationBar(),
     );
   }
 }

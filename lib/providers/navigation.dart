@@ -39,6 +39,13 @@ final screensProvider = Provider<List<ScreenItem>>((ref) {
       isDesktopOnly: true,
       children: [
         ScreenItem(
+          '/adminTools/manageActivities',
+          title: 'Manage Activities',
+          content: const Placeholder(),
+          icon: Icons.sports_soccer,
+          activeRouteIdentifier: '/adminTools/manageActivities',
+        ),
+        ScreenItem(
           '/adminTools/manageCoaches',
           title: 'Manage Coaches',
           content: const Placeholder(),

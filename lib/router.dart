@@ -1,7 +1,9 @@
 import 'package:dashboard/models/screen_item.dart';
 import 'package:dashboard/providers/auth.dart';
 import 'package:dashboard/providers/navigation.dart';
+import 'package:dashboard/views/screens/admin_tools/manage_activities.dart';
 import 'package:dashboard/views/screens/admin_tools/admin_tools.dart';
+import 'package:dashboard/views/screens/admin_tools/manual_booking/manual_booking_shell.dart';
 import 'package:dashboard/views/screens/login_screen.dart';
 import 'package:dashboard/views/screens/my_calendar.dart';
 import 'package:dashboard/views/screens/navigation_shell.dart';
@@ -44,15 +46,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       },
     ),
     GoRoute(
-      path: '/adminTools/createManualBooking',
+      path: '/adminTools/manageActivities',
       builder: (context, state) {
-        return const Placeholder();
+        return const Activities();
       },
     ),
     ShellRoute(
+      builder: (context, state, child) {
+        return ManualBookingShell(child);
+      },
       routes: [
         GoRoute(
-          path: '/adminTools/createManualBooking/type',
+          path: '/adminTools/createManualBooking',
           builder: (context, state) {
             return const Placeholder();
           },
@@ -86,6 +91,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   ];
 
   return GoRouter(
+    initialLocation: '/splash',
     routes: [
       ShellRoute(
         builder: (context, state, child) {
