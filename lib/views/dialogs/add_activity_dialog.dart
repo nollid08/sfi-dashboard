@@ -41,7 +41,7 @@ class AddActivityDialog extends ConsumerWidget {
                   decoration: const InputDecoration(
                     labelText: 'Color',
                   ),
-                  colorPickerType: ColorPickerType.colorPicker,
+                  colorPickerType: ColorPickerType.materialPicker,
                   initialValue: Colors.purple,
                   validator: FormBuilderValidators.required(),
                 ),

@@ -8,16 +8,13 @@ part 'activity_provider.g.dart';
 @riverpod
 class Activities extends _$Activities {
   @override
-  Future<List<Activity>> build() async {
+  Stream<List<Activity>> build() async* {
     final FirebaseFirestore _db = FirebaseFirestore.instance;
-    final QuerySnapshot<Map<String, dynamic>> result =
-        await _db.collection('activities').get();
-    final List<QueryDocumentSnapshot<Map<String, dynamic>>> activityDocs =
-        result.docs;
-    final List<Activity> activities = activityDocs
-        .map((activity) => Activity.fromQueryDocSnapshot(activity))
-        .toList();
-    return activities;
+    yield* _db.collection('activities').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return Activity.fromQueryDocSnapshot(doc);
+      }).toList();
+    });
   }
 
   Future<void> addActivity(
@@ -33,13 +30,10 @@ class Activities extends _$Activities {
       icon: icon,
       color: color,
     );
-
+    //Optimistic UI update
     final previousState = await future;
     state = AsyncData([...previousState, newActivity]);
+    //Update Firestore
     await newActivityRef.set(newActivity.toDocument());
-
-    // Trigger a rebuild of the UI
-    ref.invalidateSelf();
-    await future;
   }
 }

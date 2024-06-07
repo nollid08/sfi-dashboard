@@ -3,6 +3,7 @@ import 'package:dashboard/providers/auth.dart';
 import 'package:dashboard/providers/navigation.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_activities.dart';
 import 'package:dashboard/views/screens/admin_tools/admin_tools.dart';
+import 'package:dashboard/views/screens/admin_tools/manage_clients.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/manual_booking_shell.dart';
 import 'package:dashboard/views/screens/login_screen.dart';
 import 'package:dashboard/views/screens/my_calendar.dart';
@@ -49,6 +50,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       path: '/adminTools/manageActivities',
       builder: (context, state) {
         return const Activities();
+      },
+    ),
+    GoRoute(
+      path: '/adminTools/manageClients',
+      builder: (context, state) {
+        return const ManageSchools();
       },
     ),
     ShellRoute(
