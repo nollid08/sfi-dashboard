@@ -1,5 +1,5 @@
 import 'package:dashboard/providers/activity_provider.dart';
-import 'package:dashboard/views/widgets/icon_picker_form_field.dart';
+import 'package:dashboard/views/widgets/form_fields/icon_picker_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

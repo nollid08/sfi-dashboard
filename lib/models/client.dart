@@ -1,6 +1,7 @@
 import 'package:dashboard/models/client_types.dart';
 
 class Client {
+  final String id;
   final String name;
   final String addressLineOne;
   final String addressLineTwo;
@@ -9,6 +10,7 @@ class Client {
   final ClientType type;
 
   Client({
+    required this.id,
     required this.name,
     required this.addressLineOne,
     required this.addressLineTwo,
@@ -17,8 +19,9 @@ class Client {
     required this.type,
   });
 
-  factory Client.fromJson(Map<String, dynamic> json) {
+  factory Client.fromJson(Map<String, dynamic> json, String id) {
     return Client(
+      id: id,
       name: json['name'] ?? 'N/A',
       addressLineOne: json['addressLine1'] ?? 'N/A',
       addressLineTwo: json['addressLine2'] ?? 'N/A',
