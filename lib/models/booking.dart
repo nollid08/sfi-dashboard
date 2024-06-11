@@ -7,7 +7,7 @@ class Booking {
   final String activityId;
   final DateTime startDateTime;
   final TimeOfDay endTime;
-  final String recurrenceProperties;
+  final String? recurrenceProperties;
   final String clientId;
 
   Booking({
@@ -16,7 +16,7 @@ class Booking {
     required this.activityId,
     required this.startDateTime,
     required this.endTime,
-    required this.recurrenceProperties,
+    this.recurrenceProperties,
     required this.clientId,
   });
 

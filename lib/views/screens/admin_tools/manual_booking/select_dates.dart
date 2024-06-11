@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class SelectDatesScreen extends StatefulWidget {
   final Activity selectedActivity;
@@ -24,7 +26,7 @@ class SelectDatesScreen extends StatefulWidget {
 class _SelectDatesScreenState extends State<SelectDatesScreen> {
   bool isFinishDateFieldEnabled = false;
   bool isBookingRecurring = false;
-  List<bool> values = List.filled(7, false);
+  bool showDayPicker = true;
   final formKey = GlobalKey<FormBuilderState>();
   @override
   Widget build(BuildContext context) {
@@ -124,7 +126,10 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                                 Flexible(
                                   child: FormBuilderDropdown(
                                     name: 'interval_type',
-                                    items: ['Days', 'Weeks', 'Months']
+                                    items: [
+                                      'Days',
+                                      'Weeks',
+                                    ]
                                         .map(
                                           (type) => DropdownMenuItem(
                                             value: type,
@@ -133,44 +138,56 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                                         )
                                         .toList(),
                                     initialValue: "Weeks",
+                                    onChanged: (String? value) {
+                                      if (value == 'Days') {
+                                        setState(() {
+                                          showDayPicker = false;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          showDayPicker = true;
+                                        });
+                                      }
+                                    },
                                   ),
                                 ),
                               ],
                             ),
                             const Gap(20),
-                            FormBuilderFilterChip<String>(
-                              direction: Axis.horizontal,
-                              decoration: const InputDecoration(
-                                labelText: 'Recurs On:',
-                                border: OutlineInputBorder(),
+                            if (showDayPicker)
+                              FormBuilderFilterChip<String>(
+                                direction: Axis.horizontal,
+                                decoration: const InputDecoration(
+                                  labelText: 'Recurs On:',
+                                  border: OutlineInputBorder(),
+                                ),
+                                name: "days_recurring_for_weekly",
+                                initialValue: const ["Monday"],
+                                validator: FormBuilderValidators.required(),
+                                options: const [
+                                  FormBuilderChipOption(
+                                    value: "Mo",
+                                  ),
+                                  FormBuilderChipOption(
+                                    value: "Tu",
+                                  ),
+                                  FormBuilderChipOption(
+                                    value: "We",
+                                  ),
+                                  FormBuilderChipOption(
+                                    value: "Th",
+                                  ),
+                                  FormBuilderChipOption(
+                                    value: "F",
+                                  ),
+                                  FormBuilderChipOption(
+                                    value: "Sa",
+                                  ),
+                                  FormBuilderChipOption(
+                                    value: "Su",
+                                  ),
+                                ],
                               ),
-                              name: "days_recurring_for_weekly",
-                              initialValue: const ["Monday"],
-                              validator: FormBuilderValidators.required(),
-                              options: const [
-                                FormBuilderChipOption(
-                                  value: "Mo",
-                                ),
-                                FormBuilderChipOption(
-                                  value: "Tu",
-                                ),
-                                FormBuilderChipOption(
-                                  value: "We",
-                                ),
-                                FormBuilderChipOption(
-                                  value: "Th",
-                                ),
-                                FormBuilderChipOption(
-                                  value: "F",
-                                ),
-                                FormBuilderChipOption(
-                                  value: "Sa",
-                                ),
-                                FormBuilderChipOption(
-                                  value: "Su",
-                                ),
-                              ],
-                            ),
                             const Gap(20),
                             const Row(
                               children: [
@@ -207,21 +224,32 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                 final doesRecur = data['doesRecur'] as bool;
 
                 final endTime = TimeOfDay.fromDateTime(endDateTime);
-                final recurrenceProperties =
-                    "FREQ=WEEKLY;INTERVAL=$interval;BYDAY=${daysRecurringForWeekly.join(',').toUpperCase()};COUNT=$numberOfSessions";
-
+                String? recurrenceProperties;
+                if (doesRecur) {
+                  if (intervalType == 'Days') {
+                    recurrenceProperties =
+                        "FREQ=DAILY;INTERVAL=$interval;COUNT=$numberOfSessions";
+                  } else if (intervalType == 'Weeks') {
+                    recurrenceProperties =
+                        "FREQ=WEEKLY;INTERVAL=$interval;BYDAY=${daysRecurringForWeekly.join(',').toUpperCase()};COUNT=$numberOfSessions";
+                  }
+                }
                 final booking = Booking(
                   id: '1',
-                  coachIds: ["mkhK7z6u64gq7gyqt2zXD9sWIRV2"],
+                  coachIds: [
+                    // "mkhK7z6u64gq7gyqt2zXD9sWIRV2",
+                  ],
                   activityId: widget.selectedActivity.id,
                   startDateTime: startDateTime,
                   endTime: endTime,
-                  recurrenceProperties: doesRecur ? recurrenceProperties : '',
+                  recurrenceProperties: recurrenceProperties,
                   clientId: widget.selectedClient.id,
                 );
 
-                final FirebaseFirestore db = FirebaseFirestore.instance;
-                db.collection('bookings').add(booking.toJson());
+                // final FirebaseFirestore db = FirebaseFirestore.instance;
+                // db.collection('bookings').add(booking.toJson());
+                GoRouter.of(context).go('/adminTools/createManualBooking/coach',
+                    extra: booking);
               }
             },
             child: const Text('Continue'),
