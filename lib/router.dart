@@ -5,6 +5,7 @@ import 'package:dashboard/providers/auth_provider.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_activities.dart';
 import 'package:dashboard/views/screens/admin_tools/admin_tools.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_clients.dart';
+import 'package:dashboard/views/screens/admin_tools/manage_coaches.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/gather_info_screen.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/manual_booking_shell.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/select_coaches.dart';
@@ -51,7 +52,7 @@ GoRouter router(RouterRef ref) {
     GoRoute(
       path: '/adminTools/manageCoaches',
       builder: (context, state) {
-        return const Placeholder();
+        return const ManageCoachesScreen();
       },
     ),
     GoRoute(
