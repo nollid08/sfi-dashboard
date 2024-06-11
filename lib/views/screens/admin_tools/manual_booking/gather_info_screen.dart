@@ -40,6 +40,7 @@ class GatherBookingInfo extends ConsumerWidget {
                       name: 'client',
                       validator: FormBuilderValidators.required(),
                       items: clientsList.map((client) => client.name).toList(),
+                      initialValue: clientsList.first.name,
                       valueTransformer: (value) {
                         return clientsList
                             .firstWhere((client) => client.name == value);
@@ -67,7 +68,11 @@ class GatherBookingInfo extends ConsumerWidget {
                       validator: FormBuilderValidators.required(),
                       items:
                           activitiesList.map((client) => client.name).toList(),
+                      initialValue: activitiesList.first.name,
                       valueTransformer: (value) {
+                        if (value == null) {
+                          return activitiesList.first;
+                        }
                         return activitiesList
                             .firstWhere((activity) => activity.name == value);
                       },

@@ -1,4 +1,5 @@
-import 'package:dashboard/providers/auth.dart';
+import 'package:dashboard/models/booking.dart';
+import 'package:dashboard/providers/my_calendar_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,11 +10,11 @@ class MyCalendar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userValue = ref.watch(authProvider); // Directly access the stream
+    final AsyncValue<List<Booking>> myCalendar = ref.watch(myCalendarProvider);
 
     return Center(
-      child: userValue.when(
-        data: (User? user) {
+      child: myCalendar.when(
+        data: (List<Booking>? bookings) {
           return Card(
             margin: const EdgeInsets.all(16),
             child: Padding(
@@ -39,29 +40,7 @@ class MyCalendar extends ConsumerWidget {
                 showTodayButton: false,
                 showNavigationArrow: true,
                 showWeekNumber: true,
-                dataSource: CoachCalendarSource([
-                  Appointment(
-                      startTime: DateTime.now(),
-                      endTime: DateTime.now().add(const Duration(hours: 1)),
-                      subject: 'Meeting',
-                      color: Colors.blue),
-                  Appointment(
-                      startTime: DateTime.now().add(const Duration(hours: 1)),
-                      endTime: DateTime.now().add(const Duration(hours: 2)),
-                      subject: 'Meeting',
-                      color: Colors.blue),
-                  Appointment(
-                      notes: "Fun + Fitness w/ Megan",
-                      startTime: DateTime.now().add(const Duration(hours: 2)),
-                      endTime: DateTime.now().add(const Duration(hours: 3)),
-                      subject: 'Meeting',
-                      color: Colors.blue),
-                  Appointment(
-                      startTime: DateTime.now().add(const Duration(hours: 3)),
-                      endTime: DateTime.now().add(const Duration(hours: 4)),
-                      subject: 'Meeting',
-                      color: Colors.blue),
-                ]),
+                dataSource: CoachCalendarSource.fromBookings(bookings!),
               ),
             ),
           );
@@ -80,5 +59,26 @@ class MyCalendar extends ConsumerWidget {
 class CoachCalendarSource extends CalendarDataSource {
   CoachCalendarSource(List<Appointment> source) {
     appointments = source;
+  }
+
+  factory CoachCalendarSource.fromBookings(List<Booking> bookings) {
+    return CoachCalendarSource(
+      bookings
+          .map<Appointment>(
+            (Booking booking) => Appointment(
+              startTime: booking.startDateTime,
+              endTime: DateTime(
+                  booking.startDateTime.year,
+                  booking.startDateTime.month,
+                  booking.startDateTime.day,
+                  booking.endTime.hour,
+                  booking.endTime.minute),
+              subject: 'Meeting',
+              color: Colors.blue,
+              recurrenceRule: booking.recurrenceProperties,
+            ),
+          )
+          .toList(),
+    );
   }
 }

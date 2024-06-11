@@ -7,10 +7,10 @@ class IconPickerFormField extends StatelessWidget {
   final IconData initialIcon;
 
   const IconPickerFormField({
-    Key? key,
+    super.key,
     required this.name,
     required this.initialIcon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
