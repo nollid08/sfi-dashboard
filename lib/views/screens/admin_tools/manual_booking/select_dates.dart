@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/client.dart';
-import 'package:dashboard/models/client_types.dart';
 import 'package:dashboard/views/widgets/form_fields/number_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -12,7 +11,7 @@ import 'package:gap/gap.dart';
 class SelectDatesScreen extends StatefulWidget {
   final Activity selectedActivity;
   final Client selectedClient;
-  SelectDatesScreen({
+  const SelectDatesScreen({
     super.key,
     required this.selectedActivity,
     required this.selectedClient,
@@ -146,7 +145,7 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                                 border: OutlineInputBorder(),
                               ),
                               name: "days_recurring_for_weekly",
-                              initialValue: ["Monday"],
+                              initialValue: const ["Monday"],
                               validator: FormBuilderValidators.required(),
                               options: const [
                                 FormBuilderChipOption(

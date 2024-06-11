@@ -1,10 +1,6 @@
-import 'dart:isolate';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/client.dart';
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 part 'clients_provider.g.dart';
 

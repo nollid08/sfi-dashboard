@@ -1,10 +1,7 @@
 import 'package:animated_sidebar/animated_sidebar.dart';
 import 'package:dashboard/models/screen_item.dart';
-import 'package:dashboard/views/screens/admin_tools/admin_tools.dart';
-import 'package:dashboard/views/screens/my_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 //Provider for the screens that will be displayed in the navigation bar
 final screensProvider = Provider<List<ScreenItem>>((ref) {

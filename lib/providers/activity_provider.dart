@@ -9,8 +9,8 @@ part 'activity_provider.g.dart';
 class Activities extends _$Activities {
   @override
   Stream<List<Activity>> build() async* {
-    final FirebaseFirestore _db = FirebaseFirestore.instance;
-    yield* _db.collection('activities').snapshots().map((snapshot) {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    yield* db.collection('activities').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         return Activity.fromQueryDocSnapshot(doc);
       }).toList();

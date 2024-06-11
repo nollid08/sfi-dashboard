@@ -1,6 +1,5 @@
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/providers/my_calendar_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
