@@ -35,4 +35,13 @@ class Activity {
       color: Color(document['color'] as int),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'icon': icon.codePoint,
+      'color': color.value,
+    };
+  }
 }

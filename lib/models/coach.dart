@@ -27,4 +27,13 @@ class Coach {
       activitiesCovered: activitiesCovered,
     );
   }
+
+  factory Coach.fromJson(Map<String, dynamic> json) {
+    return Coach(
+      uid: json['uid'],
+      name: json['name'],
+      baseEircode: json['eircode'],
+      activitiesCovered: List<String>.from(json['activitiesCovered']),
+    );
+  }
 }

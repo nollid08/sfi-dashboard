@@ -31,14 +31,15 @@ class Client {
     );
   }
 
-  Map<String, String> toJson() {
+  Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'addressLineOne': addressLineOne,
       'addressLineTwo': addressLineTwo,
-      'postcode': eircode,
+      'eircode': eircode,
       'rollNumber': rollNumber,
-      'type': type.id,
+      'type': type.toJson(),
     };
   }
 }

@@ -239,11 +239,11 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                   coachIds: [
                     // "mkhK7z6u64gq7gyqt2zXD9sWIRV2",
                   ],
-                  activityId: widget.selectedActivity.id,
+                  activity: widget.selectedActivity,
                   startDateTime: startDateTime,
                   endTime: endTime,
                   recurrenceProperties: recurrenceProperties,
-                  clientId: widget.selectedClient.id,
+                  client: widget.selectedClient,
                 );
 
                 // final FirebaseFirestore db = FirebaseFirestore.instance;

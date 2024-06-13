@@ -15,4 +15,11 @@ class ClientType {
       return ClientType(id: type, name: 'Other');
     }
   }
+
+  Map<String, String> toJson() {
+    return {
+      'id': id,
+      'name': name,
+    };
+  }
 }

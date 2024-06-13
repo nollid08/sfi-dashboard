@@ -61,7 +61,8 @@ class _ManageCoachesScreenState extends ConsumerState<ManageCoachesScreen> {
                           Text(coaches[selectedCoachindex!].name),
                           Text(coaches[selectedCoachindex!].baseEircode),
                           Text(
-                              'Activities Covered  -${coaches[selectedCoachindex!].activitiesCovered}'),
+                            'Activities Covered  -${coaches[selectedCoachindex!].activitiesCovered}',
+                          ),
                           activities.when(
                             data: (List<Activity> activities) {
                               return Column(
@@ -76,9 +77,10 @@ class _ManageCoachesScreenState extends ConsumerState<ManageCoachesScreen> {
                                           ref
                                               .read(coachesProvider.notifier)
                                               .toggleActivity(
-                                                  coaches[selectedCoachindex!]
-                                                      .uid,
-                                                  activity.id);
+                                                coaches[selectedCoachindex!]
+                                                    .uid,
+                                                activity.id,
+                                              );
                                         },
                                       ),
                                     )

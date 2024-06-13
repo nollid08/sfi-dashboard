@@ -6,11 +6,11 @@ part of 'clients_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$clientsHash() => r'6bedbfd30c457c1df53adcf9f0fe479969b7ef6c';
+String _$clientsHash() => r'883154e847b375990db3cb2c407680aff72853d4';
 
 /// See also [clients].
 @ProviderFor(clients)
-final clientsProvider = AutoDisposeStreamProvider<List<Client>>.internal(
+final clientsProvider = StreamProvider<List<Client>>.internal(
   clients,
   name: r'clientsProvider',
   debugGetCreateSourceHash:
@@ -19,6 +19,6 @@ final clientsProvider = AutoDisposeStreamProvider<List<Client>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef ClientsRef = AutoDisposeStreamProviderRef<List<Client>>;
+typedef ClientsRef = StreamProviderRef<List<Client>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

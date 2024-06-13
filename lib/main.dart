@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dashboard/firebase_options.dart';
 import 'package:dashboard/router.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,11 +11,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_transitions/go_transitions.dart';
 
+const bool useEmulator = true;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  _connectToFirebaseEmulator();
   await dotenv.load(fileName: '.env');
   FirebaseUIAuth.configureProviders([
     GoogleProvider(clientId: dotenv.env['GOOGLE_CLIENT_ID']!),
@@ -22,6 +28,13 @@ Future<void> main() async {
       child: MainApp(),
     ),
   );
+}
+
+Future _connectToFirebaseEmulator() async {
+  if (useEmulator) {
+    final localHostString = 'localhost';
+    FirebaseFunctions.instance.useFunctionsEmulator(localHostString, 5001);
+  }
 }
 
 class MainApp extends ConsumerWidget {

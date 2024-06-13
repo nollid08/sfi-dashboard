@@ -1,6 +1,7 @@
 import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/client.dart';
+import 'package:dashboard/models/client_types.dart';
 import 'package:dashboard/providers/auth_provider.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_activities.dart';
 import 'package:dashboard/views/screens/admin_tools/admin_tools.dart';
@@ -100,8 +101,20 @@ GoRouter router(RouterRef ref) {
             Booking? booking = state.extra as Booking?;
             booking ??= Booking(
               id: '123',
-              activityId: '123',
-              clientId: '123',
+              activity: Activity(
+                  id: '123',
+                  name: 'Activity',
+                  icon: Icons.ac_unit,
+                  color: Colors.blue),
+              client: Client(
+                id: '123',
+                name: 'Client',
+                addressLineOne: 'Address Line 1',
+                addressLineTwo: 'Address Line 2',
+                eircode: 'Eircode',
+                rollNumber: 'Roll Number',
+                type: ClientType(id: '123', name: 'Type'),
+              ),
               coachIds: [],
               startDateTime: DateTime.now(),
               endTime: const TimeOfDay(hour: 0, minute: 0),
