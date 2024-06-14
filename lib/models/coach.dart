@@ -28,6 +28,23 @@ class Coach {
     );
   }
 
+  factory Coach.fromDocSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
+    final data = doc.data();
+    if (data == null) {
+      throw Exception('Coach not found');
+    }
+    final String baseEircode = data['baseEircode'] ?? 'p67RC92';
+    final List<String> activitiesCovered = data['activitiesCovered'] != null
+        ? List<String>.from(data['activitiesCovered'])
+        : [];
+    return Coach(
+      uid: doc.id,
+      name: doc['name'],
+      baseEircode: baseEircode,
+      activitiesCovered: activitiesCovered,
+    );
+  }
+
   factory Coach.fromJson(Map<String, dynamic> json) {
     return Coach(
       uid: json['uid'],

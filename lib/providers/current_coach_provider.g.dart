@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'clients_provider.dart';
+part of 'current_coach_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$clientsHash() => r'd1952fe0aa71b3b7a8591be12bcbadcd6cf09d1b';
+String _$currentCoachHash() => r'20c318812454233e5c800a1e44113eee3a42f2cd';
 
-/// See also [clients].
-@ProviderFor(clients)
-final clientsProvider = StreamProvider<List<Client>>.internal(
-  clients,
-  name: r'clientsProvider',
+/// See also [currentCoach].
+@ProviderFor(currentCoach)
+final currentCoachProvider = AutoDisposeStreamProvider<Coach?>.internal(
+  currentCoach,
+  name: r'currentCoachProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$clientsHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$currentCoachHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef ClientsRef = StreamProviderRef<List<Client>>;
+typedef CurrentCoachRef = AutoDisposeStreamProviderRef<Coach?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

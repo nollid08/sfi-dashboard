@@ -6,7 +6,7 @@ part of 'find_coach.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$findCoachesHash() => r'046ef2b69967bfd3d1df96453a46493fd82185d4';
+String _$findCoachesHash() => r'be0682f3e799e97be11e3d01cf2ffe774dd4c69b';
 
 /// Copied from Dart SDK
 class _SystemHash {

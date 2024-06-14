@@ -32,6 +32,7 @@ dependencies:
   syncfusion_flutter_datagrid: ^25.2.7
   gap: ^3.0.1
   cloud_functions: ^4.7.6
+  fast_immutable_collections: ^10.2.4
 
 dev_dependencies:
   flutter_test:

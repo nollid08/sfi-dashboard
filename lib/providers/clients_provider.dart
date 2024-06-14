@@ -9,7 +9,7 @@ Stream<List<Client>> clients(ClientsRef ref) {
   final db = FirebaseFirestore.instance;
   return db.collection('clients').snapshots().map((snapshot) {
     return snapshot.docs.map((doc) {
-      return Client.fromJson(doc.data(), doc.id);
+      return Client.fromFBJson(doc.data(), doc.id);
     }).toList();
   });
 }

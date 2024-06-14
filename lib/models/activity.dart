@@ -36,6 +36,18 @@ class Activity {
     );
   }
 
+  factory Activity.fromJson(Map<String, dynamic> json) {
+    return Activity(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      icon: IconData(
+        json['icon'] as int,
+        fontFamily: 'MaterialIcons',
+      ),
+      color: Color(json['color'] as int),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

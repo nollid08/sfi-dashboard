@@ -27,6 +27,7 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
   bool isFinishDateFieldEnabled = false;
   bool isBookingRecurring = false;
   bool showDayPicker = true;
+  final requiredDayForWeekly = ["Mo"];
   final formKey = GlobalKey<FormBuilderState>();
   @override
   Widget build(BuildContext context) {
@@ -55,6 +56,30 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                               setState(() {
                                 isFinishDateFieldEnabled = true;
                               });
+                              final int dayChosen = dateTime.weekday;
+                              switch (dayChosen) {
+                                case 1:
+                                  requiredDayForWeekly[0] = "Mo";
+                                  break;
+                                case 2:
+                                  requiredDayForWeekly[0] = "Tu";
+                                  break;
+                                case 3:
+                                  requiredDayForWeekly[0] = "We";
+                                  break;
+                                case 4:
+                                  requiredDayForWeekly[0] = "Th";
+                                  break;
+                                case 5:
+                                  requiredDayForWeekly[0] = "F";
+                                  break;
+                                case 6:
+                                  requiredDayForWeekly[0] = "Sa";
+                                  break;
+                                case 7:
+                                  requiredDayForWeekly[0] = "Su";
+                                  break;
+                              }
                             }
                           },
                         ),
@@ -158,12 +183,24 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                               FormBuilderFilterChip<String>(
                                 direction: Axis.horizontal,
                                 decoration: const InputDecoration(
-                                  labelText: 'Recurs On:',
+                                  labelText: 'Every Week On The Days:',
                                   border: OutlineInputBorder(),
                                 ),
                                 name: "days_recurring_for_weekly",
-                                initialValue: const ["Monday"],
-                                validator: FormBuilderValidators.required(),
+                                initialValue: requiredDayForWeekly,
+                                validator: FormBuilderValidators.compose([
+                                  FormBuilderValidators.required(),
+                                  (List<String>? value) {
+                                    if (value == null) {
+                                      return null;
+                                    }
+                                    if (!value
+                                        .contains(requiredDayForWeekly[0])) {
+                                      return 'Please select ${requiredDayForWeekly[0]}';
+                                    }
+                                    return null;
+                                  }
+                                ]),
                                 options: const [
                                   FormBuilderChipOption(
                                     value: "Mo",
@@ -178,7 +215,7 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                                     value: "Th",
                                   ),
                                   FormBuilderChipOption(
-                                    value: "F",
+                                    value: "Fr",
                                   ),
                                   FormBuilderChipOption(
                                     value: "Sa",
