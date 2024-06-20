@@ -6,7 +6,8 @@ part of 'find_coach.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$findCoachesHash() => r'be0682f3e799e97be11e3d01cf2ffe774dd4c69b';
+String _$findAvailableCoachesHash() =>
+    r'e4b727a6dddcb16411527bc5f104136e3b4b123c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,27 +30,28 @@ class _SystemHash {
   }
 }
 
-/// See also [findCoaches].
-@ProviderFor(findCoaches)
-const findCoachesProvider = FindCoachesFamily();
+/// See also [findAvailableCoaches].
+@ProviderFor(findAvailableCoaches)
+const findAvailableCoachesProvider = FindAvailableCoachesFamily();
 
-/// See also [findCoaches].
-class FindCoachesFamily extends Family<AsyncValue<List<Coach>>> {
-  /// See also [findCoaches].
-  const FindCoachesFamily();
+/// See also [findAvailableCoaches].
+class FindAvailableCoachesFamily
+    extends Family<AsyncValue<List<CoachTravelEstimate>>> {
+  /// See also [findAvailableCoaches].
+  const FindAvailableCoachesFamily();
 
-  /// See also [findCoaches].
-  FindCoachesProvider call(
+  /// See also [findAvailableCoaches].
+  FindAvailableCoachesProvider call(
     Booking booking,
   ) {
-    return FindCoachesProvider(
+    return FindAvailableCoachesProvider(
       booking,
     );
   }
 
   @override
-  FindCoachesProvider getProviderOverride(
-    covariant FindCoachesProvider provider,
+  FindAvailableCoachesProvider getProviderOverride(
+    covariant FindAvailableCoachesProvider provider,
   ) {
     return call(
       provider.booking,
@@ -68,32 +70,33 @@ class FindCoachesFamily extends Family<AsyncValue<List<Coach>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'findCoachesProvider';
+  String? get name => r'findAvailableCoachesProvider';
 }
 
-/// See also [findCoaches].
-class FindCoachesProvider extends AutoDisposeFutureProvider<List<Coach>> {
-  /// See also [findCoaches].
-  FindCoachesProvider(
+/// See also [findAvailableCoaches].
+class FindAvailableCoachesProvider
+    extends AutoDisposeFutureProvider<List<CoachTravelEstimate>> {
+  /// See also [findAvailableCoaches].
+  FindAvailableCoachesProvider(
     Booking booking,
   ) : this._internal(
-          (ref) => findCoaches(
-            ref as FindCoachesRef,
+          (ref) => findAvailableCoaches(
+            ref as FindAvailableCoachesRef,
             booking,
           ),
-          from: findCoachesProvider,
-          name: r'findCoachesProvider',
+          from: findAvailableCoachesProvider,
+          name: r'findAvailableCoachesProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$findCoachesHash,
-          dependencies: FindCoachesFamily._dependencies,
+                  : _$findAvailableCoachesHash,
+          dependencies: FindAvailableCoachesFamily._dependencies,
           allTransitiveDependencies:
-              FindCoachesFamily._allTransitiveDependencies,
+              FindAvailableCoachesFamily._allTransitiveDependencies,
           booking: booking,
         );
 
-  FindCoachesProvider._internal(
+  FindAvailableCoachesProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -107,12 +110,14 @@ class FindCoachesProvider extends AutoDisposeFutureProvider<List<Coach>> {
 
   @override
   Override overrideWith(
-    FutureOr<List<Coach>> Function(FindCoachesRef provider) create,
+    FutureOr<List<CoachTravelEstimate>> Function(
+            FindAvailableCoachesRef provider)
+        create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: FindCoachesProvider._internal(
-        (ref) => create(ref as FindCoachesRef),
+      override: FindAvailableCoachesProvider._internal(
+        (ref) => create(ref as FindAvailableCoachesRef),
         from: from,
         name: null,
         dependencies: null,
@@ -124,13 +129,13 @@ class FindCoachesProvider extends AutoDisposeFutureProvider<List<Coach>> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<Coach>> createElement() {
-    return _FindCoachesProviderElement(this);
+  AutoDisposeFutureProviderElement<List<CoachTravelEstimate>> createElement() {
+    return _FindAvailableCoachesProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is FindCoachesProvider && other.booking == booking;
+    return other is FindAvailableCoachesProvider && other.booking == booking;
   }
 
   @override
@@ -142,17 +147,19 @@ class FindCoachesProvider extends AutoDisposeFutureProvider<List<Coach>> {
   }
 }
 
-mixin FindCoachesRef on AutoDisposeFutureProviderRef<List<Coach>> {
+mixin FindAvailableCoachesRef
+    on AutoDisposeFutureProviderRef<List<CoachTravelEstimate>> {
   /// The parameter `booking` of this provider.
   Booking get booking;
 }
 
-class _FindCoachesProviderElement
-    extends AutoDisposeFutureProviderElement<List<Coach>> with FindCoachesRef {
-  _FindCoachesProviderElement(super.provider);
+class _FindAvailableCoachesProviderElement
+    extends AutoDisposeFutureProviderElement<List<CoachTravelEstimate>>
+    with FindAvailableCoachesRef {
+  _FindAvailableCoachesProviderElement(super.provider);
 
   @override
-  Booking get booking => (origin as FindCoachesProvider).booking;
+  Booking get booking => (origin as FindAvailableCoachesProvider).booking;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

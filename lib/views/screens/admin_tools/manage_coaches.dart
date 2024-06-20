@@ -33,7 +33,7 @@ class _ManageCoachesScreenState extends ConsumerState<ManageCoachesScreen> {
                       final Coach coach = coaches[index];
                       return ListTile(
                         title: Text(coach.name),
-                        subtitle: Text(coach.baseEircode),
+                        subtitle: Text(coach.baseEircode ?? 'No Base Eircode'),
                         tileColor: selectedCoachindex == index
                             ? Colors.blue.withOpacity(0.4)
                             : null,
@@ -59,39 +59,42 @@ class _ManageCoachesScreenState extends ConsumerState<ManageCoachesScreen> {
                             child: Text(coaches[selectedCoachindex!].name[0]),
                           ),
                           Text(coaches[selectedCoachindex!].name),
-                          Text(coaches[selectedCoachindex!].baseEircode),
-                          Text(
-                            'Activities Covered  -${coaches[selectedCoachindex!].activitiesCovered}',
-                          ),
-                          activities.when(
-                            data: (List<Activity> activities) {
-                              return Column(
-                                children: activities
-                                    .map(
-                                      (activity) => CheckboxListTile(
-                                        title: Text(activity.name),
-                                        value: coaches[selectedCoachindex!]
-                                            .activitiesCovered
-                                            .contains(activity.id),
-                                        onChanged: (bool? value) {
-                                          ref
-                                              .read(coachesProvider.notifier)
-                                              .toggleActivity(
-                                                coaches[selectedCoachindex!]
-                                                    .uid,
-                                                activity.id,
-                                              );
-                                        },
-                                      ),
-                                    )
-                                    .toList(),
-                              );
-                            },
-                            loading: () => const SizedBox.square(
-                              child: CircularProgressIndicator(),
+                          if (coaches[selectedCoachindex!].baseEircode !=
+                              null) ...[
+                            Text(coaches[selectedCoachindex!].baseEircode!),
+                            Text(
+                              'Activities Covered  -${coaches[selectedCoachindex!].activitiesCovered}',
                             ),
-                            error: (error, stackTrace) => throw error,
-                          ),
+                            activities.when(
+                              data: (List<Activity> activities) {
+                                return Column(
+                                  children: activities
+                                      .map(
+                                        (activity) => CheckboxListTile(
+                                          title: Text(activity.name),
+                                          value: coaches[selectedCoachindex!]
+                                              .activitiesCovered
+                                              .contains(activity.id),
+                                          onChanged: (bool? value) {
+                                            ref
+                                                .read(coachesProvider.notifier)
+                                                .toggleActivity(
+                                                  coaches[selectedCoachindex!]
+                                                      .uid,
+                                                  activity.id,
+                                                );
+                                          },
+                                        ),
+                                      )
+                                      .toList(),
+                                );
+                              },
+                              loading: () => const SizedBox.square(
+                                child: CircularProgressIndicator(),
+                              ),
+                              error: (error, stackTrace) => throw error,
+                            ),
+                          ],
                         ],
                       ),
                     ),

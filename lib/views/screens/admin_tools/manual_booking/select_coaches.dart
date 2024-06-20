@@ -1,5 +1,6 @@
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/coach.dart';
+import 'package:dashboard/models/coach_travel_estimate.dart';
 import 'package:dashboard/providers/bookings_provider.dart';
 import 'package:dashboard/providers/find_coach.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
@@ -19,8 +20,8 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
   final List<Coach> selectedCoaches = [];
   @override
   Widget build(BuildContext context) {
-    final AsyncValue<List<Coach>> suitableCoaches =
-        ref.watch(findCoachesProvider(widget.booking));
+    final AsyncValue<List<CoachTravelEstimate>> suitableCoaches =
+        ref.watch(findAvailableCoachesProvider(widget.booking));
     final bool repeats = widget.booking.recurrenceProperties != null;
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -55,11 +56,10 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                         child: suitableCoaches.when(
                           data: (data) => ListView.builder(
                             itemBuilder: (context, index) {
-                              final Coach coach = data[index];
+                              final CoachTravelEstimate coachTravelEstimate =
+                                  data[index];
+                              final Coach coach = coachTravelEstimate.coach;
                               return Card(
-                                // surfaceTintColor: selectedCoaches.contains(coach)
-                                //     ? Colors.blue[200]
-                                //     : Colors.white,
                                 color: selectedCoaches.contains(coach)
                                     ? Colors.blue[50]
                                     : Colors.white,
@@ -79,7 +79,7 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                                 borderOnForeground: true,
                                 child: ListTile(
                                   title: Text(coach.name),
-                                  subtitle: Text(coach.baseEircode),
+                                  subtitle: Text(coach.baseEircode!),
                                   onTap: () {
                                     setState(() {
                                       selectedCoaches.contains(coach)
@@ -87,6 +87,16 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                                           : selectedCoaches.add(coach);
                                     });
                                   },
+                                  trailing: Column(
+                                    children: [
+                                      Text(
+                                          'Distance: ${(coachTravelEstimate.distance / 1000).round()} km'),
+                                      Text(
+                                          'Travel Time: ${coachTravelEstimate.duration.inMinutes} minutes'),
+                                      Text(
+                                          'Leave Time: ${coachTravelEstimate.leaveTime}'),
+                                    ],
+                                  ),
                                 ),
                               );
                             },

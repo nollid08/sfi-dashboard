@@ -33,6 +33,8 @@ dependencies:
   gap: ^3.0.1
   cloud_functions: ^4.7.6
   fast_immutable_collections: ^10.2.4
+  maps_launcher: ^2.2.1
+  rrule: ^0.2.16
 
 dev_dependencies:
   flutter_test:

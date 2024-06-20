@@ -50,6 +50,12 @@ final screensProvider = Provider<List<ScreenItem>>((ref) {
           activeRouteIdentifier: '/adminTools/manageCoaches',
         ),
         ScreenItem(
+          '/adminTools/resourceView',
+          title: 'Resource View',
+          icon: Icons.view_list,
+          activeRouteIdentifier: '/adminTools/resourceView',
+        ),
+        ScreenItem(
           '/adminTools/createManualBooking',
           title: 'Create Manual Booking',
           icon: Icons.add,

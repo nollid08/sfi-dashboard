@@ -59,25 +59,25 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                               final int dayChosen = dateTime.weekday;
                               switch (dayChosen) {
                                 case 1:
-                                  requiredDayForWeekly[0] = "Mo";
+                                  requiredDayForWeekly[0] = "MO";
                                   break;
                                 case 2:
-                                  requiredDayForWeekly[0] = "Tu";
+                                  requiredDayForWeekly[0] = "TU";
                                   break;
                                 case 3:
-                                  requiredDayForWeekly[0] = "We";
+                                  requiredDayForWeekly[0] = "WE";
                                   break;
                                 case 4:
-                                  requiredDayForWeekly[0] = "Th";
+                                  requiredDayForWeekly[0] = "TH";
                                   break;
                                 case 5:
-                                  requiredDayForWeekly[0] = "F";
+                                  requiredDayForWeekly[0] = "FR";
                                   break;
                                 case 6:
-                                  requiredDayForWeekly[0] = "Sa";
+                                  requiredDayForWeekly[0] = "SA";
                                   break;
                                 case 7:
-                                  requiredDayForWeekly[0] = "Su";
+                                  requiredDayForWeekly[0] = "SU";
                                   break;
                               }
                             }
@@ -203,25 +203,25 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                                 ]),
                                 options: const [
                                   FormBuilderChipOption(
-                                    value: "Mo",
+                                    value: "MO",
                                   ),
                                   FormBuilderChipOption(
-                                    value: "Tu",
+                                    value: "TU",
                                   ),
                                   FormBuilderChipOption(
-                                    value: "We",
+                                    value: "WE",
                                   ),
                                   FormBuilderChipOption(
-                                    value: "Th",
+                                    value: "TH",
                                   ),
                                   FormBuilderChipOption(
-                                    value: "Fr",
+                                    value: "FR",
                                   ),
                                   FormBuilderChipOption(
-                                    value: "Sa",
+                                    value: "SA",
                                   ),
                                   FormBuilderChipOption(
-                                    value: "Su",
+                                    value: "SU",
                                   ),
                                 ],
                               ),
@@ -271,8 +271,9 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                         "FREQ=WEEKLY;INTERVAL=$interval;BYDAY=${daysRecurringForWeekly.join(',').toUpperCase()};COUNT=$numberOfSessions";
                   }
                 }
+                final FirebaseFirestore db = FirebaseFirestore.instance;
                 final booking = Booking(
-                  id: '1',
+                  id: db.collection('bookings').doc().id,
                   coachIds: [
                     // "mkhK7z6u64gq7gyqt2zXD9sWIRV2",
                   ],
@@ -282,9 +283,6 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                   recurrenceProperties: recurrenceProperties,
                   client: widget.selectedClient,
                 );
-
-                // final FirebaseFirestore db = FirebaseFirestore.instance;
-                // db.collection('bookings').add(booking.toJson());
                 GoRouter.of(context).go('/adminTools/createManualBooking/coach',
                     extra: booking);
               }

@@ -21,8 +21,8 @@ class Client {
 
   factory Client.fromJson(Map<String, dynamic> json, String id) {
     final String name = json['name'] ?? 'N/A';
-    final String addressLineOne = json['addressLine1'] ?? 'N/A';
-    final String addressLineTwo = json['addressLine2'] ?? 'N/A';
+    final String addressLineOne = json['addressLineOne'] ?? 'N/A';
+    final String addressLineTwo = json['addressLineTwo'] ?? 'N/A';
     final String eircode = json['eircode'] ?? 'N/A';
     final String rollNumber = json['rollNumber'] ?? 'N/A';
     final ClientType type = ClientType.fromString(json['type']['id'] ?? '');
@@ -39,8 +39,8 @@ class Client {
 
   factory Client.fromFBJson(Map<String, dynamic> json, String id) {
     final String name = json['name'] ?? 'N/A';
-    final String addressLineOne = json['addressLine1'] ?? 'N/A';
-    final String addressLineTwo = json['addressLine2'] ?? 'N/A';
+    final String addressLineOne = json['addressLineOne'] ?? 'N/A';
+    final String addressLineTwo = json['addressLineTwo'] ?? 'N/A';
     final String eircode = json['eircode'] ?? 'N/A';
     final String rollNumber = json['rollNumber'] ?? 'N/A';
     final ClientType type = ClientType.fromString(json['type'] ?? '');

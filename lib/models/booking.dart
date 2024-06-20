@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/client.dart';
+import 'package:dashboard/models/session.dart';
 import 'package:flutter/material.dart';
+import 'package:rrule/rrule.dart';
 
 class Booking {
   final String id;
@@ -13,6 +15,8 @@ class Booking {
   final TimeOfDay endTime;
   final String? recurrenceProperties;
   final Client client;
+  Query<Map<String, dynamic>>? sessionsRef;
+  final bool isCustom;
 
   Booking({
     required this.id,
@@ -22,7 +26,65 @@ class Booking {
     required this.endTime,
     this.recurrenceProperties,
     required this.client,
-  });
+    this.isCustom = false,
+  }) {
+    sessionsRef = FirebaseFirestore.instance
+        .collection('sessions')
+        .where('bookingId', isEqualTo: id);
+  }
+
+  List<Session> generateStandardSessions() {
+    if (recurrenceProperties == null) {
+      return [
+        Session(
+          startTime: startDateTime,
+          endTime: DateTime(
+            startDateTime.year,
+            startDateTime.month,
+            startDateTime.day,
+            endTime.hour,
+            endTime.minute,
+          ),
+          bookingId: id,
+          coachIds: coachIds,
+          activity: activity,
+          client: client,
+          bookingRef: FirebaseFirestore.instance.collection('bookings').doc(id),
+        ),
+      ];
+    }
+    final List<Session> sessions = [];
+    // Sample Recureence Rule (As String) = RRULE:FREQ=WEEKLY;COUNT=8;BYDAY=WE
+    final RecurrenceRule recRule =
+        RecurrenceRule.fromString('RRULE:$recurrenceProperties');
+    // RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH;BYMONTH=12
+    final List<DateTime> dates = recRule.getAllInstances(
+      start: startDateTime.copyWith(
+        isUtc: true,
+      ),
+    );
+
+    for (final date in dates) {
+      sessions.add(
+        Session(
+          startTime: date,
+          endTime: DateTime(
+            date.year,
+            date.month,
+            date.day,
+            endTime.hour,
+            endTime.minute,
+          ),
+          bookingId: id,
+          coachIds: coachIds,
+          activity: activity,
+          client: client,
+          bookingRef: FirebaseFirestore.instance.collection('bookings').doc(id),
+        ),
+      );
+    }
+    return sessions;
+  }
 
   Map<String, dynamic> toJson() {
     return {

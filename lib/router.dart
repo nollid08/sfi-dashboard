@@ -14,6 +14,7 @@ import 'package:dashboard/views/screens/admin_tools/manual_booking/select_dates.
 import 'package:dashboard/views/screens/login_screen.dart';
 import 'package:dashboard/views/screens/my_calendar.dart';
 import 'package:dashboard/views/screens/navigation_shell.dart';
+import 'package:dashboard/views/screens/resource_view.dart';
 import 'package:dashboard/views/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -60,6 +61,12 @@ GoRouter router(RouterRef ref) {
       path: '/adminTools/manageActivities',
       builder: (context, state) {
         return const Activities();
+      },
+    ),
+    GoRoute(
+      path: '/adminTools/resourceView',
+      builder: (context, state) {
+        return const ResourceView();
       },
     ),
     GoRoute(

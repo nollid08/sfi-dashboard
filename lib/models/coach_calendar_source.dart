@@ -18,7 +18,8 @@ class CoachCalendarSource extends CalendarDataSource {
                   booking.startDateTime.day,
                   booking.endTime.hour,
                   booking.endTime.minute),
-              location: booking.client.eircode,
+              location:
+                  ' ${booking.client.eircode}, ${booking.client.addressLineOne}, ${booking.client.addressLineTwo}',
               subject: '${booking.activity.name} - ${booking.client.name}',
               color: booking.activity.color,
               recurrenceRule: booking.recurrenceProperties,
