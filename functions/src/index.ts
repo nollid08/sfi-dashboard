@@ -2,6 +2,7 @@ import { CallableRequest, onCall, } from "firebase-functions/v2/https";
 const { initializeApp, } = require('firebase-admin/app');
 const { getFirestore, } = require('firebase-admin/firestore');
 import { defineSecret } from "firebase-functions/params"
+import { RRule, } from 'rrule';
 
 initializeApp();
 const mapsApiKey = defineSecret('MAPS_API_KEY');
@@ -11,10 +12,20 @@ export const find_coaches = onCall({ secrets: [mapsApiKey] }, async (request: Ca
     const bookingData = request.data.booking;
     const activity = new Activity(bookingData.activity.id, bookingData.activity.name, bookingData.activity.icon, bookingData.activity.color);
     const clientType = new ClientType(bookingData.client.type.id, bookingData.client.type.name);
-    const client = new Client(bookingData.client.id, bookingData.client.name, bookingData.client.addressLineOne, bookingData.client.addressLineTwo, bookingData.client.eircode, bookingData.client.rollNumber, clientType);
+    const client = new Client(bookingData.client.id, bookingData.client.name, bookingData.client.addressLineOne, bookingData.client.addressLineTwo, bookingData.client.eircode, bookingData.client.rollNumber, clientType,);
+    console.log('BookingData', bookingData);
+    const recurrenceRule = !!bookingData.recurrenceProperties ? undefined : RRule.fromString(bookingData.recurrenceProperties);
 
-
-    const booking = new Booking(bookingData.id, activity, bookingData.startTime, bookingData.endTime, bookingData.recurrenceProperties, client);
+    const booking = new Booking({
+        id: bookingData.id,
+        activity: activity,
+        initialArrival: new Date(bookingData.initialArrival),
+        initialLeave: new Date(bookingData.initialLeave),
+        initialActivityStart: new Date(bookingData.initialActivityStart),
+        initialActivityEnd: new Date(bookingData.initialActivityEnd),
+        recurrenceRule: recurrenceRule,
+        client: client
+    });
 
     const db = getFirestore();
 
@@ -61,9 +72,9 @@ export const find_coaches = onCall({ secrets: [mapsApiKey] }, async (request: Ca
         console.log('element', element);
         const distance = element.distance.value;
         const duration = element.duration.value;
-        const leaveTime = new Date(booking.startTime);
-        leaveTime.setSeconds(leaveTime.getSeconds() - duration);
-        const coachTravelEstimate = new CoachTravelEsimate(coachesWhoCoverActivity[index], distance, duration, leaveTime.getTime());
+        const mustArriveBy = new Date(booking.initialArrival);
+        const mustLeaveHomeBy = new Date(mustArriveBy.getTime() - duration * 1000);
+        const coachTravelEstimate = new CoachTravelEsimate(coachesWhoCoverActivity[index], distance, duration, mustLeaveHomeBy.getTime());
         coachTravelEstimates.push(coachTravelEstimate);
     });
 
@@ -73,23 +84,25 @@ export const find_coaches = onCall({ secrets: [mapsApiKey] }, async (request: Ca
 class Booking {
     id: String;
     activity: Activity;
-    startTime: Date;
-    endTime: String; // "HH:MM"
-    recurrenceProperties: String;
+    initialArrival: Date;
+    initialLeave: Date;
+    initialActivityStart: Date;
+    initialActivityEnd: Date;
+    recurrenceRule?: RRule;
     client: Client;
 
-    constructor(id: String, activity: Activity, startTime: Date, endTime: String, recurrenceProperties: String, client: Client) {
+    constructor({ id, activity, initialArrival, initialLeave, initialActivityStart, initialActivityEnd, recurrenceRule, client }: { id: String, activity: Activity, initialArrival: Date, initialLeave: Date, initialActivityStart: Date, initialActivityEnd: Date, recurrenceRule?: RRule, client: Client }) {
         this.id = id;
         this.activity = activity;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.recurrenceProperties = recurrenceProperties;
+        this.initialArrival = initialArrival;
+        this.initialLeave = initialLeave;
+        this.initialActivityStart = initialArrival;
+        this.initialActivityEnd = initialLeave;
+        this.recurrenceRule = recurrenceRule;
         this.client = client;
     }
 
-    toString() {
-        return `Booking: ${this.id}, ${this.activity}, ${this.startTime}, ${this.endTime}, ${this.recurrenceProperties}, ${this.client}`;
-    }
+
 }
 
 
@@ -168,12 +181,12 @@ class CoachTravelEsimate {
     coach: Coach;
     distance: number;
     duration: number;
-    leaveTime: number;
+    departureTime: number;
 
-    constructor(coach: Coach, distance: number, duration: number, leaveTime: number) {
+    constructor(coach: Coach, distance: number, duration: number, departureTime: number) {
         this.coach = coach;
         this.distance = distance;
         this.duration = duration;
-        this.leaveTime = leaveTime;
+        this.departureTime = departureTime;
     }
 }

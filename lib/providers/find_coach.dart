@@ -22,6 +22,8 @@ Future<List<CoachTravelEstimate>> findAvailableCoaches(
           CoachTravelEstimate.fromJson(coachData);
       coaches.add(coachTravelEstimate);
     }
+    //Sort by duration
+    coaches.sort((a, b) => a.duration.compareTo(b.duration));
     return coaches;
   } catch (e) {
     throw Exception('Error: $e');

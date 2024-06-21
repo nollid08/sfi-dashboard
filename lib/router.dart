@@ -107,24 +107,27 @@ GoRouter router(RouterRef ref) {
           builder: (context, state) {
             Booking? booking = state.extra as Booking?;
             booking ??= Booking(
-              id: '123',
-              activity: Activity(
-                  id: '123',
-                  name: 'Activity',
-                  icon: Icons.ac_unit,
-                  color: Colors.blue),
-              client: Client(
-                id: '123',
-                name: 'Client',
-                addressLineOne: 'Address Line 1',
-                addressLineTwo: 'Address Line 2',
-                eircode: 'Eircode',
-                rollNumber: 'Roll Number',
-                type: ClientType(id: '123', name: 'Type'),
-              ),
+              id: 'test',
               coachIds: [],
-              startDateTime: DateTime.now(),
-              endTime: const TimeOfDay(hour: 0, minute: 0),
+              client: Client(
+                id: 'test',
+                rollNumber: 'test',
+                type: ClientType(name: 'School', id: 'school'),
+                name: 'Test School',
+                addressLineOne: 'Test Address Line One',
+                addressLineTwo: 'Test Address Line Two',
+                eircode: 'Test Eircode',
+              ),
+              activity: Activity(
+                id: 'test',
+                name: 'Test Activity',
+                color: Colors.blue,
+                icon: Icons.accessibility,
+              ),
+              initialActivityStart: DateTime.now(),
+              initialActivityEnd: DateTime.now().add(const Duration(hours: 1)),
+              initialArrival: DateTime.now().subtract(const Duration(hours: 1)),
+              initialLeave: DateTime.now().add(const Duration(hours: 2)),
             );
             return SelectCoachesScreen(booking);
           },

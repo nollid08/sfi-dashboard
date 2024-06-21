@@ -8,7 +8,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:rrule/rrule.dart';
 
 class SelectDatesScreen extends StatefulWidget {
   final Activity selectedActivity;
@@ -24,10 +24,9 @@ class SelectDatesScreen extends StatefulWidget {
 }
 
 class _SelectDatesScreenState extends State<SelectDatesScreen> {
-  bool isFinishDateFieldEnabled = false;
   bool isBookingRecurring = false;
-  bool showDayPicker = true;
-  final requiredDayForWeekly = ["Mo"];
+  bool recursWeekly = true;
+  ByWeekDayEntry baseDayForWeekly = ByWeekDayEntry(DateTime.now().weekday);
   final formKey = GlobalKey<FormBuilderState>();
   @override
   Widget build(BuildContext context) {
@@ -41,83 +40,164 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
               children: [
                 Flexible(
                   flex: 1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
                     children: [
-                      SizedBox(
-                        width: 200,
-                        child: FormBuilderDateTimePicker(
-                          name: 'start_date',
-                          validator: FormBuilderValidators.required(),
-                          decoration:
-                              const InputDecoration(labelText: 'Starts at'),
-                          onChanged: (DateTime? dateTime) {
-                            if (dateTime != null) {
-                              setState(() {
-                                isFinishDateFieldEnabled = true;
-                              });
-                              final int dayChosen = dateTime.weekday;
-                              switch (dayChosen) {
-                                case 1:
-                                  requiredDayForWeekly[0] = "MO";
-                                  break;
-                                case 2:
-                                  requiredDayForWeekly[0] = "TU";
-                                  break;
-                                case 3:
-                                  requiredDayForWeekly[0] = "WE";
-                                  break;
-                                case 4:
-                                  requiredDayForWeekly[0] = "TH";
-                                  break;
-                                case 5:
-                                  requiredDayForWeekly[0] = "FR";
-                                  break;
-                                case 6:
-                                  requiredDayForWeekly[0] = "SA";
-                                  break;
-                                case 7:
-                                  requiredDayForWeekly[0] = "SU";
-                                  break;
-                              }
-                            }
-                          },
-                        ),
+                      FormBuilderDateTimePicker(
+                        decoration: const InputDecoration(
+                            labelText: 'Select Initial Date'),
+                        name: 'initialDate',
+                        inputType: InputType.date,
+                        initialValue: DateTime.now(),
+                        onChanged: (DateTime? selectedDate) {
+                          baseDayForWeekly =
+                              ByWeekDayEntry(selectedDate!.weekday);
+                        },
                       ),
-                      SizedBox(
-                        width: 200,
-                        child: FormBuilderDateTimePicker(
-                          name: 'end_time',
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: FormBuilderValidators.compose(
-                            [
-                              FormBuilderValidators.required(),
-                              (date) {
-                                final minDateTime = formKey.currentState!
-                                    .fields['start_date']!.value as DateTime?;
-                                final minTime =
-                                    TimeOfDay.fromDateTime(minDateTime!);
-                                final selectedTime =
-                                    TimeOfDay.fromDateTime(date!);
-                                final comparableMinTime =
-                                    minTime.hour * 60 + minTime.minute;
-                                final comparableSelectedTime =
-                                    selectedTime.hour * 60 +
-                                        selectedTime.minute;
-                                if (comparableSelectedTime <=
-                                    comparableMinTime) {
-                                  return 'End time must be after start time';
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 200,
+                            child: FormBuilderDateTimePicker(
+                              name: 'initial_activity_start',
+                              initialTime:
+                                  const TimeOfDay(hour: 09, minute: 10),
+                              initialValue: DateTime.now().copyWith(
+                                hour: 09,
+                                minute: 10,
+                              ),
+                              inputType: InputType.time,
+                              validator: FormBuilderValidators.required(),
+                              decoration:
+                                  const InputDecoration(labelText: 'Starts at'),
+                              onChanged: (DateTime? newStartTime) {
+                                if (newStartTime == null) {
+                                  return;
                                 }
-                                return null;
+                                final DateTime newArrivalTime = newStartTime
+                                    .subtract(const Duration(minutes: 30));
+                                formKey.currentState!.fields['initial_arrival']!
+                                    .didChange(newArrivalTime);
                               },
-                            ],
+                            ),
                           ),
-                          inputType: InputType.time,
-                          //Only enable when other field is filled
-                          enabled: isFinishDateFieldEnabled,
-                          decoration:
-                              const InputDecoration(labelText: 'Finishes at'),
-                        ),
+                          SizedBox(
+                            width: 200,
+                            child: FormBuilderDateTimePicker(
+                              name: 'initial_activity_end',
+                              initialTime:
+                                  const TimeOfDay(hour: 14, minute: 50),
+                              initialValue: DateTime.now().copyWith(
+                                hour: 14,
+                                minute: 50,
+                              ),
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: FormBuilderValidators.compose(
+                                [
+                                  FormBuilderValidators.required(),
+                                  (date) {
+                                    final TimeOfDay selectedFinishTime =
+                                        TimeOfDay.fromDateTime(date!);
+                                    final DateTime selectedStartDateTime =
+                                        formKey
+                                            .currentState!
+                                            .fields['initial_activity_start']!
+                                            .value!;
+                                    final TimeOfDay selectedStartTime =
+                                        TimeOfDay.fromDateTime(
+                                            selectedStartDateTime);
+                                    int finishTimeMinutes =
+                                        selectedFinishTime.hour * 60 +
+                                            selectedFinishTime.minute;
+                                    int startTimeMinutes =
+                                        selectedStartTime.hour * 60 +
+                                            selectedStartTime.minute;
+                                    if (finishTimeMinutes <= startTimeMinutes) {
+                                      return 'Finish time must be after start time';
+                                    }
+                                    return null;
+                                  }
+                                ],
+                              ),
+                              inputType: InputType.time,
+                              decoration: const InputDecoration(
+                                  labelText: 'Finishes at'),
+                              onChanged: (DateTime? newEndTime) {
+                                if (newEndTime == null) {
+                                  return;
+                                }
+                                final DateTime newLeaveTime =
+                                    newEndTime.add(const Duration(minutes: 30));
+                                formKey.currentState!.fields['initial_leave']!
+                                    .didChange(newLeaveTime);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 200,
+                            child: FormBuilderDateTimePicker(
+                              name: 'initial_arrival',
+                              initialTime:
+                                  const TimeOfDay(hour: 08, minute: 40),
+                              initialValue: DateTime.now().copyWith(
+                                hour: 08,
+                                minute: 40,
+                              ),
+                              inputType: InputType.time,
+                              validator: FormBuilderValidators.required(),
+                              decoration:
+                                  const InputDecoration(labelText: 'Arrive at'),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 200,
+                            child: FormBuilderDateTimePicker(
+                              name: 'initial_leave',
+                              initialTime:
+                                  const TimeOfDay(hour: 15, minute: 20),
+                              initialValue: DateTime.now().copyWith(
+                                hour: 15,
+                                minute: 20,
+                              ),
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: FormBuilderValidators.compose(
+                                [
+                                  FormBuilderValidators.required(),
+                                  (date) {
+                                    final TimeOfDay selectedFinishTime =
+                                        TimeOfDay.fromDateTime(date!);
+                                    final DateTime selectedStartDateTime =
+                                        formKey.currentState!
+                                            .fields['initial_arrival']!.value!;
+                                    final TimeOfDay selectedStartTime =
+                                        TimeOfDay.fromDateTime(
+                                            selectedStartDateTime);
+                                    int finishTimeMinutes =
+                                        selectedFinishTime.hour * 60 +
+                                            selectedFinishTime.minute;
+                                    int startTimeMinutes =
+                                        selectedStartTime.hour * 60 +
+                                            selectedStartTime.minute;
+                                    if (finishTimeMinutes <= startTimeMinutes) {
+                                      return 'Leave time must be after Arrival time';
+                                    }
+                                    return null;
+                                  }
+                                ],
+                              ),
+                              inputType: InputType.time,
+                              decoration:
+                                  const InputDecoration(labelText: 'Leave at'),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -130,6 +210,7 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                       FormBuilderCheckbox(
                         name: "doesRecur",
                         title: const Text("Does this booking recur?"),
+                        initialValue: false,
                         onChanged: (bool? value) {
                           setState(() {
                             isBookingRecurring = value!;
@@ -145,12 +226,12 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                                 const Flexible(child: Text('Repeats every')),
                                 const Flexible(
                                   child: NumberPickerFormField(
-                                    name: "selected_interval",
+                                    name: "interval",
                                   ),
                                 ),
                                 Flexible(
                                   child: FormBuilderDropdown(
-                                    name: 'interval_type',
+                                    name: 'frequency',
                                     items: [
                                       'Days',
                                       'Weeks',
@@ -163,14 +244,21 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                                         )
                                         .toList(),
                                     initialValue: "Weeks",
+                                    valueTransformer: (String? freqString) {
+                                      if (freqString == 'Days') {
+                                        return Frequency.daily;
+                                      } else {
+                                        return Frequency.weekly;
+                                      }
+                                    },
                                     onChanged: (String? value) {
                                       if (value == 'Days') {
                                         setState(() {
-                                          showDayPicker = false;
+                                          recursWeekly = false;
                                         });
                                       } else {
                                         setState(() {
-                                          showDayPicker = true;
+                                          recursWeekly = true;
                                         });
                                       }
                                     },
@@ -179,49 +267,53 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                               ],
                             ),
                             const Gap(20),
-                            if (showDayPicker)
-                              FormBuilderFilterChip<String>(
+                            if (recursWeekly)
+                              FormBuilderFilterChip<ByWeekDayEntry>(
                                 direction: Axis.horizontal,
                                 decoration: const InputDecoration(
                                   labelText: 'Every Week On The Days:',
                                   border: OutlineInputBorder(),
                                 ),
                                 name: "days_recurring_for_weekly",
-                                initialValue: requiredDayForWeekly,
-                                validator: FormBuilderValidators.compose([
-                                  FormBuilderValidators.required(),
-                                  (List<String>? value) {
-                                    if (value == null) {
-                                      return null;
-                                    }
-                                    if (!value
-                                        .contains(requiredDayForWeekly[0])) {
-                                      return 'Please select ${requiredDayForWeekly[0]}';
-                                    }
-                                    return null;
-                                  }
-                                ]),
-                                options: const [
+                                initialValue: [baseDayForWeekly],
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: recursWeekly
+                                    ? FormBuilderValidators.compose([
+                                        FormBuilderValidators.required(),
+                                        (List<ByWeekDayEntry>? value) {
+                                          if (value == null) {
+                                            return null;
+                                          }
+                                          if (!value
+                                              .contains(baseDayForWeekly)) {
+                                            return 'Please select $baseDayForWeekly';
+                                          }
+                                          return null;
+                                        }
+                                      ])
+                                    : null,
+                                options: [
                                   FormBuilderChipOption(
-                                    value: "MO",
+                                    value: ByWeekDayEntry(DateTime.monday),
                                   ),
                                   FormBuilderChipOption(
-                                    value: "TU",
+                                    value: ByWeekDayEntry(DateTime.tuesday),
                                   ),
                                   FormBuilderChipOption(
-                                    value: "WE",
+                                    value: ByWeekDayEntry(DateTime.wednesday),
                                   ),
                                   FormBuilderChipOption(
-                                    value: "TH",
+                                    value: ByWeekDayEntry(DateTime.thursday),
                                   ),
                                   FormBuilderChipOption(
-                                    value: "FR",
+                                    value: ByWeekDayEntry(DateTime.friday),
                                   ),
                                   FormBuilderChipOption(
-                                    value: "SA",
+                                    value: ByWeekDayEntry(DateTime.saturday),
                                   ),
                                   FormBuilderChipOption(
-                                    value: "SU",
+                                    value: ByWeekDayEntry(DateTime.sunday),
                                   ),
                                 ],
                               ),
@@ -251,36 +343,63 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
             onPressed: () {
               if (formKey.currentState!.saveAndValidate()) {
                 final data = formKey.currentState!.value;
-                final startDateTime = data['start_date'] as DateTime;
-                final endDateTime = data['end_time'] as DateTime;
-                final interval = data['selected_interval'] as int;
-                final intervalType = data['interval_type'] as String;
-                final daysRecurringForWeekly =
-                    data['days_recurring_for_weekly'] as List<String>;
-                final numberOfSessions = data['number_of_sessions'] as int;
-                final doesRecur = data['doesRecur'] as bool;
+                final DateTime initialDate = data['initialDate'];
 
-                final endTime = TimeOfDay.fromDateTime(endDateTime);
-                String? recurrenceProperties;
+                final initialActivityStartTime = data['initial_activity_start'];
+                final initialActivityEndTime = data['initial_activity_end'];
+                final initialArrivalTime = data['initial_arrival'];
+                final initialLeaveTime = data['initial_leave'];
+
+                final initialActivityStart = initialDate.copyWith(
+                  hour: initialActivityStartTime.hour,
+                  minute: initialActivityStartTime.minute,
+                );
+                final initialActivityEnd = initialDate.copyWith(
+                  hour: initialActivityEndTime.hour,
+                  minute: initialActivityEndTime.minute,
+                );
+                final initialArrival = initialDate.copyWith(
+                  hour: initialArrivalTime.hour,
+                  minute: initialArrivalTime.minute,
+                );
+                final initialLeave = initialDate.copyWith(
+                  hour: initialLeaveTime.hour,
+                  minute: initialLeaveTime.minute,
+                );
+
+                final doesRecur = data['doesRecur'] as bool;
+                RecurrenceRule? recurrenceRules;
                 if (doesRecur) {
-                  if (intervalType == 'Days') {
-                    recurrenceProperties =
-                        "FREQ=DAILY;INTERVAL=$interval;COUNT=$numberOfSessions";
-                  } else if (intervalType == 'Weeks') {
-                    recurrenceProperties =
-                        "FREQ=WEEKLY;INTERVAL=$interval;BYDAY=${daysRecurringForWeekly.join(',').toUpperCase()};COUNT=$numberOfSessions";
+                  final int interval = data['interval'];
+                  final Frequency frequency = data['frequency'];
+                  final List<ByWeekDayEntry> byWeekDayEntry =
+                      List.from(data['days_recurring_for_weekly']);
+                  final numberOfSessions = data['number_of_sessions'];
+                  if (frequency == Frequency.daily) {
+                    recurrenceRules = RecurrenceRule(
+                      frequency: Frequency.daily,
+                      interval: interval,
+                      count: numberOfSessions,
+                    );
+                  } else {
+                    recurrenceRules = RecurrenceRule(
+                        frequency: Frequency.weekly,
+                        interval: interval,
+                        count: numberOfSessions,
+                        byWeekDays: byWeekDayEntry);
                   }
                 }
+
                 final FirebaseFirestore db = FirebaseFirestore.instance;
                 final booking = Booking(
                   id: db.collection('bookings').doc().id,
-                  coachIds: [
-                    // "mkhK7z6u64gq7gyqt2zXD9sWIRV2",
-                  ],
+                  coachIds: [],
                   activity: widget.selectedActivity,
-                  startDateTime: startDateTime,
-                  endTime: endTime,
-                  recurrenceProperties: recurrenceProperties,
+                  initialActivityStart: initialActivityStart,
+                  initialActivityEnd: initialActivityEnd,
+                  initialArrival: initialArrival,
+                  initialLeave: initialLeave,
+                  recurrenceRules: recurrenceRules,
                   client: widget.selectedClient,
                 );
                 GoRouter.of(context).go('/adminTools/createManualBooking/coach',

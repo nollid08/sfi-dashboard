@@ -5,6 +5,8 @@ import 'package:dashboard/models/client.dart';
 class Session {
   final DateTime startTime;
   final DateTime endTime;
+  final DateTime arrivalTime;
+  final DateTime leaveTime;
   final String bookingId;
   final List<String> coachIds;
   final Activity activity;
@@ -14,6 +16,8 @@ class Session {
   Session({
     required this.startTime,
     required this.endTime,
+    required this.arrivalTime,
+    required this.leaveTime,
     required this.bookingId,
     required this.coachIds,
     required this.activity,
@@ -25,6 +29,8 @@ class Session {
     return {
       'startTime': startTime.toIso8601String(),
       'endTime': endTime.toIso8601String(),
+      'arrivalTime': arrivalTime.toIso8601String(),
+      'leaveTime': leaveTime.toIso8601String(),
       'bookingId': bookingId,
       'coachIds': coachIds,
       'activity': activity.toJson(),
@@ -36,6 +42,8 @@ class Session {
     final data = doc.data() as Map<String, dynamic>;
     final DateTime startTime = DateTime.parse(data['startTime']);
     final DateTime endTime = DateTime.parse(data['endTime']);
+    final DateTime arrivalTime = DateTime.parse(data['arrivalTime']);
+    final DateTime leaveTime = DateTime.parse(data['leaveTime']);
     final String bookingId = data['bookingId'];
     final List<String> coachIds = List<String>.from(data['coachIds']);
     final Activity activity = Activity.fromJson(data['activity']);
@@ -43,6 +51,8 @@ class Session {
     return Session(
       startTime: startTime,
       endTime: endTime,
+      arrivalTime: arrivalTime,
+      leaveTime: leaveTime,
       bookingId: bookingId,
       coachIds: coachIds,
       activity: activity,

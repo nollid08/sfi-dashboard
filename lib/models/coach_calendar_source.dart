@@ -8,24 +8,20 @@ class CoachCalendarSource extends CalendarDataSource {
 
   factory CoachCalendarSource.fromBookings(List<Booking> bookings) {
     return CoachCalendarSource(
-      bookings
-          .map<Appointment>(
-            (Booking booking) => Appointment(
-              startTime: booking.startDateTime,
-              endTime: DateTime(
-                  booking.startDateTime.year,
-                  booking.startDateTime.month,
-                  booking.startDateTime.day,
-                  booking.endTime.hour,
-                  booking.endTime.minute),
-              location:
-                  ' ${booking.client.eircode}, ${booking.client.addressLineOne}, ${booking.client.addressLineTwo}',
-              subject: '${booking.activity.name} - ${booking.client.name}',
-              color: booking.activity.color,
-              recurrenceRule: booking.recurrenceProperties,
-            ),
-          )
-          .toList(),
+      bookings.map<Appointment>((Booking booking) {
+        final String recurrenceRule = booking.recurrenceRules.toString();
+        //Remove RRULE: from the start of the string
+        final String recurrenceRuleString = recurrenceRule.substring(6);
+        return Appointment(
+          startTime: booking.initialActivityStart,
+          endTime: booking.initialActivityEnd,
+          location:
+              ' ${booking.client.eircode}, ${booking.client.addressLineOne}, ${booking.client.addressLineTwo}',
+          subject: '${booking.activity.name} - ${booking.client.name}',
+          color: booking.activity.color,
+          recurrenceRule: recurrenceRuleString,
+        );
+      }).toList(),
     );
   }
 }

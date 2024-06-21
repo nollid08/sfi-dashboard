@@ -22,7 +22,7 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
   Widget build(BuildContext context) {
     final AsyncValue<List<CoachTravelEstimate>> suitableCoaches =
         ref.watch(findAvailableCoachesProvider(widget.booking));
-    final bool repeats = widget.booking.recurrenceProperties != null;
+    final bool repeats = widget.booking.recurrenceRules != null;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -32,17 +32,78 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
               children: [
                 Expanded(
                   child: Column(children: [
-                    const Text('Current Booking'),
-                    Text('Activity: ${widget.booking.activity.name}'),
-                    Text('Client: ${widget.booking.client.name}'),
-                    Text('Initial Date: ${widget.booking.startDateTime}'),
-                    Text(
-                      'Time: ${widget.booking.startDateTime.hour}:${widget.booking.startDateTime.minute} - ${widget.booking.endTime.hour}:${widget.booking.endTime.minute}',
+                    const Text(
+                      'Current Booking',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 30,
+                        color: Colors.black,
+                      ),
                     ),
-                    Text('Repeats?: $repeats'),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Activity: ${widget.booking.activity.name}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Client: ${widget.booking.client.name}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Initial Date: ${widget.booking.initialActivityStart}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      ' Activity Time: ${widget.booking.initialActivityStart.hour}:${widget.booking.initialActivityStart.minute} - ${widget.booking.initialActivityEnd.hour}:${widget.booking.initialActivityEnd.minute}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Arrival Time: ${widget.booking.initialArrival.hour}:${widget.booking.initialArrival.minute}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Leave Time: ${widget.booking.initialLeave.hour}:${widget.booking.initialLeave.minute}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Repeats?: $repeats',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                    ),
                     if (repeats)
                       Text(
-                          'Recurrence Properties: ${widget.booking.recurrenceProperties}'),
+                        'Recurrence Properties: ${widget.booking.recurrenceRules}',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                        ),
+                      ),
                   ]),
                 ),
                 const VerticalDivider(),
@@ -54,10 +115,12 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                               fontWeight: FontWeight.bold, fontSize: 30)),
                       Expanded(
                         child: suitableCoaches.when(
-                          data: (data) => ListView.builder(
+                          data: (List<CoachTravelEstimate>
+                                  coachTravelEstimates) =>
+                              ListView.builder(
                             itemBuilder: (context, index) {
                               final CoachTravelEstimate coachTravelEstimate =
-                                  data[index];
+                                  coachTravelEstimates[index];
                               final Coach coach = coachTravelEstimate.coach;
                               return Card(
                                 color: selectedCoaches.contains(coach)
@@ -94,13 +157,13 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                                       Text(
                                           'Travel Time: ${coachTravelEstimate.duration.inMinutes} minutes'),
                                       Text(
-                                          'Leave Time: ${coachTravelEstimate.leaveTime}'),
+                                          'Leave Time: ${coachTravelEstimate.departureTime}'),
                                     ],
                                   ),
                                 ),
                               );
                             },
-                            itemCount: data.length,
+                            itemCount: coachTravelEstimates.length,
                           ),
                           loading: () => const CircularProgressIndicator(),
                           error: (error, stackTrace) => Text('Error: $error'),

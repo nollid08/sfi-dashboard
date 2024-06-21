@@ -11,9 +11,12 @@ class Booking {
   final String id;
   final List<String> coachIds;
   final Activity activity;
-  final DateTime startDateTime;
-  final TimeOfDay endTime;
-  final String? recurrenceProperties;
+  final DateTime initialActivityStart;
+  final DateTime initialActivityEnd;
+  final DateTime initialArrival;
+  final DateTime initialLeave;
+
+  final RecurrenceRule? recurrenceRules;
   final Client client;
   Query<Map<String, dynamic>>? sessionsRef;
   final bool isCustom;
@@ -22,9 +25,11 @@ class Booking {
     required this.id,
     required this.coachIds,
     required this.activity,
-    required this.startDateTime,
-    required this.endTime,
-    this.recurrenceProperties,
+    required this.initialActivityStart,
+    required this.initialActivityEnd,
+    required this.initialArrival,
+    required this.initialLeave,
+    this.recurrenceRules,
     required this.client,
     this.isCustom = false,
   }) {
@@ -34,17 +39,13 @@ class Booking {
   }
 
   List<Session> generateStandardSessions() {
-    if (recurrenceProperties == null) {
+    if (recurrenceRules == null) {
       return [
         Session(
-          startTime: startDateTime,
-          endTime: DateTime(
-            startDateTime.year,
-            startDateTime.month,
-            startDateTime.day,
-            endTime.hour,
-            endTime.minute,
-          ),
+          startTime: initialActivityStart,
+          endTime: initialActivityEnd,
+          arrivalTime: initialArrival,
+          leaveTime: initialLeave,
           bookingId: id,
           coachIds: coachIds,
           activity: activity,
@@ -54,12 +55,8 @@ class Booking {
       ];
     }
     final List<Session> sessions = [];
-    // Sample Recureence Rule (As String) = RRULE:FREQ=WEEKLY;COUNT=8;BYDAY=WE
-    final RecurrenceRule recRule =
-        RecurrenceRule.fromString('RRULE:$recurrenceProperties');
-    // RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH;BYMONTH=12
-    final List<DateTime> dates = recRule.getAllInstances(
-      start: startDateTime.copyWith(
+    final List<DateTime> dates = recurrenceRules!.getAllInstances(
+      start: initialActivityStart.copyWith(
         isUtc: true,
       ),
     );
@@ -68,12 +65,17 @@ class Booking {
       sessions.add(
         Session(
           startTime: date,
-          endTime: DateTime(
-            date.year,
-            date.month,
-            date.day,
-            endTime.hour,
-            endTime.minute,
+          endTime: date.copyWith(
+            hour: initialActivityEnd.hour,
+            minute: initialActivityEnd.minute,
+          ),
+          arrivalTime: date.copyWith(
+            hour: initialArrival.hour,
+            minute: initialArrival.minute,
+          ),
+          leaveTime: date.copyWith(
+            hour: initialLeave.hour,
+            minute: initialLeave.minute,
           ),
           bookingId: id,
           coachIds: coachIds,
@@ -91,9 +93,11 @@ class Booking {
       'id': id,
       'coachIds': coachIds,
       'activity': activity.toJson(),
-      'startTime': startDateTime.toIso8601String(),
-      'endTime': "${endTime.hour}:${endTime.minute}",
-      'recurrenceProperties': recurrenceProperties,
+      'initialActivityStart': initialActivityStart.toIso8601String(),
+      'initialActivityEnd': initialActivityEnd.toIso8601String(),
+      'initialArrival': initialArrival.toIso8601String(),
+      'initialLeave': initialLeave.toIso8601String(),
+      'recurrenceProperties': recurrenceRules.toString(),
       'client': client.toJson(),
     };
   }
@@ -102,9 +106,11 @@ class Booking {
     return {
       'coachIds': coachIds,
       'activity': activity.toJson(),
-      'startTime': startDateTime.toIso8601String(),
-      'endTime': "${endTime.hour}:${endTime.minute}",
-      'recurrenceProperties': recurrenceProperties,
+      'startTime': initialActivityStart.toIso8601String(),
+      'endTime': '${initialActivityEnd.hour}:${initialActivityEnd.minute}',
+      'initialArrival': initialArrival.toIso8601String(),
+      'initialLeave': initialLeave.toIso8601String(),
+      'recurrenceProperties': recurrenceRules,
       'client': client.toJson(),
     };
   }
@@ -114,20 +120,24 @@ class Booking {
     final String id = doc.id;
     final List<String> coachIds = List<String>.from(data['coachIds']);
     final Activity activity = Activity.fromJson(data['activity']);
-    final DateTime startDateTime = DateTime.parse(data['startTime']);
-    final TimeOfDay endTime = TimeOfDay(
-      hour: int.parse(data['endTime'].split(':')[0]),
-      minute: int.parse(data['endTime'].split(':')[1]),
-    );
-    final String? recurrenceProperties = data['recurrenceProperties'];
+    final DateTime initialActivityStart = DateTime.parse(data['startTime']);
+    final DateTime initialActivityEnd = DateTime.parse(data['endTime']);
+    final DateTime initialArrival = DateTime.parse(data['initialArrival']);
+    final DateTime initialLeave = DateTime.parse(data['initialLeave']);
+    final String? recurrenceRulesJson = data['recurrenceProperties'];
+    final RecurrenceRule? recurrenceProperties = recurrenceRulesJson != null
+        ? RecurrenceRule.fromJson(jsonDecode(recurrenceRulesJson))
+        : null;
     final Client client = Client.fromJson(data['client'], doc.id);
     return Booking(
       id: id,
       coachIds: coachIds,
       activity: activity,
-      startDateTime: startDateTime,
-      endTime: endTime,
-      recurrenceProperties: recurrenceProperties,
+      initialActivityStart: initialActivityStart,
+      initialActivityEnd: initialActivityEnd,
+      initialArrival: initialArrival,
+      initialLeave: initialLeave,
+      recurrenceRules: recurrenceProperties,
       client: client,
     );
   }
@@ -136,18 +146,22 @@ class Booking {
     String? id,
     List<String>? coachIds,
     Activity? activity,
-    DateTime? startDateTime,
-    TimeOfDay? endTime,
-    String? recurrenceProperties,
+    DateTime? initialActivityStart,
+    DateTime? initialActivityEnd,
+    DateTime? initialArrival,
+    DateTime? initialLeave,
+    RecurrenceRule? recurrenceRules,
     Client? client,
   }) {
     return Booking(
       id: id ?? this.id,
       coachIds: coachIds ?? this.coachIds,
       activity: activity ?? this.activity,
-      startDateTime: startDateTime ?? this.startDateTime,
-      endTime: endTime ?? this.endTime,
-      recurrenceProperties: recurrenceProperties ?? this.recurrenceProperties,
+      initialActivityStart: initialActivityStart ?? this.initialActivityStart,
+      initialActivityEnd: initialActivityEnd ?? this.initialActivityEnd,
+      initialArrival: initialArrival ?? this.initialArrival,
+      initialLeave: initialLeave ?? this.initialLeave,
+      recurrenceRules: recurrenceRules ?? recurrenceRules,
       client: client ?? this.client,
     );
   }
