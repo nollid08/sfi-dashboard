@@ -21,7 +21,7 @@ Stream<List<Session>> sessions(SessionsRef ref,
   } else {
     sessionSnapshots = db
         .collection('sessions')
-        .where('coachIds', arrayContainsAny: coachIds)
+        .where('coachUids', arrayContainsAny: coachIds)
         .snapshots();
   }
   yield* sessionSnapshots.map((snapshot) {

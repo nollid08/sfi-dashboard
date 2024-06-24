@@ -53,4 +53,13 @@ class Coach {
       activitiesCovered: List<String>.from(json['activitiesCovered']),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'uid': uid,
+      'name': name,
+      'eircode': baseEircode,
+      'activitiesCovered': activitiesCovered,
+    };
+  }
 }

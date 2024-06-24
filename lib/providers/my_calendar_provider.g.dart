@@ -6,11 +6,12 @@ part of 'my_calendar_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$myCalendarHash() => r'1aba0ec5cc6e58ffde708b51b9e4021b6e5eae39';
+String _$myCalendarHash() => r'637e6c3d93ec68ef8dbe393ec033757c15b48e06';
 
 /// See also [myCalendar].
 @ProviderFor(myCalendar)
-final myCalendarProvider = AutoDisposeStreamProvider<List<Booking>>.internal(
+final myCalendarProvider =
+    AutoDisposeStreamProvider<CoachCalendarSource>.internal(
   myCalendar,
   name: r'myCalendarProvider',
   debugGetCreateSourceHash:
@@ -19,6 +20,6 @@ final myCalendarProvider = AutoDisposeStreamProvider<List<Booking>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef MyCalendarRef = AutoDisposeStreamProviderRef<List<Booking>>;
+typedef MyCalendarRef = AutoDisposeStreamProviderRef<CoachCalendarSource>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

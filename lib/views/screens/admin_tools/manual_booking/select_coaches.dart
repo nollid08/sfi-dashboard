@@ -17,7 +17,7 @@ class SelectCoachesScreen extends ConsumerStatefulWidget {
 }
 
 class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
-  final List<Coach> selectedCoaches = [];
+  final List<CoachTravelEstimate> selectedCoaches = [];
   @override
   Widget build(BuildContext context) {
     final AsyncValue<List<CoachTravelEstimate>> suitableCoaches =
@@ -122,11 +122,16 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                               final CoachTravelEstimate coachTravelEstimate =
                                   coachTravelEstimates[index];
                               final Coach coach = coachTravelEstimate.coach;
+                              final departureTime = widget
+                                  .booking.initialArrival
+                                  .subtract(coachTravelEstimate.duration);
                               return Card(
-                                color: selectedCoaches.contains(coach)
+                                color: selectedCoaches
+                                        .contains(coachTravelEstimate)
                                     ? Colors.blue[50]
                                     : Colors.white,
-                                shape: selectedCoaches.contains(coach)
+                                shape: selectedCoaches
+                                        .contains(coachTravelEstimate)
                                     ? RoundedRectangleBorder(
                                         side: const BorderSide(
                                             color: Colors.blue, width: 2.0),
@@ -145,9 +150,12 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                                   subtitle: Text(coach.baseEircode!),
                                   onTap: () {
                                     setState(() {
-                                      selectedCoaches.contains(coach)
-                                          ? selectedCoaches.remove(coach)
-                                          : selectedCoaches.add(coach);
+                                      selectedCoaches
+                                              .contains(coachTravelEstimate)
+                                          ? selectedCoaches
+                                              .remove(coachTravelEstimate)
+                                          : selectedCoaches
+                                              .add(coachTravelEstimate);
                                     });
                                   },
                                   trailing: Column(
@@ -156,8 +164,7 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                                           'Distance: ${(coachTravelEstimate.distance / 1000).round()} km'),
                                       Text(
                                           'Travel Time: ${coachTravelEstimate.duration.inMinutes} minutes'),
-                                      Text(
-                                          'Leave Time: ${coachTravelEstimate.departureTime}'),
+                                      Text('Leave Time: $departureTime'),
                                     ],
                                   ),
                                 ),
@@ -199,9 +206,7 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                           var bookingsProv =
                               ref.read(bookingsProvider(param).notifier);
                           final Booking booking = widget.booking.copyWith(
-                            coachIds: selectedCoaches
-                                .map((coach) => coach.uid)
-                                .toList(),
+                            coachTravelEstimates: selectedCoaches,
                           );
                           bookingsProv.addBooking(booking);
                         },

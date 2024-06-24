@@ -1,5 +1,6 @@
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/coach_calendar_source.dart';
+import 'package:dashboard/providers/auth_provider.dart';
 import 'package:dashboard/providers/my_calendar_provider.dart';
 import 'package:dashboard/views/widgets/hover_wrapper.dart';
 import 'package:flutter/gestures.dart';
@@ -13,11 +14,13 @@ class MyCalendar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<List<Booking>> myCalendar = ref.watch(myCalendarProvider);
+    final AsyncValue<CoachCalendarSource> myCalendar =
+        ref.watch(myCalendarProvider);
+
     final calendarController = CalendarController();
     return Center(
       child: myCalendar.when(
-        data: (List<Booking>? bookings) {
+        data: (CoachCalendarSource? coachCalendarSource) {
           return Card(
             margin: const EdgeInsets.all(16),
             child: Padding(
@@ -78,7 +81,7 @@ class MyCalendar extends ConsumerWidget {
                 showTodayButton: false,
                 showNavigationArrow: true,
                 showWeekNumber: true,
-                dataSource: CoachCalendarSource.fromBookings(bookings!),
+                dataSource: coachCalendarSource,
               ),
             ),
           );

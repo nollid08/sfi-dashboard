@@ -4,13 +4,11 @@ class CoachTravelEstimate {
   final Coach coach;
   final double distance;
   final Duration duration;
-  final DateTime departureTime;
 
   CoachTravelEstimate({
     required this.coach,
     required this.distance,
     required this.duration,
-    required this.departureTime,
   });
 
   factory CoachTravelEstimate.fromJson(Map<String, dynamic> json) {
@@ -18,7 +16,14 @@ class CoachTravelEstimate {
       coach: Coach.fromJson(json['coach']),
       distance: json['distance'],
       duration: Duration(seconds: json['duration']),
-      departureTime: DateTime.fromMillisecondsSinceEpoch(json['departureTime']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'coach': coach.toJson(),
+      'distance': distance,
+      'duration': duration.inSeconds,
+    };
   }
 }

@@ -14,7 +14,7 @@ class Bookings extends _$Bookings {
     final FirebaseFirestore db = FirebaseFirestore.instance;
     final Stream<QuerySnapshot> bookingSnapshots = db
         .collection('bookings')
-        .where('coachIds',
+        .where('coachUids',
             arrayContainsAny: coaches.map((coach) => coach.uid).toList())
         .snapshots();
     yield* bookingSnapshots.map((snapshot) {

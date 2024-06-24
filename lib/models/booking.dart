@@ -3,13 +3,14 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/client.dart';
+import 'package:dashboard/models/coach_travel_estimate.dart';
 import 'package:dashboard/models/session.dart';
 import 'package:flutter/material.dart';
 import 'package:rrule/rrule.dart';
 
 class Booking {
   final String id;
-  final List<String> coachIds;
+  final List<CoachTravelEstimate> coachTravelEstimates;
   final Activity activity;
   final DateTime initialActivityStart;
   final DateTime initialActivityEnd;
@@ -23,7 +24,7 @@ class Booking {
 
   Booking({
     required this.id,
-    required this.coachIds,
+    required this.coachTravelEstimates,
     required this.activity,
     required this.initialActivityStart,
     required this.initialActivityEnd,
@@ -47,7 +48,7 @@ class Booking {
           arrivalTime: initialArrival,
           leaveTime: initialLeave,
           bookingId: id,
-          coachIds: coachIds,
+          coachTravelEstimates: coachTravelEstimates,
           activity: activity,
           client: client,
           bookingRef: FirebaseFirestore.instance.collection('bookings').doc(id),
@@ -78,7 +79,7 @@ class Booking {
             minute: initialLeave.minute,
           ),
           bookingId: id,
-          coachIds: coachIds,
+          coachTravelEstimates: coachTravelEstimates,
           activity: activity,
           client: client,
           bookingRef: FirebaseFirestore.instance.collection('bookings').doc(id),
@@ -91,26 +92,28 @@ class Booking {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'coachIds': coachIds,
+      'coachTravelEstimates':
+          coachTravelEstimates.map((e) => e.toJson()).toList(),
+      'coachUids': coachTravelEstimates.map((e) => e.coach.uid).toList(),
       'activity': activity.toJson(),
       'initialActivityStart': initialActivityStart.toIso8601String(),
       'initialActivityEnd': initialActivityEnd.toIso8601String(),
       'initialArrival': initialArrival.toIso8601String(),
       'initialLeave': initialLeave.toIso8601String(),
-      'recurrenceProperties': recurrenceRules.toString(),
+      'recurrenceProperties': recurrenceRules?.toJson(),
       'client': client.toJson(),
     };
   }
 
   Map<String, dynamic> toFBJson() {
     return {
-      'coachIds': coachIds,
+      'coachTravelEstimates': coachTravelEstimates,
       'activity': activity.toJson(),
       'startTime': initialActivityStart.toIso8601String(),
       'endTime': '${initialActivityEnd.hour}:${initialActivityEnd.minute}',
       'initialArrival': initialArrival.toIso8601String(),
       'initialLeave': initialLeave.toIso8601String(),
-      'recurrenceProperties': recurrenceRules,
+      'recurrenceProperties': recurrenceRules?.toJson(),
       'client': client.toJson(),
     };
   }
@@ -118,20 +121,27 @@ class Booking {
   factory Booking.fromQueryDocSnapshot(QueryDocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     final String id = doc.id;
-    final List<String> coachIds = List<String>.from(data['coachIds']);
+    final List<CoachTravelEstimate> coachTravelEstimates =
+        data['coachTravelEstimates']
+            .map<CoachTravelEstimate>(
+              (cte) => CoachTravelEstimate.fromJson(cte),
+            )
+            .toList();
     final Activity activity = Activity.fromJson(data['activity']);
-    final DateTime initialActivityStart = DateTime.parse(data['startTime']);
-    final DateTime initialActivityEnd = DateTime.parse(data['endTime']);
+    final DateTime initialActivityStart =
+        DateTime.parse(data['initialActivityStart']);
+    final DateTime initialActivityEnd =
+        DateTime.parse(data['initialActivityEnd']);
     final DateTime initialArrival = DateTime.parse(data['initialArrival']);
     final DateTime initialLeave = DateTime.parse(data['initialLeave']);
-    final String? recurrenceRulesJson = data['recurrenceProperties'];
+    final Map<String, dynamic>? recurrenceRulesJson = data['recurrenceProperties'];
     final RecurrenceRule? recurrenceProperties = recurrenceRulesJson != null
-        ? RecurrenceRule.fromJson(jsonDecode(recurrenceRulesJson))
+        ? RecurrenceRule.fromJson(recurrenceRulesJson)
         : null;
     final Client client = Client.fromJson(data['client'], doc.id);
     return Booking(
       id: id,
-      coachIds: coachIds,
+      coachTravelEstimates: coachTravelEstimates,
       activity: activity,
       initialActivityStart: initialActivityStart,
       initialActivityEnd: initialActivityEnd,
@@ -144,7 +154,7 @@ class Booking {
 
   Booking copyWith({
     String? id,
-    List<String>? coachIds,
+    List<CoachTravelEstimate>? coachTravelEstimates,
     Activity? activity,
     DateTime? initialActivityStart,
     DateTime? initialActivityEnd,
@@ -155,13 +165,13 @@ class Booking {
   }) {
     return Booking(
       id: id ?? this.id,
-      coachIds: coachIds ?? this.coachIds,
+      coachTravelEstimates: coachTravelEstimates ?? this.coachTravelEstimates,
       activity: activity ?? this.activity,
       initialActivityStart: initialActivityStart ?? this.initialActivityStart,
       initialActivityEnd: initialActivityEnd ?? this.initialActivityEnd,
       initialArrival: initialArrival ?? this.initialArrival,
       initialLeave: initialLeave ?? this.initialLeave,
-      recurrenceRules: recurrenceRules ?? recurrenceRules,
+      recurrenceRules: recurrenceRules ?? this.recurrenceRules,
       client: client ?? this.client,
     );
   }

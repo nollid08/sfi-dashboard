@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/client.dart';
+import 'package:dashboard/models/coach_travel_estimate.dart';
 
 class Session {
   final DateTime startTime;
@@ -8,7 +9,7 @@ class Session {
   final DateTime arrivalTime;
   final DateTime leaveTime;
   final String bookingId;
-  final List<String> coachIds;
+  final List<CoachTravelEstimate> coachTravelEstimates;
   final Activity activity;
   final Client client;
   final DocumentReference<Map<String, dynamic>> bookingRef;
@@ -19,7 +20,7 @@ class Session {
     required this.arrivalTime,
     required this.leaveTime,
     required this.bookingId,
-    required this.coachIds,
+    required this.coachTravelEstimates,
     required this.activity,
     required this.client,
     required this.bookingRef,
@@ -32,7 +33,8 @@ class Session {
       'arrivalTime': arrivalTime.toIso8601String(),
       'leaveTime': leaveTime.toIso8601String(),
       'bookingId': bookingId,
-      'coachIds': coachIds,
+      'coachTravelEstimates':
+          coachTravelEstimates.map((cte) => cte.toJson()).toList(),
       'activity': activity.toJson(),
       'client': client.toJson(),
     };
@@ -45,7 +47,12 @@ class Session {
     final DateTime arrivalTime = DateTime.parse(data['arrivalTime']);
     final DateTime leaveTime = DateTime.parse(data['leaveTime']);
     final String bookingId = data['bookingId'];
-    final List<String> coachIds = List<String>.from(data['coachIds']);
+    final List<CoachTravelEstimate> coachTravelEstimates =
+        data['coachTravelEstimates']
+            .map<CoachTravelEstimate>(
+              (cte) => CoachTravelEstimate.fromJson(cte),
+            )
+            .toList();
     final Activity activity = Activity.fromJson(data['activity']);
     final Client client = Client.fromJson(data['client'], doc.id);
     return Session(
@@ -54,7 +61,7 @@ class Session {
       arrivalTime: arrivalTime,
       leaveTime: leaveTime,
       bookingId: bookingId,
-      coachIds: coachIds,
+      coachTravelEstimates: coachTravelEstimates,
       activity: activity,
       client: client,
       bookingRef: doc.reference as DocumentReference<Map<String, dynamic>>,

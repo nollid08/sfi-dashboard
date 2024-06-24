@@ -108,7 +108,7 @@ GoRouter router(RouterRef ref) {
             Booking? booking = state.extra as Booking?;
             booking ??= Booking(
               id: 'test',
-              coachIds: [],
+              coachTravelEstimates: [],
               client: Client(
                 id: 'test',
                 rollNumber: 'test',

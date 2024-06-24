@@ -7,7 +7,7 @@ part of 'find_coach.dart';
 // **************************************************************************
 
 String _$findAvailableCoachesHash() =>
-    r'e4b727a6dddcb16411527bc5f104136e3b4b123c';
+    r'2f0af68ce63c03b30d40d0fc72e0a8305783ffcf';
 
 /// Copied from Dart SDK
 class _SystemHash {

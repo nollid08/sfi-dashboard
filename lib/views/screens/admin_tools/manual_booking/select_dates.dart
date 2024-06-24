@@ -367,7 +367,7 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                   minute: initialLeaveTime.minute,
                 );
 
-                final doesRecur = data['doesRecur'] as bool;
+                final bool doesRecur = data['doesRecur'];
                 RecurrenceRule? recurrenceRules;
                 if (doesRecur) {
                   final int interval = data['interval'];
@@ -393,7 +393,7 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                 final FirebaseFirestore db = FirebaseFirestore.instance;
                 final booking = Booking(
                   id: db.collection('bookings').doc().id,
-                  coachIds: [],
+                  coachTravelEstimates: [],
                   activity: widget.selectedActivity,
                   initialActivityStart: initialActivityStart,
                   initialActivityEnd: initialActivityEnd,
