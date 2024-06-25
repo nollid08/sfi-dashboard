@@ -7,7 +7,7 @@ part of 'find_coach.dart';
 // **************************************************************************
 
 String _$findAvailableCoachesHash() =>
-    r'2f0af68ce63c03b30d40d0fc72e0a8305783ffcf';
+    r'4d2a8d9bbbcddac2eb20415f6aad9347525310a4';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -42,10 +42,10 @@ class FindAvailableCoachesFamily
 
   /// See also [findAvailableCoaches].
   FindAvailableCoachesProvider call(
-    Booking booking,
+    BookingTemplate bookingTemplate,
   ) {
     return FindAvailableCoachesProvider(
-      booking,
+      bookingTemplate,
     );
   }
 
@@ -54,7 +54,7 @@ class FindAvailableCoachesFamily
     covariant FindAvailableCoachesProvider provider,
   ) {
     return call(
-      provider.booking,
+      provider.bookingTemplate,
     );
   }
 
@@ -78,11 +78,11 @@ class FindAvailableCoachesProvider
     extends AutoDisposeFutureProvider<List<CoachTravelEstimate>> {
   /// See also [findAvailableCoaches].
   FindAvailableCoachesProvider(
-    Booking booking,
+    BookingTemplate bookingTemplate,
   ) : this._internal(
           (ref) => findAvailableCoaches(
             ref as FindAvailableCoachesRef,
-            booking,
+            bookingTemplate,
           ),
           from: findAvailableCoachesProvider,
           name: r'findAvailableCoachesProvider',
@@ -93,7 +93,7 @@ class FindAvailableCoachesProvider
           dependencies: FindAvailableCoachesFamily._dependencies,
           allTransitiveDependencies:
               FindAvailableCoachesFamily._allTransitiveDependencies,
-          booking: booking,
+          bookingTemplate: bookingTemplate,
         );
 
   FindAvailableCoachesProvider._internal(
@@ -103,10 +103,10 @@ class FindAvailableCoachesProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.booking,
+    required this.bookingTemplate,
   }) : super.internal();
 
-  final Booking booking;
+  final BookingTemplate bookingTemplate;
 
   @override
   Override overrideWith(
@@ -123,7 +123,7 @@ class FindAvailableCoachesProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        booking: booking,
+        bookingTemplate: bookingTemplate,
       ),
     );
   }
@@ -135,13 +135,14 @@ class FindAvailableCoachesProvider
 
   @override
   bool operator ==(Object other) {
-    return other is FindAvailableCoachesProvider && other.booking == booking;
+    return other is FindAvailableCoachesProvider &&
+        other.bookingTemplate == bookingTemplate;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, booking.hashCode);
+    hash = _SystemHash.combine(hash, bookingTemplate.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -149,8 +150,8 @@ class FindAvailableCoachesProvider
 
 mixin FindAvailableCoachesRef
     on AutoDisposeFutureProviderRef<List<CoachTravelEstimate>> {
-  /// The parameter `booking` of this provider.
-  Booking get booking;
+  /// The parameter `bookingTemplate` of this provider.
+  BookingTemplate get bookingTemplate;
 }
 
 class _FindAvailableCoachesProviderElement
@@ -159,7 +160,8 @@ class _FindAvailableCoachesProviderElement
   _FindAvailableCoachesProviderElement(super.provider);
 
   @override
-  Booking get booking => (origin as FindAvailableCoachesProvider).booking;
+  BookingTemplate get bookingTemplate =>
+      (origin as FindAvailableCoachesProvider).bookingTemplate;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

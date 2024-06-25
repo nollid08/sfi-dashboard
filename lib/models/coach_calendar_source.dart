@@ -1,5 +1,6 @@
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/coach_travel_estimate.dart';
+import 'package:dashboard/models/session.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -8,41 +9,39 @@ class CoachCalendarSource extends CalendarDataSource {
     appointments = source;
   }
 
-  factory CoachCalendarSource.fromBookings(
-      List<Booking> bookings, String? coachUid) {
+  factory CoachCalendarSource.fromSessions({
+    required List<Session> sessions,
+    required String? coachUid,
+  }) {
     final List<Appointment> appointments = [];
-    for (final booking in bookings) {
-      final String? recurrenceRule = booking.recurrenceRules?.toString();
-      //Remove RRULE: from the start of the string
-      final String? recurrenceRuleString = recurrenceRule?.substring(6);
+    for (final session in sessions) {
       appointments.add(
         Appointment(
-          startTime: booking.initialArrival,
-          endTime: booking.initialLeave,
+          startTime: session.arrivalTime,
+          endTime: session.leaveTime,
           location:
-              ' ${booking.client.eircode}, ${booking.client.addressLineOne}, ${booking.client.addressLineTwo}',
-          subject: '${booking.activity.name} - ${booking.client.name}',
-          color: booking.activity.color,
-          recurrenceRule: recurrenceRuleString,
+              ' ${session.client.eircode}, ${session.client.addressLineOne}, ${session.client.addressLineTwo}',
+          subject: '${session.activity.name} - ${session.client.name}',
+          color: session.activity.color,
         ),
       );
       if (coachUid != null) {
-        final CoachTravelEstimate coachTravelEstimate = booking
+        final CoachTravelEstimate coachTravelEstimate = session
             .coachTravelEstimates
             .where((cte) => cte.coach.uid == coachUid)
             .first;
         final Duration travelTime = coachTravelEstimate.duration;
-        final DateTime leaveHome = booking.initialArrival.subtract(travelTime);
-        final DateTime arriveHome = booking.initialLeave.add(travelTime);
+        final DateTime leaveHome = session.arrivalTime.subtract(travelTime);
+        final DateTime arriveHome = session.leaveTime.add(travelTime);
         appointments.add(Appointment(
           startTime: leaveHome,
-          endTime: booking.initialArrival,
+          endTime: session.arrivalTime,
           color: Colors.grey,
           subject: 'Commute',
         ));
 
         appointments.add(Appointment(
-          startTime: booking.initialLeave,
+          startTime: session.leaveTime,
           endTime: arriveHome,
           color: Colors.grey,
           subject: 'Commute',

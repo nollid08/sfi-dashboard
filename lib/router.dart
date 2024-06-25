@@ -1,5 +1,6 @@
 import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/booking.dart';
+import 'package:dashboard/models/booking_template.dart';
 import 'package:dashboard/models/client.dart';
 import 'package:dashboard/models/client_types.dart';
 import 'package:dashboard/providers/auth_provider.dart';
@@ -105,31 +106,12 @@ GoRouter router(RouterRef ref) {
         GoRoute(
           path: '/adminTools/createManualBooking/coach',
           builder: (context, state) {
-            Booking? booking = state.extra as Booking?;
-            booking ??= Booking(
-              id: 'test',
-              coachTravelEstimates: [],
-              client: Client(
-                id: 'test',
-                rollNumber: 'test',
-                type: ClientType(name: 'School', id: 'school'),
-                name: 'Test School',
-                addressLineOne: 'Test Address Line One',
-                addressLineTwo: 'Test Address Line Two',
-                eircode: 'Test Eircode',
-              ),
-              activity: Activity(
-                id: 'test',
-                name: 'Test Activity',
-                color: Colors.blue,
-                icon: Icons.accessibility,
-              ),
-              initialActivityStart: DateTime.now(),
-              initialActivityEnd: DateTime.now().add(const Duration(hours: 1)),
-              initialArrival: DateTime.now().subtract(const Duration(hours: 1)),
-              initialLeave: DateTime.now().add(const Duration(hours: 2)),
-            );
-            return SelectCoachesScreen(booking);
+            final bookingTemplate = state.extra as BookingTemplate;
+            return SelectCoachesScreen(bookingTemplate);
+          },
+          redirect: (context, state) {
+            if (state.extra == null) return '/adminTools/createManualBooking';
+            return null;
           },
         ),
         GoRoute(

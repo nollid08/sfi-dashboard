@@ -1,4 +1,5 @@
 import 'package:dashboard/models/booking.dart';
+import 'package:dashboard/models/booking_template.dart';
 import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/models/coach_travel_estimate.dart';
 import 'package:dashboard/providers/bookings_provider.dart';
@@ -8,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SelectCoachesScreen extends ConsumerStatefulWidget {
-  final Booking booking;
-  const SelectCoachesScreen(this.booking, {super.key});
+  final BookingTemplate bookingTemplate;
+  const SelectCoachesScreen(this.bookingTemplate, {super.key});
 
   @override
   ConsumerState<SelectCoachesScreen> createState() =>
@@ -21,8 +22,7 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
   @override
   Widget build(BuildContext context) {
     final AsyncValue<List<CoachTravelEstimate>> suitableCoaches =
-        ref.watch(findAvailableCoachesProvider(widget.booking));
-    final bool repeats = widget.booking.recurrenceRules != null;
+        ref.watch(findAvailableCoachesProvider(widget.bookingTemplate));
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -42,7 +42,7 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'Activity: ${widget.booking.activity.name}',
+                      'Activity: ${widget.bookingTemplate.activity.name}',
                       style: const TextStyle(
                         fontSize: 18,
                         color: Colors.black,
@@ -50,7 +50,7 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      'Client: ${widget.booking.client.name}',
+                      'Client: ${widget.bookingTemplate.client.name}',
                       style: const TextStyle(
                         fontSize: 18,
                         color: Colors.black,
@@ -58,52 +58,12 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      'Initial Date: ${widget.booking.initialActivityStart}',
+                      'Sessions No.: ${widget.bookingTemplate.sessions.length}',
                       style: const TextStyle(
                         fontSize: 18,
                         color: Colors.black,
                       ),
                     ),
-                    const SizedBox(height: 5),
-                    Text(
-                      ' Activity Time: ${widget.booking.initialActivityStart.hour}:${widget.booking.initialActivityStart.minute} - ${widget.booking.initialActivityEnd.hour}:${widget.booking.initialActivityEnd.minute}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      'Arrival Time: ${widget.booking.initialArrival.hour}:${widget.booking.initialArrival.minute}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      'Leave Time: ${widget.booking.initialLeave.hour}:${widget.booking.initialLeave.minute}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      'Repeats?: $repeats',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                    if (repeats)
-                      Text(
-                        'Recurrence Properties: ${widget.booking.recurrenceRules}',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.black,
-                        ),
-                      ),
                   ]),
                 ),
                 const VerticalDivider(),
@@ -123,7 +83,7 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                                   coachTravelEstimates[index];
                               final Coach coach = coachTravelEstimate.coach;
                               final departureTime = widget
-                                  .booking.initialArrival
+                                  .bookingTemplate.sessions[0].arrivalTime
                                   .subtract(coachTravelEstimate.duration);
                               return Card(
                                 color: selectedCoaches
@@ -205,7 +165,8 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                           final IList<Coach> param = <Coach>[].lock;
                           var bookingsProv =
                               ref.read(bookingsProvider(param).notifier);
-                          final Booking booking = widget.booking.copyWith(
+                          final BookingTemplate booking =
+                              widget.bookingTemplate.copyWith(
                             coachTravelEstimates: selectedCoaches,
                           );
                           bookingsProv.addBooking(booking);

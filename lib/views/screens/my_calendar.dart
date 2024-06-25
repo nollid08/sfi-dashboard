@@ -1,9 +1,5 @@
-import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/coach_calendar_source.dart';
-import 'package:dashboard/providers/auth_provider.dart';
 import 'package:dashboard/providers/my_calendar_provider.dart';
-import 'package:dashboard/views/widgets/hover_wrapper.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';

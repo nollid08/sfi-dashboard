@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/booking.dart';
+import 'package:dashboard/models/booking_template.dart';
 import 'package:dashboard/models/client.dart';
+import 'package:dashboard/models/session.dart';
 import 'package:dashboard/views/widgets/form_fields/number_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -391,15 +393,23 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                 }
 
                 final FirebaseFirestore db = FirebaseFirestore.instance;
-                final booking = Booking(
-                  id: db.collection('bookings').doc().id,
-                  coachTravelEstimates: [],
+                final String bookingId = db.collection('bookings').doc().id;
+                final List<Session> sessions = Session.generateStandardSessions(
+                  bookingId: bookingId,
                   activity: widget.selectedActivity,
+                  client: widget.selectedClient,
                   initialActivityStart: initialActivityStart,
                   initialActivityEnd: initialActivityEnd,
                   initialArrival: initialArrival,
                   initialLeave: initialLeave,
+                  coachTravelEstimates: [],
                   recurrenceRules: recurrenceRules,
+                );
+                final booking = BookingTemplate(
+                  bookingId: bookingId,
+                  coachTravelEstimates: [],
+                  activity: widget.selectedActivity,
+                  sessions: sessions,
                   client: widget.selectedClient,
                 );
                 GoRouter.of(context).go('/adminTools/createManualBooking/coach',

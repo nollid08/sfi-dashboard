@@ -6,7 +6,7 @@ part of 'my_calendar_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$myCalendarHash() => r'637e6c3d93ec68ef8dbe393ec033757c15b48e06';
+String _$myCalendarHash() => r'f541218e60e1d8e9640366040072e28e1a59caeb';
 
 /// See also [myCalendar].
 @ProviderFor(myCalendar)

@@ -1,5 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dashboard/models/booking.dart';
+import 'package:dashboard/models/booking_template.dart';
 import 'package:dashboard/models/coach_travel_estimate.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -7,11 +8,12 @@ part 'find_coach.g.dart';
 
 @riverpod
 Future<List<CoachTravelEstimate>> findAvailableCoaches(
-    FindAvailableCoachesRef ref, Booking booking) async {
+    FindAvailableCoachesRef ref, BookingTemplate bookingTemplate) async {
   final functions = FirebaseFunctions.instance;
   final callable = functions.httpsCallable('find_coaches');
+  print('Booking: ${bookingTemplate.toJson()}');
   final result = await callable.call({
-    'booking': booking.toJson(),
+    'booking': bookingTemplate.toJson(),
   });
 
   try {

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/booking.dart';
+import 'package:dashboard/models/booking_template.dart';
 import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/models/session.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
@@ -24,18 +25,18 @@ class Bookings extends _$Bookings {
     });
   }
 
-  Future<void> addBooking(Booking booking) async {
+  Future<void> addBooking(BookingTemplate bookingTemplate) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
-    if (booking.isCustom) {
-      throw Exception('Custom bookings Must Yet Be Implemented');
-    }
-    //If Booking Repeats, then generate all the sessions
-
-    await db.collection('bookings').doc(booking.id).set(booking.toJson());
-    final List<Session> sessions = booking.generateStandardSessions();
-    final batch = db.batch();
+    final Booking booking = Booking.fromBookingTemplate(bookingTemplate);
+    final List<Session> sessions = bookingTemplate.sessions;
+    final WriteBatch batch = db.batch();
+    final DocumentReference<Map<String, dynamic>> bookingRef =
+        db.collection('bookings').doc(booking.id);
+    batch.set(bookingRef, booking.toFBJson());
     for (final session in sessions) {
-      batch.set(db.collection('sessions').doc(), session.toJson());
+      final DocumentReference<Map<String, dynamic>> sessionRef =
+          db.collection('sessions').doc();
+      batch.set(sessionRef, session.toDoc());
     }
     await batch.commit();
   }
