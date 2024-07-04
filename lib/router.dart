@@ -6,6 +6,8 @@ import 'package:dashboard/models/client_types.dart';
 import 'package:dashboard/providers/auth_provider.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_activities.dart';
 import 'package:dashboard/views/screens/admin_tools/admin_tools.dart';
+import 'package:dashboard/views/screens/admin_tools/manage_booking.dart';
+import 'package:dashboard/views/screens/admin_tools/manage_bookings.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_clients.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_coaches.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/gather_info_screen.dart';
@@ -120,6 +122,17 @@ GoRouter router(RouterRef ref) {
             return const Placeholder();
           },
         ),
+        GoRoute(
+            path: '/adminTools/manageBookings',
+            builder: (context, state) {
+              return const ManageBookings();
+            }),
+        GoRoute(
+            path: '/adminTools/manageBookings/:bookingId',
+            builder: (context, state) {
+              final bookingId = state.pathParameters['bookingId']!;
+              return ManageBooking(bookingId);
+            }),
       ],
     ),
   ];

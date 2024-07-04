@@ -402,12 +402,12 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
                   initialActivityEnd: initialActivityEnd,
                   initialArrival: initialArrival,
                   initialLeave: initialLeave,
-                  coachTravelEstimates: [],
+                  assignedCoaches: [],
                   recurrenceRules: recurrenceRules,
                 );
                 final booking = BookingTemplate(
                   bookingId: bookingId,
-                  coachTravelEstimates: [],
+                  assignedCoaches: [],
                   activity: widget.selectedActivity,
                   sessions: sessions,
                   client: widget.selectedClient,

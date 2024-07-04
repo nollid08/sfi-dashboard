@@ -3,7 +3,7 @@ import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/booking_template.dart';
 import 'package:dashboard/models/client.dart';
 import 'package:dashboard/models/coach.dart';
-import 'package:dashboard/models/coach_travel_estimate.dart';
+import 'package:dashboard/models/travel_estimate.dart';
 import 'package:rrule/rrule.dart';
 
 class Booking {
@@ -41,12 +41,30 @@ class Booking {
     };
   }
 
-  factory Booking.fromQueryDocSnapshot(QueryDocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory Booking.fromQueryDocSnapshot(
+      QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+    final data = doc.data();
     final String id = doc.id;
     final Activity activity = Activity.fromJson(data['activity']);
     final Client client = Client.fromJson(data['client'], doc.id);
-    final List<String> coaches = data['coaches'];
+    final coaches = List<String>.from(data['coaches']);
+    return Booking(
+      id: id,
+      activity: activity,
+      coachesUids: coaches,
+      client: client,
+    );
+  }
+
+  factory Booking.fromDocSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
+    final data = doc.data();
+    if (data == null) {
+      throw Exception('No Booking Exists Of ID ${doc.id}');
+    }
+    final String id = doc.id;
+    final Activity activity = Activity.fromJson(data['activity']);
+    final Client client = Client.fromJson(data['client'], doc.id);
+    final coaches = List<String>.from(data['coaches']);
     return Booking(
       id: id,
       activity: activity,
@@ -56,9 +74,8 @@ class Booking {
   }
 
   factory Booking.fromBookingTemplate(BookingTemplate bookingTemplate) {
-    final List<String> coaches = bookingTemplate.coachTravelEstimates
-        .map((cte) => cte.coach.uid)
-        .toList();
+    final List<String> coaches =
+        bookingTemplate.assignedCoaches.map((ac) => ac.coach.uid).toList();
     return Booking(
       id: bookingTemplate.bookingId,
       activity: bookingTemplate.activity,
@@ -69,13 +86,7 @@ class Booking {
 
   Booking copyWith({
     String? id,
-    List<CoachTravelEstimate>? coachTravelEstimates,
     Activity? activity,
-    DateTime? initialActivityStart,
-    DateTime? initialActivityEnd,
-    DateTime? initialArrival,
-    DateTime? initialLeave,
-    RecurrenceRule? recurrenceRules,
     List<String>? coachesUids,
     Client? client,
   }) {

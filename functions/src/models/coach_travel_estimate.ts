@@ -1,13 +1,12 @@
-import { Coach } from './coach';
+import { Coach } from "./coach";
+import { TravelEstimate } from "./travel_estimate";
 
-export class CoachTravelEsimate {
+export class CoachTravelEstimate {
     coach: Coach;
-    distance: number;
-    duration: number;
+    travelEstimate: TravelEstimate;
 
-    constructor(coach: Coach, distance: number, duration: number) {
+    constructor({ coach, travelEstimate }: { coach: Coach, travelEstimate: TravelEstimate }) {
         this.coach = coach;
-        this.distance = distance;
-        this.duration = duration;
+        this.travelEstimate = travelEstimate;
     }
 }

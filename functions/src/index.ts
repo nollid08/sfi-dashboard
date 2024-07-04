@@ -6,9 +6,12 @@ import { Booking } from './models/booking';
 import { Activity } from './models/activity';
 import { ClientType } from "./models/client_type";
 import { Client } from "./models/client";
-import { CoachTravelEsimate as CoachTravelEstimate } from "./models/coach_travel_estimate";
+import { TravelEstimate } from "./models/travel_estimate";
 import { Coach } from "./models/coach";
 import { BookingSession, BookingSessionData } from "./models/session";
+import { CoachRecomendation } from "./models/coach_recommendation";
+import { QoutaInfo } from "./models/qouta_info";
+import { CoachTravelEstimate } from "./models/coach_travel_estimate";
 
 initializeApp();
 const mapsApiKey = defineSecret('MAPS_API_KEY');
@@ -20,13 +23,21 @@ export const find_coaches = onCall({ secrets: [mapsApiKey] }, async (request: Ca
     const clientType = new ClientType(bookingData.client.type.id, bookingData.client.type.name);
     const client = new Client(bookingData.client.id, bookingData.client.name, bookingData.client.addressLineOne, bookingData.client.addressLineTwo, bookingData.client.eircode, bookingData.client.rollNumber, clientType,);
     const sessions: BookingSession[] = bookingData.sessions
-        .map((session: BookingSessionData) => new BookingSession({
+        .map((session: {
+            id: String;
+            arrivalTime: string;
+            leaveTime: string;
+            startTime: string;
+            endTime: string;
+            coaches: String[];
+        }) => new BookingSession({
             id: session.id,
             arrivalTime: new Date(session.arrivalTime),
             leaveTime: new Date(session.leaveTime),
             startTime: new Date(session.startTime),
             endTime: new Date(session.endTime),
             coaches: session.coaches,
+            assignedCoaches: [],
         }));
     const booking = new Booking({
         id: bookingData.id,
@@ -41,7 +52,6 @@ export const find_coaches = onCall({ secrets: [mapsApiKey] }, async (request: Ca
 
 
     const coachesWhoCoverActivityDocs = await coachesWhoTeachRef.get();
-    console.log('coachesWhoTeach', coachesWhoCoverActivityDocs.docs.length);
     if (coachesWhoCoverActivityDocs.empty) {
         console.log('No Coaches Found');
         return [];
@@ -53,28 +63,37 @@ export const find_coaches = onCall({ secrets: [mapsApiKey] }, async (request: Ca
         if (coach.baseEircode == undefined) {
             console.log(`${coach.name} does not have a base eircode`);
             return;
+        } else {
+            console.log(`${coach.name} has a base eircode - ${coach.baseEircode}`);
         }
-        return new Coach(doc.id, coach.name, coach.baseEircode, coach.activitiesCovered);
+        return new Coach({
+            uid: doc.id,
+            name: coach.name,
+            baseEircode: coach.baseEircode,
+            activitiesCovered: coach.activitiesCovered,
+            timeToCover: coach.timeToCover,
+        });
     });
 
     // Filter for coaches who can cover the entire booking e.g don't have a session in db that overlaps with the new sessions
     const baseQuery = db.collection('sessions').where('coaches', 'array-contains-any', coachesWhoCoverActivity.map(coach => coach.uid));
     const busyCoachUids: String[] = [];
     for (let session of booking.sessions) {
-        console.log('session', session.arrivalTime.toDateString());
-        const fullOverlapSession = await baseQuery.where('arrivalTime', '<=', session.arrivalTime).where('leaveTime', '>=', session.leaveTime).get();
-        const beginningOverlapSession = await baseQuery.where('arrivalTime', '>=', session.arrivalTime).where('arrivalTime', '<=', session.leaveTime).get();
-        const endOverlapSession = await baseQuery.where('leaveTime', '>=', session.arrivalTime).where('leaveTime', '<=', session.leaveTime).get();
+        const fullOverlapSession = await baseQuery.where('arrivalTime', '<=', session.arrivalTime).where('leaveTime', '>=', session.endTime).get();
+        const beginningOverlapSession = await baseQuery.where('arrivalTime', '>=', session.arrivalTime).where('arrivalTime', '<=', session.endTime).get();
+        const endOverlapSession = await baseQuery.where('leaveTime', '>=', session.arrivalTime).where('leaveTime', '<=', session.endTime).get();
         const overlappingSessionDocs = fullOverlapSession.docs.concat(beginningOverlapSession.docs).concat(endOverlapSession.docs);
         const overlappingSessions: BookingSession[] = overlappingSessionDocs.map((doc: any) => {
             const session: BookingSessionData = doc.data();
+
             return new BookingSession({
                 id: doc.id,
-                arrivalTime: session.arrivalTime,
-                leaveTime: session.leaveTime,
-                startTime: session.startTime,
-                endTime: session.endTime,
+                arrivalTime: session.arrivalTime.toDate(),
+                leaveTime: session.leaveTime.toDate(),
+                startTime: session.startTime.toDate(),
+                endTime: session.endTime.toDate(),
                 coaches: session.coaches,
+                assignedCoaches: session.assignedCoaches,
             });
         });
 
@@ -86,15 +105,13 @@ export const find_coaches = onCall({ secrets: [mapsApiKey] }, async (request: Ca
             }
         }
     }
-    console.log('busyCoachUids', busyCoachUids);
     const availableCoachesWhoCoverActivity = coachesWhoCoverActivity.filter(coach => !busyCoachUids.includes(coach.uid));
-    console.log('availableCoachesWhoCoverActivity', availableCoachesWhoCoverActivity);
 
 
-    let coachTravelEstimates: CoachTravelEstimate[] = [];
+    let coachRecommendations: CoachRecomendation[] = [];
 
     const baseDistanceMatrixUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric';
-    const origins: String[] = availableCoachesWhoCoverActivity.map(coach => coach.eircode);
+    const origins: String[] = availableCoachesWhoCoverActivity.map(coach => coach.baseEircode);
     const destinations: String = booking.client.eircode;
     const apiKey = mapsApiKey.value();
     const distanceMatrixUrl = `${baseDistanceMatrixUrl}&origins=${origins.join('|')}&destinations=${destinations}&key=${apiKey}`;
@@ -104,16 +121,31 @@ export const find_coaches = onCall({ secrets: [mapsApiKey] }, async (request: Ca
 
     const rows = data.rows;
 
-    rows.forEach((row: any, index: number) => {
+    for (const row of rows) {
         const elements = row.elements;
-        const element = elements[0];
-        const distance = element.distance.value;
-        const duration = element.duration.value;
-        const coachTravelEstimate = new CoachTravelEstimate(availableCoachesWhoCoverActivity[index], distance, duration);
-        coachTravelEstimates.push(coachTravelEstimate);
-    });
+        for (const element of elements) {
+            const travelEstimate = new TravelEstimate({
 
-    return coachTravelEstimates;
+                distance: element.distance.value,
+                duration: element.duration.value * 1000,
+            });
+            const coach = availableCoachesWhoCoverActivity[rows.indexOf(row)];
+            const coachTravelEstimate = new CoachTravelEstimate({
+                travelEstimate,
+                coach,
+            });
+            const qoutaInfo = await QoutaInfo.buildQoutaInfo(booking.sessions, coachTravelEstimate);
+            const coachRecommendation = new CoachRecomendation({
+                coach,
+                travelEstimate,
+                qoutaInfo,
+            });
+            coachRecommendations.push(coachRecommendation);
+
+        }
+    }
+    return coachRecommendations;
+
 });
 
 

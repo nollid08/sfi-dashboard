@@ -1,5 +1,5 @@
 import 'package:dashboard/models/coach.dart';
-import 'package:dashboard/models/coach_travel_estimate.dart';
+import 'package:dashboard/models/travel_estimate.dart';
 import 'package:dashboard/models/session.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -22,9 +22,8 @@ class ResourceCalendarDataSource extends CalendarDataSource {
             subject:
                 '${session.activity.name} @ ${session.client.addressLineOne}',
             color: session.activity.color,
-            resourceIds: session.coachTravelEstimates
-                .map((CoachTravelEstimate cte) => cte.coach.uid)
-                .toList(),
+            resourceIds:
+                session.assignedCoaches.map((ac) => ac.coach.uid).toList(),
           ),
         )
         .toList();

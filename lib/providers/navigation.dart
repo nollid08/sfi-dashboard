@@ -61,6 +61,12 @@ final screensProvider = Provider<List<ScreenItem>>((ref) {
           icon: Icons.add,
           activeRouteIdentifier: '/adminTools/createManualBooking',
         ),
+        ScreenItem(
+          '/adminTools/manageBookings',
+          title: 'Manage Bookings',
+          icon: Icons.book,
+          activeRouteIdentifier: '/adminTools/manageBookings',
+        )
       ],
     ),
   ];

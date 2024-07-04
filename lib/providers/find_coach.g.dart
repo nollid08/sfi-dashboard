@@ -7,7 +7,7 @@ part of 'find_coach.dart';
 // **************************************************************************
 
 String _$findAvailableCoachesHash() =>
-    r'4d2a8d9bbbcddac2eb20415f6aad9347525310a4';
+    r'b8a8f3928c55e3d22a23194168d3c153cda9bb68';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -36,7 +36,7 @@ const findAvailableCoachesProvider = FindAvailableCoachesFamily();
 
 /// See also [findAvailableCoaches].
 class FindAvailableCoachesFamily
-    extends Family<AsyncValue<List<CoachTravelEstimate>>> {
+    extends Family<AsyncValue<List<CoachRecommendation>>> {
   /// See also [findAvailableCoaches].
   const FindAvailableCoachesFamily();
 
@@ -75,7 +75,7 @@ class FindAvailableCoachesFamily
 
 /// See also [findAvailableCoaches].
 class FindAvailableCoachesProvider
-    extends AutoDisposeFutureProvider<List<CoachTravelEstimate>> {
+    extends AutoDisposeFutureProvider<List<CoachRecommendation>> {
   /// See also [findAvailableCoaches].
   FindAvailableCoachesProvider(
     BookingTemplate bookingTemplate,
@@ -110,7 +110,7 @@ class FindAvailableCoachesProvider
 
   @override
   Override overrideWith(
-    FutureOr<List<CoachTravelEstimate>> Function(
+    FutureOr<List<CoachRecommendation>> Function(
             FindAvailableCoachesRef provider)
         create,
   ) {
@@ -129,7 +129,7 @@ class FindAvailableCoachesProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<CoachTravelEstimate>> createElement() {
+  AutoDisposeFutureProviderElement<List<CoachRecommendation>> createElement() {
     return _FindAvailableCoachesProviderElement(this);
   }
 
@@ -149,13 +149,13 @@ class FindAvailableCoachesProvider
 }
 
 mixin FindAvailableCoachesRef
-    on AutoDisposeFutureProviderRef<List<CoachTravelEstimate>> {
+    on AutoDisposeFutureProviderRef<List<CoachRecommendation>> {
   /// The parameter `bookingTemplate` of this provider.
   BookingTemplate get bookingTemplate;
 }
 
 class _FindAvailableCoachesProviderElement
-    extends AutoDisposeFutureProviderElement<List<CoachTravelEstimate>>
+    extends AutoDisposeFutureProviderElement<List<CoachRecommendation>>
     with FindAvailableCoachesRef {
   _FindAvailableCoachesProviderElement(super.provider);
 

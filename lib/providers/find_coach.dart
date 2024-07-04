@@ -1,13 +1,13 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/booking_template.dart';
-import 'package:dashboard/models/coach_travel_estimate.dart';
+import 'package:dashboard/models/coach_recommendation.dart';
+import 'package:dashboard/models/travel_estimate.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 part 'find_coach.g.dart';
 
 @riverpod
-Future<List<CoachTravelEstimate>> findAvailableCoaches(
+Future<List<CoachRecommendation>> findAvailableCoaches(
     FindAvailableCoachesRef ref, BookingTemplate bookingTemplate) async {
   final functions = FirebaseFunctions.instance;
   final callable = functions.httpsCallable('find_coaches');
@@ -16,18 +16,16 @@ Future<List<CoachTravelEstimate>> findAvailableCoaches(
     'booking': bookingTemplate.toJson(),
   });
 
-  try {
-    final data = List<Map<String, dynamic>>.from(result.data);
-    final List<CoachTravelEstimate> coaches = [];
-    for (Map<String, dynamic> coachData in data) {
-      CoachTravelEstimate coachTravelEstimate =
-          CoachTravelEstimate.fromJson(coachData);
-      coaches.add(coachTravelEstimate);
-    }
-    //Sort by duration
-    coaches.sort((a, b) => a.duration.compareTo(b.duration));
-    return coaches;
-  } catch (e) {
-    throw Exception('Error: $e');
+  final data = List<Map<String, dynamic>>.from(result.data);
+  final List<CoachRecommendation> coachRecommendations = [];
+  for (Map<String, dynamic> recData in data) {
+    CoachRecommendation coachRecommendation =
+        CoachRecommendation.fromJson(recData);
+    coachRecommendations.add(coachRecommendation);
   }
+  coachRecommendations.sort((a, b) {
+    return a.qoutaInfo.currentAverageQoutaPercentage
+        .compareTo(b.qoutaInfo.currentAverageQoutaPercentage);
+  });
+  return coachRecommendations;
 }

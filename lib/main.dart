@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_transitions/go_transitions.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 const bool useEmulator = true;
 
@@ -32,7 +33,7 @@ Future<void> main() async {
 
 Future _connectToFirebaseEmulator() async {
   if (useEmulator) {
-    final localHostString = 'localhost';
+    const localHostString = 'localhost';
     FirebaseFunctions.instance.useFunctionsEmulator(localHostString, 5001);
   }
 }
@@ -43,18 +44,20 @@ class MainApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    return MaterialApp.router(
-      theme: ThemeData(
-        pageTransitionsTheme: const PageTransitionsTheme(
-          builders: {
-            TargetPlatform.android: GoTransitions.cupertino,
-            TargetPlatform.iOS: GoTransitions.cupertino,
-            TargetPlatform.macOS: GoTransitions.cupertino,
-            TargetPlatform.windows: GoTransitions.cupertino,
-          },
+    return GlobalLoaderOverlay(
+      child: MaterialApp.router(
+        theme: ThemeData(
+          pageTransitionsTheme: const PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: GoTransitions.cupertino,
+              TargetPlatform.iOS: GoTransitions.cupertino,
+              TargetPlatform.macOS: GoTransitions.cupertino,
+              TargetPlatform.windows: GoTransitions.cupertino,
+            },
+          ),
         ),
+        routerConfig: router,
       ),
-      routerConfig: router,
     );
   }
 }

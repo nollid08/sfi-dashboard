@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/activity.dart';
+import 'package:dashboard/models/assigned_coach.dart';
 import 'package:dashboard/models/client.dart';
-import 'package:dashboard/models/coach_travel_estimate.dart';
+import 'package:dashboard/models/travel_estimate.dart';
 import 'package:rrule/rrule.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class Session {
   final DateTime startTime;
@@ -11,7 +11,7 @@ class Session {
   final DateTime arrivalTime;
   final DateTime leaveTime;
   final String bookingId;
-  final List<CoachTravelEstimate> coachTravelEstimates;
+  final List<AssignedCoach> assignedCoaches;
   final Activity activity;
   final Client client;
   final DocumentReference<Map<String, dynamic>> bookingRef;
@@ -22,7 +22,7 @@ class Session {
     required this.arrivalTime,
     required this.leaveTime,
     required this.bookingId,
-    required this.coachTravelEstimates,
+    required this.assignedCoaches,
     required this.activity,
     required this.client,
     required this.bookingRef,
@@ -35,9 +35,8 @@ class Session {
       'arrivalTime': arrivalTime.millisecondsSinceEpoch,
       'leaveTime': leaveTime.millisecondsSinceEpoch,
       'bookingId': bookingId,
-      'coachTravelEstimates':
-          coachTravelEstimates.map((cte) => cte.toJson()).toList(),
-      'coaches': coachTravelEstimates.map((cte) => cte.coach.uid).toList(),
+      'assignedCoaches': assignedCoaches.map((ac) => ac.toJson()).toList(),
+      'coaches': assignedCoaches.map((cte) => cte.coach.uid).toList(),
       'activity': activity.toJson(),
       'client': client.toJson(),
     };
@@ -50,9 +49,8 @@ class Session {
       'arrivalTime': arrivalTime,
       'leaveTime': leaveTime,
       'bookingId': bookingId,
-      'coachTravelEstimates':
-          coachTravelEstimates.map((cte) => cte.toJson()).toList(),
-      'coaches': coachTravelEstimates.map((cte) => cte.coach.uid).toList(),
+      'assignedCoaches': assignedCoaches.map((ac) => ac.toJson()).toList(),
+      'coaches': assignedCoaches.map((cte) => cte.coach.uid).toList(),
       'activity': activity.toJson(),
       'client': client.toJson(),
     };
@@ -69,12 +67,11 @@ class Session {
     final DateTime arrivalTime = arrivalTimestamp.toDate();
     final DateTime leaveTime = leaveTimestamp.toDate();
     final String bookingId = data['bookingId'];
-    final List<CoachTravelEstimate> coachTravelEstimates =
-        data['coachTravelEstimates']
-            .map<CoachTravelEstimate>(
-              (cte) => CoachTravelEstimate.fromJson(cte),
-            )
-            .toList();
+    final List<AssignedCoach> assignedCoaches = data['assignedCoaches']
+        .map<AssignedCoach>(
+          (assignedCoach) => AssignedCoach.fromJson(assignedCoach),
+        )
+        .toList();
     final Activity activity = Activity.fromJson(data['activity']);
     final Client client = Client.fromJson(data['client'], doc.id);
     return Session(
@@ -83,7 +80,7 @@ class Session {
       arrivalTime: arrivalTime,
       leaveTime: leaveTime,
       bookingId: bookingId,
-      coachTravelEstimates: coachTravelEstimates,
+      assignedCoaches: assignedCoaches,
       activity: activity,
       client: client,
       bookingRef: doc.reference as DocumentReference<Map<String, dynamic>>,
@@ -98,7 +95,7 @@ class Session {
     required DateTime initialActivityEnd,
     required DateTime initialArrival,
     required DateTime initialLeave,
-    required List<CoachTravelEstimate> coachTravelEstimates,
+    required List<AssignedCoach> assignedCoaches,
     RecurrenceRule? recurrenceRules,
   }) {
     if (recurrenceRules == null) {
@@ -109,7 +106,7 @@ class Session {
           arrivalTime: initialArrival,
           leaveTime: initialLeave,
           bookingId: bookingId,
-          coachTravelEstimates: coachTravelEstimates,
+          assignedCoaches: assignedCoaches,
           activity: activity,
           client: client,
           bookingRef:
@@ -141,7 +138,7 @@ class Session {
             minute: initialLeave.minute,
           ),
           bookingId: bookingId,
-          coachTravelEstimates: coachTravelEstimates,
+          assignedCoaches: assignedCoaches,
           activity: activity,
           client: client,
           bookingRef:
@@ -158,7 +155,7 @@ class Session {
     DateTime? arrivalTime,
     DateTime? leaveTime,
     String? bookingId,
-    List<CoachTravelEstimate>? coachTravelEstimates,
+    List<AssignedCoach>? assignedCoaches,
     Activity? activity,
     Client? client,
     DocumentReference<Map<String, dynamic>>? bookingRef,
@@ -169,7 +166,7 @@ class Session {
       arrivalTime: arrivalTime ?? this.arrivalTime,
       leaveTime: leaveTime ?? this.leaveTime,
       bookingId: bookingId ?? this.bookingId,
-      coachTravelEstimates: coachTravelEstimates ?? this.coachTravelEstimates,
+      assignedCoaches: assignedCoaches ?? this.assignedCoaches,
       activity: activity ?? this.activity,
       client: client ?? this.client,
       bookingRef: bookingRef ?? this.bookingRef,

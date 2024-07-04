@@ -49,7 +49,7 @@ class Coach {
     return Coach(
       uid: json['uid'],
       name: json['name'],
-      baseEircode: json['eircode'],
+      baseEircode: json['baseEircode'],
       activitiesCovered: List<String>.from(json['activitiesCovered']),
     );
   }

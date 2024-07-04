@@ -1,13 +1,16 @@
 export class Coach {
     uid: String;
     name: String;
-    eircode: String;
+    baseEircode: String;
     activitiesCovered: Array<String>;
+    timeToCover: number;
 
-    constructor(uid: String, name: String, eircode: String, activitiesCovered: Array<String>) {
+
+    constructor({ uid, name, baseEircode, activitiesCovered, timeToCover }: { uid: String, name: String, baseEircode: String, activitiesCovered: Array<String>, timeToCover: number }) {
         this.uid = uid;
         this.name = name;
+        this.baseEircode = baseEircode;
         this.activitiesCovered = activitiesCovered;
-        this.eircode = eircode;
+        this.timeToCover = timeToCover;
     }
 }

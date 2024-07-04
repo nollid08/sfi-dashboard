@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/activity.dart';
+import 'package:dashboard/models/assigned_coach.dart';
 import 'package:dashboard/models/client.dart';
-import 'package:dashboard/models/coach_travel_estimate.dart';
+import 'package:dashboard/models/travel_estimate.dart';
 import 'package:dashboard/models/session.dart';
 import 'package:rrule/rrule.dart';
 
 class BookingTemplate {
   final String bookingId;
-  final List<CoachTravelEstimate> coachTravelEstimates;
+  final List<AssignedCoach> assignedCoaches;
   final Activity activity;
   final List<Session> sessions;
   final Client client;
@@ -15,7 +16,7 @@ class BookingTemplate {
 
   BookingTemplate({
     required this.bookingId,
-    required this.coachTravelEstimates,
+    required this.assignedCoaches,
     required this.activity,
     required this.sessions,
     required this.client,
@@ -24,8 +25,7 @@ class BookingTemplate {
   Map<String, dynamic> toJson() {
     return {
       'bookingId': bookingId,
-      'coachTravelEstimates':
-          coachTravelEstimates.map((cte) => cte.toJson()).toList(),
+      'assignedCoaches': assignedCoaches.map((ac) => ac.toJson()).toList(),
       'activity': activity.toJson(),
       'sessions': sessions.map((session) => session.toJson()).toList(),
       'client': client.toJson(),
@@ -34,7 +34,7 @@ class BookingTemplate {
 
   BookingTemplate copyWith({
     String? bookingId,
-    List<CoachTravelEstimate>? coachTravelEstimates,
+    List<AssignedCoach>? assignedCoaches,
     Activity? activity,
     List<Session>? sessions,
     RecurrenceRule? recurrenceRules,
@@ -45,8 +45,7 @@ class BookingTemplate {
         ? sessions.map((session) {
             final Session updatedSession = session.copyWith(
               bookingId: bookingId ?? this.bookingId,
-              coachTravelEstimates:
-                  coachTravelEstimates ?? this.coachTravelEstimates,
+              assignedCoaches: assignedCoaches ?? this.assignedCoaches,
               activity: activity ?? this.activity,
               client: client ?? this.client,
             );
@@ -55,8 +54,7 @@ class BookingTemplate {
         : this.sessions.map((session) {
             final Session updatedSession = session.copyWith(
               bookingId: bookingId ?? this.bookingId,
-              coachTravelEstimates:
-                  coachTravelEstimates ?? this.coachTravelEstimates,
+              assignedCoaches: assignedCoaches ?? this.assignedCoaches,
               activity: activity ?? this.activity,
               client: client ?? this.client,
             );
@@ -65,7 +63,7 @@ class BookingTemplate {
 
     return BookingTemplate(
       bookingId: bookingId ?? this.bookingId,
-      coachTravelEstimates: coachTravelEstimates ?? this.coachTravelEstimates,
+      assignedCoaches: assignedCoaches ?? this.assignedCoaches,
       activity: activity ?? this.activity,
       sessions: updatedSessions,
       client: client ?? this.client,

@@ -1,5 +1,6 @@
+import 'package:dashboard/models/assigned_coach.dart';
 import 'package:dashboard/models/booking.dart';
-import 'package:dashboard/models/coach_travel_estimate.dart';
+import 'package:dashboard/models/travel_estimate.dart';
 import 'package:dashboard/models/session.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -26,11 +27,10 @@ class CoachCalendarSource extends CalendarDataSource {
         ),
       );
       if (coachUid != null) {
-        final CoachTravelEstimate coachTravelEstimate = session
-            .coachTravelEstimates
-            .where((cte) => cte.coach.uid == coachUid)
-            .first;
-        final Duration travelTime = coachTravelEstimate.duration;
+        final AssignedCoach assignedCoach = session.assignedCoaches.firstWhere(
+          (ac) => ac.coach.uid == coachUid,
+        );
+        final Duration travelTime = assignedCoach.travelInfo.duration;
         final DateTime leaveHome = session.arrivalTime.subtract(travelTime);
         final DateTime arriveHome = session.leaveTime.add(travelTime);
         appointments.add(Appointment(

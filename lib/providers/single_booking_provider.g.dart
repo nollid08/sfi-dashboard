@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'bookings_provider.dart';
+part of 'single_booking_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bookingsHash() => r'5c2559f404110ad9d3ccb48820e487b92a45db2d';
+String _$singleBookingHash() => r'0fa44d3307ace9344f797b3c2b6676caa34e459a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,39 +29,39 @@ class _SystemHash {
   }
 }
 
-abstract class _$Bookings
-    extends BuildlessAutoDisposeStreamNotifier<List<Booking>> {
-  late final IList<Coach> coaches;
+abstract class _$SingleBooking
+    extends BuildlessAutoDisposeStreamNotifier<Booking> {
+  late final String id;
 
-  Stream<List<Booking>> build(
-    IList<Coach> coaches,
+  Stream<Booking> build(
+    String id,
   );
 }
 
-/// See also [Bookings].
-@ProviderFor(Bookings)
-const bookingsProvider = BookingsFamily();
+/// See also [SingleBooking].
+@ProviderFor(SingleBooking)
+const singleBookingProvider = SingleBookingFamily();
 
-/// See also [Bookings].
-class BookingsFamily extends Family<AsyncValue<List<Booking>>> {
-  /// See also [Bookings].
-  const BookingsFamily();
+/// See also [SingleBooking].
+class SingleBookingFamily extends Family<AsyncValue<Booking>> {
+  /// See also [SingleBooking].
+  const SingleBookingFamily();
 
-  /// See also [Bookings].
-  BookingsProvider call(
-    IList<Coach> coaches,
+  /// See also [SingleBooking].
+  SingleBookingProvider call(
+    String id,
   ) {
-    return BookingsProvider(
-      coaches,
+    return SingleBookingProvider(
+      id,
     );
   }
 
   @override
-  BookingsProvider getProviderOverride(
-    covariant BookingsProvider provider,
+  SingleBookingProvider getProviderOverride(
+    covariant SingleBookingProvider provider,
   ) {
     return call(
-      provider.coaches,
+      provider.id,
     );
   }
 
@@ -77,97 +77,98 @@ class BookingsFamily extends Family<AsyncValue<List<Booking>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'bookingsProvider';
+  String? get name => r'singleBookingProvider';
 }
 
-/// See also [Bookings].
-class BookingsProvider
-    extends AutoDisposeStreamNotifierProviderImpl<Bookings, List<Booking>> {
-  /// See also [Bookings].
-  BookingsProvider(
-    IList<Coach> coaches,
+/// See also [SingleBooking].
+class SingleBookingProvider
+    extends AutoDisposeStreamNotifierProviderImpl<SingleBooking, Booking> {
+  /// See also [SingleBooking].
+  SingleBookingProvider(
+    String id,
   ) : this._internal(
-          () => Bookings()..coaches = coaches,
-          from: bookingsProvider,
-          name: r'bookingsProvider',
+          () => SingleBooking()..id = id,
+          from: singleBookingProvider,
+          name: r'singleBookingProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$bookingsHash,
-          dependencies: BookingsFamily._dependencies,
-          allTransitiveDependencies: BookingsFamily._allTransitiveDependencies,
-          coaches: coaches,
+                  : _$singleBookingHash,
+          dependencies: SingleBookingFamily._dependencies,
+          allTransitiveDependencies:
+              SingleBookingFamily._allTransitiveDependencies,
+          id: id,
         );
 
-  BookingsProvider._internal(
+  SingleBookingProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.coaches,
+    required this.id,
   }) : super.internal();
 
-  final IList<Coach> coaches;
+  final String id;
 
   @override
-  Stream<List<Booking>> runNotifierBuild(
-    covariant Bookings notifier,
+  Stream<Booking> runNotifierBuild(
+    covariant SingleBooking notifier,
   ) {
     return notifier.build(
-      coaches,
+      id,
     );
   }
 
   @override
-  Override overrideWith(Bookings Function() create) {
+  Override overrideWith(SingleBooking Function() create) {
     return ProviderOverride(
       origin: this,
-      override: BookingsProvider._internal(
-        () => create()..coaches = coaches,
+      override: SingleBookingProvider._internal(
+        () => create()..id = id,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        coaches: coaches,
+        id: id,
       ),
     );
   }
 
   @override
-  AutoDisposeStreamNotifierProviderElement<Bookings, List<Booking>>
+  AutoDisposeStreamNotifierProviderElement<SingleBooking, Booking>
       createElement() {
-    return _BookingsProviderElement(this);
+    return _SingleBookingProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is BookingsProvider && other.coaches == coaches;
+    return other is SingleBookingProvider && other.id == id;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, coaches.hashCode);
+    hash = _SystemHash.combine(hash, id.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin BookingsRef on AutoDisposeStreamNotifierProviderRef<List<Booking>> {
-  /// The parameter `coaches` of this provider.
-  IList<Coach> get coaches;
+mixin SingleBookingRef on AutoDisposeStreamNotifierProviderRef<Booking> {
+  /// The parameter `id` of this provider.
+  String get id;
 }
 
-class _BookingsProviderElement
-    extends AutoDisposeStreamNotifierProviderElement<Bookings, List<Booking>>
-    with BookingsRef {
-  _BookingsProviderElement(super.provider);
+class _SingleBookingProviderElement
+    extends AutoDisposeStreamNotifierProviderElement<SingleBooking, Booking>
+    with SingleBookingRef {
+  _SingleBookingProviderElement(super.provider);
 
   @override
-  IList<Coach> get coaches => (origin as BookingsProvider).coaches;
+  String get id => (origin as SingleBookingProvider).id;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

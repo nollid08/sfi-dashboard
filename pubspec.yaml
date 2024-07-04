@@ -35,6 +35,7 @@ dependencies:
   fast_immutable_collections: ^10.2.4
   maps_launcher: ^2.2.1
   rrule: ^0.2.16
+  loader_overlay: ^4.0.0
 
 dev_dependencies:
   flutter_test:
