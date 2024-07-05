@@ -26,7 +26,7 @@ class AssignedCoach {
     return AssignedCoach(
       coach: Coach.fromJson(json['coach']),
       travelInfo: TravelInfo.fromJson(json['travelInfo']),
-      hasOvernightAllowance: json['asOvernightAllowance'],
+      hasOvernightAllowance: json['hasOvernightAllowance'],
     );
   }
 
