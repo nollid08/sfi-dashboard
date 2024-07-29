@@ -20,8 +20,7 @@ class CoachCalendarSource extends CalendarDataSource {
         Appointment(
           startTime: session.arrivalTime,
           endTime: session.leaveTime,
-          location:
-              ' ${session.client.eircode}, ${session.client.addressLineOne}, ${session.client.addressLineTwo}',
+          location: ' ${session.client.eircode}',
           subject: '${session.activity.name} - ${session.client.name}',
           color: session.activity.color,
         ),

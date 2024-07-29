@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/client.dart';
+import 'package:dashboard/models/client_types.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -6,18 +8,45 @@ class ClientDataSource extends DataGridSource {
   ClientDataSource({required List<Client> clients}) {
     _clients = clients
         .map<DataGridRow>((Client client) => DataGridRow(cells: [
-              DataGridCell<String>(columnName: 'Name', value: client.name),
               DataGridCell<String>(
-                  columnName: 'AL1', value: client.addressLineOne),
+                columnName: 'RollNumber',
+                value: client.rollNumber,
+              ),
               DataGridCell<String>(
-                  columnName: 'AL2', value: client.addressLineTwo),
+                columnName: 'Name',
+                value: client.name,
+              ),
               DataGridCell<String>(
-                  columnName: 'Eircode', value: client.eircode),
+                columnName: 'Town',
+                value: client.town,
+              ),
               DataGridCell<String>(
-                  columnName: 'RollNumber', value: client.rollNumber),
+                columnName: 'County',
+                value: client.county,
+              ),
+              DataGridCell<String>(
+                columnName: 'Eircode',
+                value: client.eircode,
+              ),
               DataGridCell<String>(
                 columnName: 'Type',
                 value: client.type.name,
+              ),
+              DataGridCell<String>(
+                columnName: 'Deis Status',
+                value: client.isDeis ? 'Yes' : 'No',
+              ),
+              DataGridCell<int>(
+                columnName: 'Classrooms',
+                value: client.classrooms,
+              ),
+              DataGridCell<int>(
+                columnName: 'Pupils',
+                value: client.students,
+              ),
+              DataGridCell<Client>(
+                columnName: 'Client',
+                value: client,
               ),
             ]))
         .toList();

@@ -15,3 +15,10 @@ export class Activity {
         return `Activity: ${this.id}, ${this.name}, ${this.icon}, ${this.color}`;
     }
 }
+
+export interface ActivityData {
+    id: String;
+    name: String;
+    icon: String;
+    color: String;
+}

@@ -19,8 +19,7 @@ class ResourceCalendarDataSource extends CalendarDataSource {
           (Session session) => Appointment(
             startTime: session.startTime,
             endTime: session.endTime,
-            subject:
-                '${session.activity.name} @ ${session.client.addressLineOne}',
+            subject: '${session.activity.name} @ ${session.client.town}',
             color: session.activity.color,
             resourceIds:
                 session.assignedCoaches.map((ac) => ac.coach.uid).toList(),

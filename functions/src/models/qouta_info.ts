@@ -53,6 +53,8 @@ export class QoutaInfo {
                 startTime: session.startTime.toDate(),
                 endTime: session.endTime.toDate(),
                 coaches: session.coaches,
+                activity: session.activity,
+                client: session.client,
                 assignedCoaches: session.assignedCoaches,
             });
         });

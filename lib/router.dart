@@ -4,12 +4,17 @@ import 'package:dashboard/models/booking_template.dart';
 import 'package:dashboard/models/client.dart';
 import 'package:dashboard/models/client_types.dart';
 import 'package:dashboard/providers/auth_provider.dart';
+import 'package:dashboard/providers/navigation/selected_screen_index_provider.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_activities.dart';
 import 'package:dashboard/views/screens/admin_tools/admin_tools.dart';
-import 'package:dashboard/views/screens/admin_tools/manage_booking.dart';
-import 'package:dashboard/views/screens/admin_tools/manage_bookings.dart';
+import 'package:dashboard/views/screens/admin_tools/manage_booking/add_booking_session.dart';
+import 'package:dashboard/views/screens/admin_tools/manage_booking/manage_booking.dart';
+import 'package:dashboard/views/screens/admin_tools/manage_booking/manage_booking_shell.dart';
+import 'package:dashboard/views/screens/admin_tools/manage_booking/manage_bookings.dart';
+import 'package:dashboard/views/screens/admin_tools/manage_client.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_clients.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_coaches.dart';
+import 'package:dashboard/views/screens/admin_tools/manage_booking/manage_session.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/gather_info_screen.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/manual_booking_shell.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/select_coaches.dart';
@@ -21,6 +26,7 @@ import 'package:dashboard/views/screens/resource_view.dart';
 import 'package:dashboard/views/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -78,6 +84,13 @@ GoRouter router(RouterRef ref) {
         return const ManageSchools();
       },
     ),
+    GoRoute(
+      path: '/adminTools/manageClients/:clientId',
+      builder: (context, state) {
+        final clientId = state.pathParameters['clientId']!;
+        return ManageClient(clientId);
+      },
+    ),
     ShellRoute(
       builder: (context, state, child) {
         return ManualBookingShell(child);
@@ -123,21 +136,64 @@ GoRouter router(RouterRef ref) {
           },
         ),
         GoRoute(
-            path: '/adminTools/manageBookings',
-            builder: (context, state) {
-              return const ManageBookings();
-            }),
-        GoRoute(
-            path: '/adminTools/manageBookings/:bookingId',
-            builder: (context, state) {
-              final bookingId = state.pathParameters['bookingId']!;
-              return ManageBooking(bookingId);
-            }),
+          path: '/adminTools/manageBookings',
+          builder: (context, state) {
+            return const ManageBookings();
+          },
+        ),
+        ShellRoute(
+          builder: (context, state, child) {
+            final bookingId = state.pathParameters['bookingId']!;
+            final int? sessionIndex =
+                state.pathParameters['sessionIndex'] != null
+                    ? int.parse(state.pathParameters['sessionIndex']!)
+                    : null;
+            final bool isAddingNewSession =
+                state.fullPath?.contains('addSession') ?? false;
+            return ManageBookingShell(
+              bookingId: bookingId,
+              sessionIndex: sessionIndex,
+              isAddingNewSession: isAddingNewSession,
+              child: child,
+            );
+          },
+          routes: [
+            GoRoute(
+              path: '/adminTools/manageBookings/:bookingId',
+              builder: (context, state) {
+                final bookingId = state.pathParameters['bookingId']!;
+                return ManageBooking(id: bookingId);
+              },
+            ),
+            GoRoute(
+              path:
+                  '/adminTools/manageBookings/:bookingId/sessions/:sessionIndex',
+              builder: (context, state) {
+                final bookingId = state.pathParameters['bookingId']!;
+                final int sessionIndex =
+                    int.parse(state.pathParameters['sessionIndex'] ?? "-1");
+                return ManageSession(
+                  key: ValueKey(sessionIndex),
+                  bookingId: bookingId,
+                  sessionIndex: sessionIndex,
+                );
+              },
+            ),
+            GoRoute(
+              path: '/adminTools/manageBookings/:bookingId/addSession',
+              builder: (context, state) {
+                final bookingId = state.pathParameters['bookingId']!;
+                return AddBookingSession(bookingId: bookingId);
+              },
+            ),
+          ],
+        ),
       ],
     ),
   ];
   return GoRouter(
     initialLocation: '/splash',
+    observers: [MyNavObserver()],
     routes: [
       ShellRoute(
         builder: (context, state, child) {
@@ -179,4 +235,38 @@ GoRouter router(RouterRef ref) {
       return isAuth ? null : '/splash';
     },
   );
+}
+
+class MyNavObserver extends NavigatorObserver {
+  MyNavObserver();
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    updateScreenIndex(route);
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    updateScreenIndex(previousRoute!);
+  }
+
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    updateScreenIndex(previousRoute!);
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    updateScreenIndex(newRoute!);
+  }
+
+  void updateScreenIndex(Route<dynamic> newRoute) {
+    // final container = ProviderContainer();
+    // final currentRoute = newRoute.settings.name;
+    // final authState = container
+    //     .read(selectedScreenIndexProvider.notifier)
+    //     .updateIndexBasedOnRouteName(currentRoute ?? '/');
+
+    // container.dispose();
+  }
 }

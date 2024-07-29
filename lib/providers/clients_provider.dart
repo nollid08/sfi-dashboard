@@ -5,11 +5,22 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'clients_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Stream<List<Client>> clients(ClientsRef ref) {
-  final db = FirebaseFirestore.instance;
-  return db.collection('clients').snapshots().map((snapshot) {
-    return snapshot.docs.map((doc) {
-      return Client.fromFBJson(doc.data(), doc.id);
-    }).toList();
-  });
+class Clients extends _$Clients {
+  @override
+  Stream<List<Client>> build() {
+    final db = FirebaseFirestore.instance;
+    return db.collection('clients').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return Client.fromFBJson(doc.data(), doc.id);
+      }).toList();
+    });
+  }
+
+  Future<void> updateClient(Client newClient) async {
+    final db = FirebaseFirestore.instance;
+    await db
+        .collection('clients')
+        .doc(newClient.id)
+        .update(newClient.toFBJson());
+  }
 }

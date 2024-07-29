@@ -3,6 +3,7 @@ import 'package:dashboard/models/client.dart';
 import 'package:dashboard/providers/clients_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ManageSchools extends ConsumerWidget {
@@ -16,18 +17,41 @@ class ManageSchools extends ConsumerWidget {
     return Scaffold(
       body: clients.when(
         data: (clientsList) {
+          var clientDataSource = ClientDataSource(clients: clientsList);
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Card(
               child: SfDataGrid(
-                columnWidthMode: ColumnWidthMode.fill,
-                source: ClientDataSource(clients: clientsList),
+                columnWidthMode: ColumnWidthMode.auto,
+                source: clientDataSource,
                 headerRowHeight: 80,
                 headerGridLinesVisibility: GridLinesVisibility.both,
                 gridLinesVisibility: GridLinesVisibility.both,
                 allowFiltering: true,
                 allowSorting: true,
+                allowEditing: true,
+                onCellTap: (details) {
+                  final int selectedRowIndex =
+                      details.rowColumnIndex.rowIndex - 1;
+                  final DataGridRow row = clientDataSource.effectiveRows
+                      .elementAt(selectedRowIndex);
+                  final Client client = row.getCells().last.value;
+                  context.go('/adminTools/manageClients/${client.id}');
+                },
+                selectionMode: SelectionMode.multiple,
+                navigationMode: GridNavigationMode.row,
+                // onCellTap: (details) {
+                //   print(details.);
+                // },
                 columns: <GridColumn>[
+                  GridColumn(
+                    columnName: 'RollNumber',
+                    label: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      alignment: Alignment.centerLeft,
+                      child: const Text('Roll Number'),
+                    ),
+                  ),
                   GridColumn(
                     columnName: 'Name',
                     label: Container(
@@ -39,20 +63,20 @@ class ManageSchools extends ConsumerWidget {
                     ),
                   ),
                   GridColumn(
-                    columnName: 'AL1',
+                    columnName: 'Town',
                     label: Container(
                       padding: const EdgeInsets.all(16.0),
                       alignment: Alignment.centerLeft,
-                      child: const Text('Address Line One'),
+                      child: const Text('Town'),
                     ),
                   ),
                   GridColumn(
-                    columnName: 'AL2',
+                    columnName: 'County',
                     label: Container(
                       padding: const EdgeInsets.all(16.0),
                       alignment: Alignment.centerLeft,
                       child: const Text(
-                        'Address Line 2',
+                        'County',
                       ),
                     ),
                   ),
@@ -61,15 +85,9 @@ class ManageSchools extends ConsumerWidget {
                     label: Container(
                       padding: const EdgeInsets.all(16.0),
                       alignment: Alignment.centerLeft,
-                      child: const Text('Eircode'),
-                    ),
-                  ),
-                  GridColumn(
-                    columnName: 'RollNumber',
-                    label: Container(
-                      padding: const EdgeInsets.all(16.0),
-                      alignment: Alignment.centerLeft,
-                      child: const Text('Roll Number'),
+                      child: const Text(
+                        'Eircode',
+                      ),
                     ),
                   ),
                   GridColumn(
@@ -77,8 +95,37 @@ class ManageSchools extends ConsumerWidget {
                     label: Container(
                       padding: const EdgeInsets.all(16.0),
                       alignment: Alignment.centerLeft,
-                      child: const Text('RollNumber'),
+                      child: const Text('Type'),
                     ),
+                  ),
+                  GridColumn(
+                    columnName: 'Deis Status',
+                    label: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      alignment: Alignment.centerLeft,
+                      child: const Text('Deis Status'),
+                    ),
+                  ),
+                  GridColumn(
+                    columnName: 'Classrooms',
+                    label: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      alignment: Alignment.centerLeft,
+                      child: const Text('Classrooms'),
+                    ),
+                  ),
+                  GridColumn(
+                    columnName: 'Pupils',
+                    label: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      alignment: Alignment.centerLeft,
+                      child: const Text('Pupils'),
+                    ),
+                  ),
+                  GridColumn(
+                    columnName: 'Client',
+                    label: Container(),
+                    width: 0,
                   ),
                 ],
               ),
@@ -91,7 +138,7 @@ class ManageSchools extends ConsumerWidget {
             child: CircularProgressIndicator(),
           ),
         ),
-        error: (error, stackTrace) => Text('Error: $error'),
+        error: (error, stackTrace) => Text('Error: $error, $stackTrace'),
       ),
     );
   }

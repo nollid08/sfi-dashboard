@@ -7,7 +7,7 @@ import 'package:dashboard/models/qouta_info.dart';
 import 'package:dashboard/models/travel_estimate.dart';
 import 'package:dashboard/models/travel_info.dart';
 import 'package:dashboard/providers/bookings_provider.dart';
-import 'package:dashboard/providers/find_coach.dart';
+import 'package:dashboard/providers/find_booking_templates_available_coaches.dart';
 import 'package:dashboard/views/widgets/booking_template_info.dart';
 import 'package:dashboard/views/widgets/coach_recommendation_selector.dart';
 import 'package:dashboard/views/widgets/fortnightly_breakdown.dart';
@@ -30,8 +30,8 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
   final List<CoachRecommendation> selectedCoaches = [];
   @override
   Widget build(BuildContext context) {
-    final AsyncValue<List<CoachRecommendation>> suitableCoaches =
-        ref.watch(findAvailableCoachesProvider(widget.bookingTemplate));
+    final AsyncValue<List<CoachRecommendation>> suitableCoaches = ref.watch(
+        findBookingTemplatesAvailableCoachesProvider(widget.bookingTemplate));
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(

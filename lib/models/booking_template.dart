@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/assigned_coach.dart';
+import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/client.dart';
 import 'package:dashboard/models/travel_estimate.dart';
 import 'package:dashboard/models/session.dart';
@@ -67,6 +68,24 @@ class BookingTemplate {
       activity: activity ?? this.activity,
       sessions: updatedSessions,
       client: client ?? this.client,
+    );
+  }
+
+  static Future<BookingTemplate> fromBooking(Booking booking) async {
+    final List<AssignedCoach> assignedCoaches = [];
+    final Activity activity = booking.activity;
+    final sessionsRef = booking.sessionsRef;
+    final List<Session> sessions = await sessionsRef?.get().then((value) =>
+            value.docs.map((doc) => Session.fromDocSnapshot(doc)).toList()) ??
+        [];
+    final Client client = booking.client;
+
+    return BookingTemplate(
+      bookingId: booking.id,
+      assignedCoaches: assignedCoaches,
+      activity: activity,
+      sessions: sessions,
+      client: client,
     );
   }
 }

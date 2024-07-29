@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'find_coach.dart';
+part of 'find_sessions_available_coaches.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$findAvailableCoachesHash() =>
-    r'b8a8f3928c55e3d22a23194168d3c153cda9bb68';
+String _$findSessionsAvailableCoachesHash() =>
+    r'9220e91331126e7418f98b8d2eb0f5df2ca346c4';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,31 +30,32 @@ class _SystemHash {
   }
 }
 
-/// See also [findAvailableCoaches].
-@ProviderFor(findAvailableCoaches)
-const findAvailableCoachesProvider = FindAvailableCoachesFamily();
+/// See also [findSessionsAvailableCoaches].
+@ProviderFor(findSessionsAvailableCoaches)
+const findSessionsAvailableCoachesProvider =
+    FindSessionsAvailableCoachesFamily();
 
-/// See also [findAvailableCoaches].
-class FindAvailableCoachesFamily
+/// See also [findSessionsAvailableCoaches].
+class FindSessionsAvailableCoachesFamily
     extends Family<AsyncValue<List<CoachRecommendation>>> {
-  /// See also [findAvailableCoaches].
-  const FindAvailableCoachesFamily();
+  /// See also [findSessionsAvailableCoaches].
+  const FindSessionsAvailableCoachesFamily();
 
-  /// See also [findAvailableCoaches].
-  FindAvailableCoachesProvider call(
-    BookingTemplate bookingTemplate,
+  /// See also [findSessionsAvailableCoaches].
+  FindSessionsAvailableCoachesProvider call(
+    Session session,
   ) {
-    return FindAvailableCoachesProvider(
-      bookingTemplate,
+    return FindSessionsAvailableCoachesProvider(
+      session,
     );
   }
 
   @override
-  FindAvailableCoachesProvider getProviderOverride(
-    covariant FindAvailableCoachesProvider provider,
+  FindSessionsAvailableCoachesProvider getProviderOverride(
+    covariant FindSessionsAvailableCoachesProvider provider,
   ) {
     return call(
-      provider.bookingTemplate,
+      provider.session,
     );
   }
 
@@ -70,98 +71,98 @@ class FindAvailableCoachesFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'findAvailableCoachesProvider';
+  String? get name => r'findSessionsAvailableCoachesProvider';
 }
 
-/// See also [findAvailableCoaches].
-class FindAvailableCoachesProvider
+/// See also [findSessionsAvailableCoaches].
+class FindSessionsAvailableCoachesProvider
     extends AutoDisposeFutureProvider<List<CoachRecommendation>> {
-  /// See also [findAvailableCoaches].
-  FindAvailableCoachesProvider(
-    BookingTemplate bookingTemplate,
+  /// See also [findSessionsAvailableCoaches].
+  FindSessionsAvailableCoachesProvider(
+    Session session,
   ) : this._internal(
-          (ref) => findAvailableCoaches(
-            ref as FindAvailableCoachesRef,
-            bookingTemplate,
+          (ref) => findSessionsAvailableCoaches(
+            ref as FindSessionsAvailableCoachesRef,
+            session,
           ),
-          from: findAvailableCoachesProvider,
-          name: r'findAvailableCoachesProvider',
+          from: findSessionsAvailableCoachesProvider,
+          name: r'findSessionsAvailableCoachesProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$findAvailableCoachesHash,
-          dependencies: FindAvailableCoachesFamily._dependencies,
+                  : _$findSessionsAvailableCoachesHash,
+          dependencies: FindSessionsAvailableCoachesFamily._dependencies,
           allTransitiveDependencies:
-              FindAvailableCoachesFamily._allTransitiveDependencies,
-          bookingTemplate: bookingTemplate,
+              FindSessionsAvailableCoachesFamily._allTransitiveDependencies,
+          session: session,
         );
 
-  FindAvailableCoachesProvider._internal(
+  FindSessionsAvailableCoachesProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.bookingTemplate,
+    required this.session,
   }) : super.internal();
 
-  final BookingTemplate bookingTemplate;
+  final Session session;
 
   @override
   Override overrideWith(
     FutureOr<List<CoachRecommendation>> Function(
-            FindAvailableCoachesRef provider)
+            FindSessionsAvailableCoachesRef provider)
         create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: FindAvailableCoachesProvider._internal(
-        (ref) => create(ref as FindAvailableCoachesRef),
+      override: FindSessionsAvailableCoachesProvider._internal(
+        (ref) => create(ref as FindSessionsAvailableCoachesRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        bookingTemplate: bookingTemplate,
+        session: session,
       ),
     );
   }
 
   @override
   AutoDisposeFutureProviderElement<List<CoachRecommendation>> createElement() {
-    return _FindAvailableCoachesProviderElement(this);
+    return _FindSessionsAvailableCoachesProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is FindAvailableCoachesProvider &&
-        other.bookingTemplate == bookingTemplate;
+    return other is FindSessionsAvailableCoachesProvider &&
+        other.session == session;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, bookingTemplate.hashCode);
+    hash = _SystemHash.combine(hash, session.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin FindAvailableCoachesRef
+mixin FindSessionsAvailableCoachesRef
     on AutoDisposeFutureProviderRef<List<CoachRecommendation>> {
-  /// The parameter `bookingTemplate` of this provider.
-  BookingTemplate get bookingTemplate;
+  /// The parameter `session` of this provider.
+  Session get session;
 }
 
-class _FindAvailableCoachesProviderElement
+class _FindSessionsAvailableCoachesProviderElement
     extends AutoDisposeFutureProviderElement<List<CoachRecommendation>>
-    with FindAvailableCoachesRef {
-  _FindAvailableCoachesProviderElement(super.provider);
+    with FindSessionsAvailableCoachesRef {
+  _FindSessionsAvailableCoachesProviderElement(super.provider);
 
   @override
-  BookingTemplate get bookingTemplate =>
-      (origin as FindAvailableCoachesProvider).bookingTemplate;
+  Session get session =>
+      (origin as FindSessionsAvailableCoachesProvider).session;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

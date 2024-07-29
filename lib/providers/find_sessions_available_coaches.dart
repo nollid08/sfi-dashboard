@@ -1,19 +1,23 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/booking_template.dart';
 import 'package:dashboard/models/coach_recommendation.dart';
+import 'package:dashboard/models/session.dart';
 import 'package:dashboard/models/travel_estimate.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-part 'find_coach.g.dart';
+
+part 'find_sessions_available_coaches.g.dart';
 
 @riverpod
-Future<List<CoachRecommendation>> findAvailableCoaches(
-    FindAvailableCoachesRef ref, BookingTemplate bookingTemplate) async {
+Future<List<CoachRecommendation>> findSessionsAvailableCoaches(
+    FindSessionsAvailableCoachesRef ref, Session session) async {
+  final db = FirebaseFirestore.instance;
+
   final functions = FirebaseFunctions.instance;
-  final callable = functions.httpsCallable('find_coaches');
-  print('Booking: ${bookingTemplate.toJson()}');
+  final callable = functions.httpsCallable('find_sessions_available_coaches');
   final result = await callable.call({
-    'booking': bookingTemplate.toJson(),
+    'session': session.toJson(),
   });
 
   final data = List<Map<String, dynamic>>.from(result.data);

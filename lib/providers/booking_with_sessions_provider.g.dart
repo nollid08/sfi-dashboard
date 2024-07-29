@@ -7,7 +7,7 @@ part of 'booking_with_sessions_provider.dart';
 // **************************************************************************
 
 String _$singleBookingWithSessionsHash() =>
-    r'f7e0a97ea0504f8b47d1d3d643e5b9f95bc7cd5c';
+    r'5eb928017ca02b7c6b2080f5d951d63f90beda98';
 
 /// Copied from Dart SDK
 class _SystemHash {

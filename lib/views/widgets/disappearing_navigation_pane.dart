@@ -1,5 +1,7 @@
 import 'package:animated_sidebar/animated_sidebar.dart';
 import 'package:dashboard/providers/navigation.dart';
+import 'package:dashboard/providers/navigation/indexed_screens_provider.dart';
+import 'package:dashboard/providers/navigation/selected_screen_index_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

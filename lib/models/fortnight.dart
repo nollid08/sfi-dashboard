@@ -18,7 +18,7 @@ class Fortnight {
 
   factory Fortnight.fromDate(DateTime givenDate) {
     final DateTime baseStartDate =
-        DateTime(2024, 0, 1); // Start date of FN1 is January 1, 2024
+        DateTime(2024, 0, 1); // Start date of FN1 is January 1, 202
 
     // Calculate the difference in days
     const millisecondsPerDay = 1000 * 60 * 60 * 24;

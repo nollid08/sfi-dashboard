@@ -18,9 +18,7 @@ class ScreenItem {
     required this.activeRouteIdentifier,
   });
 
-  bool isActive(BuildContext context) {
-    final String currentRoute =
-        GoRouter.of(context).routeInformationProvider.value.uri.path;
+  bool isActive(String currentRoute) {
     if (currentRoute.contains(activeRouteIdentifier)) {
       return true;
     } else {

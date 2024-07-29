@@ -6,7 +6,7 @@ part of 'sessions_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sessionsHash() => r'9fadb82a55d945074ac3250a4709e5a53ee15bf9';
+String _$sessionsHash() => r'd8b2d0a3c5de379b154b4e4dbb96cbf0900ec772';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,16 +29,27 @@ class _SystemHash {
   }
 }
 
-/// See also [sessions].
-@ProviderFor(sessions)
+abstract class _$Sessions
+    extends BuildlessAutoDisposeStreamNotifier<List<Session>> {
+  late final IList<String>? bookingIds;
+  late final IList<String>? coachIds;
+
+  Stream<List<Session>> build({
+    IList<String>? bookingIds,
+    IList<String>? coachIds,
+  });
+}
+
+/// See also [Sessions].
+@ProviderFor(Sessions)
 const sessionsProvider = SessionsFamily();
 
-/// See also [sessions].
+/// See also [Sessions].
 class SessionsFamily extends Family<AsyncValue<List<Session>>> {
-  /// See also [sessions].
+  /// See also [Sessions].
   const SessionsFamily();
 
-  /// See also [sessions].
+  /// See also [Sessions].
   SessionsProvider call({
     IList<String>? bookingIds,
     IList<String>? coachIds,
@@ -74,18 +85,17 @@ class SessionsFamily extends Family<AsyncValue<List<Session>>> {
   String? get name => r'sessionsProvider';
 }
 
-/// See also [sessions].
-class SessionsProvider extends AutoDisposeStreamProvider<List<Session>> {
-  /// See also [sessions].
+/// See also [Sessions].
+class SessionsProvider
+    extends AutoDisposeStreamNotifierProviderImpl<Sessions, List<Session>> {
+  /// See also [Sessions].
   SessionsProvider({
     IList<String>? bookingIds,
     IList<String>? coachIds,
   }) : this._internal(
-          (ref) => sessions(
-            ref as SessionsRef,
-            bookingIds: bookingIds,
-            coachIds: coachIds,
-          ),
+          () => Sessions()
+            ..bookingIds = bookingIds
+            ..coachIds = coachIds,
           from: sessionsProvider,
           name: r'sessionsProvider',
           debugGetCreateSourceHash:
@@ -113,13 +123,23 @@ class SessionsProvider extends AutoDisposeStreamProvider<List<Session>> {
   final IList<String>? coachIds;
 
   @override
-  Override overrideWith(
-    Stream<List<Session>> Function(SessionsRef provider) create,
+  Stream<List<Session>> runNotifierBuild(
+    covariant Sessions notifier,
   ) {
+    return notifier.build(
+      bookingIds: bookingIds,
+      coachIds: coachIds,
+    );
+  }
+
+  @override
+  Override overrideWith(Sessions Function() create) {
     return ProviderOverride(
       origin: this,
       override: SessionsProvider._internal(
-        (ref) => create(ref as SessionsRef),
+        () => create()
+          ..bookingIds = bookingIds
+          ..coachIds = coachIds,
         from: from,
         name: null,
         dependencies: null,
@@ -132,7 +152,8 @@ class SessionsProvider extends AutoDisposeStreamProvider<List<Session>> {
   }
 
   @override
-  AutoDisposeStreamProviderElement<List<Session>> createElement() {
+  AutoDisposeStreamNotifierProviderElement<Sessions, List<Session>>
+      createElement() {
     return _SessionsProviderElement(this);
   }
 
@@ -153,7 +174,7 @@ class SessionsProvider extends AutoDisposeStreamProvider<List<Session>> {
   }
 }
 
-mixin SessionsRef on AutoDisposeStreamProviderRef<List<Session>> {
+mixin SessionsRef on AutoDisposeStreamNotifierProviderRef<List<Session>> {
   /// The parameter `bookingIds` of this provider.
   IList<String>? get bookingIds;
 
@@ -162,7 +183,8 @@ mixin SessionsRef on AutoDisposeStreamProviderRef<List<Session>> {
 }
 
 class _SessionsProviderElement
-    extends AutoDisposeStreamProviderElement<List<Session>> with SessionsRef {
+    extends AutoDisposeStreamNotifierProviderElement<Sessions, List<Session>>
+    with SessionsRef {
   _SessionsProviderElement(super.provider);
 
   @override
