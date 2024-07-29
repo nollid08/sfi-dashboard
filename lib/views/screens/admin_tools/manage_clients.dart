@@ -36,7 +36,7 @@ class ManageSchools extends ConsumerWidget {
                   final DataGridRow row = clientDataSource.effectiveRows
                       .elementAt(selectedRowIndex);
                   final Client client = row.getCells().last.value;
-                  context.go('/adminTools/manageClients/${client.id}');
+                  context.push('/adminTools/manageClients/${client.id}');
                 },
                 selectionMode: SelectionMode.multiple,
                 navigationMode: GridNavigationMode.row,

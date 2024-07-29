@@ -11,6 +11,18 @@ class Client {
   final bool isDeis;
   final int classrooms;
   final int students;
+  final DateTime joinDate;
+  final List<String> previousBookingIds;
+  final bool? hasHall;
+  final bool? hasParking;
+  final int? largestClassSize;
+  final bool? hasMats;
+  final String? contactName;
+  final String? contactEmail;
+  final String? contactPhone;
+  final String? principalName;
+  final String? principalEmail;
+  final String? notes;
 
   Client({
     required this.id,
@@ -23,6 +35,18 @@ class Client {
     required this.isDeis,
     required this.classrooms,
     required this.students,
+    required this.joinDate,
+    this.previousBookingIds = const [],
+    this.hasHall,
+    this.hasParking,
+    this.largestClassSize,
+    this.hasMats,
+    this.contactName,
+    this.contactEmail,
+    this.contactPhone,
+    this.principalName,
+    this.principalEmail,
+    this.notes,
   });
 
   factory Client.fromJson(Map<String, dynamic> json, String id) {
@@ -35,6 +59,19 @@ class Client {
     final bool isDeis = json['isDeis'] ?? false;
     final int classrooms = json['classrooms'] ?? 0;
     final int students = json['students'] ?? 0;
+    final DateTime joinDate = json['joinDate'];
+    final List<String> previousBookingIds =
+        List<String>.from(json['previousBookingIds'] ?? []);
+    final bool? hasHall = json['hasHall'];
+    final bool? hasParking = json['hasParking'];
+    final int? largestClassSize = json['largestClassSize'];
+    final bool? hasMats = json['hasMats'];
+    final String? contactName = json['contactName'];
+    final String? contactEmail = json['contactEmail'];
+    final String? contactPhone = json['contactPhone'];
+    final String? principalName = json['principalName'];
+    final String? principalEmail = json['principalEmail'];
+    final String? notes = json['notes'];
     return Client(
       id: id,
       name: name,
@@ -46,20 +83,41 @@ class Client {
       isDeis: isDeis,
       classrooms: classrooms,
       students: students,
+      joinDate: joinDate,
+      previousBookingIds: previousBookingIds,
+      hasHall: hasHall,
+      hasParking: hasParking,
+      largestClassSize: largestClassSize,
+      hasMats: hasMats,
+      contactName: contactName,
+      contactEmail: contactEmail,
+      contactPhone: contactPhone,
+      principalName: principalName,
+      principalEmail: principalEmail,
+      notes: notes,
     );
   }
 
   factory Client.fromFBJson(Map<String, dynamic> json, String id) {
-    final String name = json['name'] ?? 'N/A';
-    final String town = json['town'] ?? 'N/A';
-    final String county = json['county'] ?? 'N/A';
-
     final String eircode = json['eircode'] ?? 'N/A';
     final String rollNumber = json['rollNumber'] ?? 'N/A';
     final ClientType type = ClientType.fromString(json['type'] ?? '');
     final bool isDeis = json['isDeis'] ?? false;
     final int classrooms = json['classrooms'] ?? 0;
     final int students = json['students'] ?? 0;
+    final String name = json['name'] ?? 'N/A';
+    final String town = json['town'] ?? 'N/A';
+    final String county = json['county'] ?? 'N/A';
+    final bool? hasHall = json['hasHall'];
+    final bool? hasParking = json['hasParking'];
+    final int? largestClassSize = json['largestClassSize'];
+    final bool? hasMats = json['hasMats'];
+    final String? contactName = json['contactName'];
+    final String? contactEmail = json['contactEmail'];
+    final String? contactPhone = json['contactPhone'];
+    final String? principalName = json['principalName'];
+    final String? principalEmail = json['principalEmail'];
+    final String? notes = json['notes'];
     return Client(
       id: id,
       name: name,
@@ -71,6 +129,17 @@ class Client {
       isDeis: isDeis,
       classrooms: classrooms,
       students: students,
+      joinDate: DateTime.now(),
+      hasHall: hasHall,
+      hasParking: hasParking,
+      largestClassSize: largestClassSize,
+      hasMats: hasMats,
+      contactName: contactName,
+      contactEmail: contactEmail,
+      contactPhone: contactPhone,
+      principalName: principalName,
+      principalEmail: principalEmail,
+      notes: notes,
     );
   }
 
@@ -80,12 +149,24 @@ class Client {
       'name': name,
       'eircode': eircode,
       'rollNumber': rollNumber,
-      'type': type.toJson(),
+      'type': type.id,
       'town': town,
       'county': county,
       'isDeis': isDeis,
       'classrooms': classrooms,
       'students': students,
+      'joinDate': joinDate,
+      'previousBookingIds': previousBookingIds,
+      'hasHall': hasHall,
+      'hasParking': hasParking,
+      'largestClassSize': largestClassSize,
+      'hasMats': hasMats,
+      'contactName': contactName,
+      'contactEmail': contactEmail,
+      'contactPhone': contactPhone,
+      'principalName': principalName,
+      'principalEmail': principalEmail,
+      'notes': notes,
     };
   }
 
@@ -100,6 +181,16 @@ class Client {
       'isDeis': isDeis,
       'classrooms': classrooms,
       'students': students,
+      'hasHall': hasHall,
+      'hasParking': hasParking,
+      'largestClassSize': largestClassSize,
+      'hasMats': hasMats,
+      'contactName': contactName,
+      'contactEmail': contactEmail,
+      'contactPhone': contactPhone,
+      'principalName': principalName,
+      'principalEmail': principalEmail,
+      'notes': notes,
     };
   }
 
@@ -114,6 +205,18 @@ class Client {
     bool? isDeis,
     int? classrooms,
     int? students,
+    DateTime? joinDate,
+    List<String>? previousBookingIds,
+    bool? hasHall,
+    bool? hasParking,
+    int? largestClassSize,
+    bool? hasMats,
+    String? contactName,
+    String? contactEmail,
+    String? contactPhone,
+    String? principalName,
+    String? principalEmail,
+    String? notes,
   }) {
     return Client(
       id: id ?? this.id,
@@ -126,6 +229,18 @@ class Client {
       isDeis: isDeis ?? this.isDeis,
       classrooms: classrooms ?? this.classrooms,
       students: students ?? this.students,
+      joinDate: joinDate ?? this.joinDate,
+      previousBookingIds: previousBookingIds ?? this.previousBookingIds,
+      hasHall: hasHall ?? this.hasHall,
+      hasParking: hasParking ?? this.hasParking,
+      largestClassSize: largestClassSize ?? this.largestClassSize,
+      hasMats: hasMats ?? this.hasMats,
+      contactName: contactName ?? this.contactName,
+      contactEmail: contactEmail ?? this.contactEmail,
+      contactPhone: contactPhone ?? this.contactPhone,
+      principalName: principalName ?? this.principalName,
+      principalEmail: principalEmail ?? this.principalEmail,
+      notes: notes ?? this.notes,
     );
   }
 }

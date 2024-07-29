@@ -15,12 +15,4 @@ class Clients extends _$Clients {
       }).toList();
     });
   }
-
-  Future<void> updateClient(Client newClient) async {
-    final db = FirebaseFirestore.instance;
-    await db
-        .collection('clients')
-        .doc(newClient.id)
-        .update(newClient.toFBJson());
-  }
 }
