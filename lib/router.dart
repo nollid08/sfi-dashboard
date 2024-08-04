@@ -15,15 +15,22 @@ import 'package:dashboard/views/screens/admin_tools/manage_client.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_clients.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_coaches.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_booking/manage_session.dart';
+import 'package:dashboard/views/screens/admin_tools/manage_leave_requests.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/gather_info_screen.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/manual_booking_shell.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/select_coaches.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/select_dates.dart';
+import 'package:dashboard/views/screens/my_future_bookings.dart';
 import 'package:dashboard/views/screens/login_screen.dart';
+import 'package:dashboard/views/screens/my_booking_shell.dart';
 import 'package:dashboard/views/screens/my_calendar.dart';
+import 'package:dashboard/views/screens/my_leave_screen.dart';
+import 'package:dashboard/views/screens/my_past_bookings.dart';
 import 'package:dashboard/views/screens/navigation_shell.dart';
 import 'package:dashboard/views/screens/resource_view.dart';
 import 'package:dashboard/views/screens/splash_screen.dart';
+import 'package:dashboard/views/screens/view_booking.dart';
+import 'package:dashboard/views/screens/view_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,15 +50,56 @@ GoRouter router(RouterRef ref) {
       },
     ),
     GoRoute(
-      path: '/myProfile',
+      path: '/myFutureBookings',
       builder: (context, state) {
-        return const Placeholder();
+        return const MyFutureBookingsView();
       },
     ),
     GoRoute(
-      path: '/mySettings',
+      path: '/myleave',
       builder: (context, state) {
-        return const Placeholder();
+        return const MyLeaveScreen();
+      },
+    ),
+    ShellRoute(
+      builder: (context, state, child) {
+        final bookingId = state.pathParameters['bookingId']!;
+        final int? sessionIndex = state.pathParameters['sessionIndex'] != null
+            ? int.parse(state.pathParameters['sessionIndex']!)
+            : null;
+        return MyBookingShell(
+          bookingId: bookingId,
+          sessionIndex: sessionIndex,
+          child: child,
+        );
+      },
+      routes: [
+        GoRoute(
+          path: '/myBookings/:bookingId',
+          builder: (context, state) {
+            final bookingId = state.pathParameters['bookingId']!;
+            return ViewBooking(id: bookingId);
+          },
+        ),
+        GoRoute(
+          path: '/myBookings/:bookingId/sessions/:sessionIndex',
+          builder: (context, state) {
+            final bookingId = state.pathParameters['bookingId']!;
+            final int sessionIndex =
+                int.parse(state.pathParameters['sessionIndex'] ?? "-1");
+            return ViewSession(
+              key: ValueKey(sessionIndex),
+              bookingId: bookingId,
+              sessionIndex: sessionIndex,
+            );
+          },
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/myPastBookings',
+      builder: (context, state) {
+        return const MyPastBookingsView();
       },
     ),
     GoRoute(
@@ -79,18 +127,19 @@ GoRouter router(RouterRef ref) {
       },
     ),
     GoRoute(
-      path: '/adminTools/manageClients',
-      builder: (context, state) {
-        return const ManageSchools();
-      },
-    ),
-    GoRoute(
-      path: '/adminTools/manageClients/:clientId',
-      builder: (context, state) {
-        final clientId = state.pathParameters['clientId']!;
-        return ManageClient(clientId);
-      },
-    ),
+        path: '/adminTools/manageClients',
+        builder: (context, state) {
+          return const ManageSchools();
+        },
+        routes: [
+          GoRoute(
+            path: ':clientId',
+            builder: (context, state) {
+              final clientId = state.pathParameters['clientId']!;
+              return ManageClient(clientId);
+            },
+          ),
+        ]),
     ShellRoute(
       builder: (context, state, child) {
         return ManualBookingShell(child);
@@ -130,11 +179,10 @@ GoRouter router(RouterRef ref) {
           },
         ),
         GoRoute(
-          path: '/adminTools/createManualBooking/success',
-          builder: (context, state) {
-            return const Placeholder();
-          },
-        ),
+            path: '/adminTools/manageLeaveRequests',
+            builder: (context, state) {
+              return const ManageLeaveRequests();
+            }),
         GoRoute(
           path: '/adminTools/manageBookings',
           builder: (context, state) {

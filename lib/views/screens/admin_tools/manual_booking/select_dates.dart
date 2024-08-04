@@ -423,5 +423,3 @@ class _SelectDatesScreenState extends State<SelectDatesScreen> {
     );
   }
 }
-
-class DateFormat {}

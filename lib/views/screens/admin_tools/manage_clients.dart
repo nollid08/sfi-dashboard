@@ -36,13 +36,10 @@ class ManageSchools extends ConsumerWidget {
                   final DataGridRow row = clientDataSource.effectiveRows
                       .elementAt(selectedRowIndex);
                   final Client client = row.getCells().last.value;
-                  context.push('/adminTools/manageClients/${client.id}');
+                  context.go('/adminTools/manageClients/${client.id}');
                 },
                 selectionMode: SelectionMode.multiple,
                 navigationMode: GridNavigationMode.row,
-                // onCellTap: (details) {
-                //   print(details.);
-                // },
                 columns: <GridColumn>[
                   GridColumn(
                     columnName: 'RollNumber',

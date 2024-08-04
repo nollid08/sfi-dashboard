@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/client.dart';
+import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/models/session.dart';
 
 class BookingWithSessions extends Booking {
@@ -13,15 +14,31 @@ class BookingWithSessions extends Booking {
     required super.coachesUids,
     required super.activity,
     required super.client,
+    required super.startDate,
+    required super.endDate,
     required this.sessions,
   });
+
+  List<Coach> get coaches {
+    final List<Coach> coaches = [];
+    for (final session in sessions) {
+      for (final assignedCoach in session.assignedCoaches) {
+        final coach = assignedCoach.coach;
+        //if uid is not already in the list
+        if (!coaches.any((c) => c.uid == coach.uid)) {
+          coaches.add(coach);
+        }
+      }
+    }
+    return coaches;
+  }
 
   factory BookingWithSessions.fromQueryDocSnapshot(
       QueryDocumentSnapshot<Map<String, dynamic>> doc, List<Session> sessions) {
     final data = doc.data();
     final String id = doc.id;
     final Activity activity = Activity.fromJson(data['activity']);
-    final Client client = Client.fromJson(data['client'], doc.id);
+    final Client client = Client.fromFBJson(data['client'], doc.id);
     final coaches = List<String>.from(data['coaches']);
 
     return BookingWithSessions(
@@ -30,6 +47,8 @@ class BookingWithSessions extends Booking {
       coachesUids: coaches,
       client: client,
       sessions: sessions,
+      endDate: data['endDate'],
+      startDate: data['startDate'],
     );
   }
 
@@ -41,7 +60,7 @@ class BookingWithSessions extends Booking {
     }
     final String id = doc.id;
     final Activity activity = Activity.fromJson(data['activity']);
-    final Client client = Client.fromJson(data['client'], doc.id);
+    final Client client = Client.fromFBJson(data['client'], doc.id);
     final coaches = List<String>.from(data['coaches']);
     return BookingWithSessions(
       id: id,
@@ -49,6 +68,8 @@ class BookingWithSessions extends Booking {
       coachesUids: coaches,
       client: client,
       sessions: sessions,
+      endDate: data['endDate'],
+      startDate: data['startDate'],
     );
   }
 
@@ -59,16 +80,22 @@ class BookingWithSessions extends Booking {
       activity: booking.activity,
       coachesUids: booking.coachesUids,
       client: booking.client,
-      sessions: sessions,
+      sessions: sessions.where((session) {
+        return session.bookingId == booking.id;
+      }).toList(),
+      endDate: booking.endDate,
+      startDate: booking.startDate,
     );
   }
 
   @override
   BookingWithSessions copyWith({
     String? id,
-    Activity? activity,
     List<String>? coachesUids,
+    Activity? activity,
     Client? client,
+    DateTime? startDate,
+    DateTime? endDate,
     List<Session>? sessions,
   }) {
     return BookingWithSessions(
@@ -76,6 +103,8 @@ class BookingWithSessions extends Booking {
       coachesUids: coachesUids ?? this.coachesUids,
       activity: activity ?? this.activity,
       client: client ?? this.client,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
       sessions: sessions ?? this.sessions,
     );
   }

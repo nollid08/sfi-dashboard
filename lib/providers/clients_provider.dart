@@ -11,7 +11,7 @@ class Clients extends _$Clients {
     final db = FirebaseFirestore.instance;
     return db.collection('clients').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
-        return Client.fromFBJson(doc.data(), doc.id);
+        return Client.fromJson(doc.data(), doc.id);
       }).toList();
     });
   }

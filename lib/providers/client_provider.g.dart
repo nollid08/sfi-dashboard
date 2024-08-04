@@ -6,7 +6,7 @@ part of 'client_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$singleClientHash() => r'acbbd59303bb751409f414be5af545860d57da31';
+String _$singleClientHash() => r'7ffe5814e0861c6688f4dcdb1a4d23145e62c9db';
 
 /// Copied from Dart SDK
 class _SystemHash {

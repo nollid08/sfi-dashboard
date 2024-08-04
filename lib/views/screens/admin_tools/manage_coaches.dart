@@ -2,6 +2,10 @@ import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/providers/activity_provider.dart';
 import 'package:dashboard/providers/coaches_provider.dart';
+import 'package:dashboard/providers/future_sessions_provider.dart';
+import 'package:dashboard/views/widgets/request_annual_leave_dialog.dart';
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -93,6 +97,21 @@ class _ManageCoachesScreenState extends ConsumerState<ManageCoachesScreen> {
                                 child: CircularProgressIndicator(),
                               ),
                               error: (error, stackTrace) => throw error,
+                            ),
+                            FilledButton.icon(
+                              onPressed: () async {
+                                await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return RequestAnnualLeaveDialog(
+                                      coachUid:
+                                          coaches[selectedCoachindex!].uid,
+                                    );
+                                  },
+                                );
+                              },
+                              label: const Text('Add Annual Leave'),
+                              icon: const Icon(Icons.beach_access),
                             ),
                           ],
                         ],

@@ -12,6 +12,8 @@ class Booking {
   final Activity activity;
   final List<String> coachesUids;
   final Client client;
+  final DateTime startDate;
+  final DateTime endDate;
   Query<Map<String, dynamic>>? sessionsRef;
 
   Booking({
@@ -19,6 +21,8 @@ class Booking {
     required this.coachesUids,
     required this.activity,
     required this.client,
+    required this.startDate,
+    required this.endDate,
   }) {
     sessionsRef = FirebaseFirestore.instance
         .collection('sessions')
@@ -31,6 +35,8 @@ class Booking {
       'activity': activity.toJson(),
       'coaches': coachesUids,
       'client': client.toJson(),
+      'startDate': startDate.millisecondsSinceEpoch,
+      'endDate': endDate.millisecondsSinceEpoch,
     };
   }
 
@@ -39,6 +45,8 @@ class Booking {
       'activity': activity.toJson(),
       'coaches': coachesUids,
       'client': client.toJson(),
+      'startDate': startDate,
+      'endDate': endDate,
     };
   }
 
@@ -47,13 +55,17 @@ class Booking {
     final data = doc.data();
     final String id = doc.id;
     final Activity activity = Activity.fromJson(data['activity']);
-    final Client client = Client.fromJson(data['client'], doc.id);
+    final Client client = Client.fromFBJson(data['client'], doc.id);
     final coaches = List<String>.from(data['coaches']);
+    final DateTime startDate = data['startDate'].toDate();
+    final DateTime endDate = data['endDate'].toDate();
     return Booking(
       id: id,
       activity: activity,
       coachesUids: coaches,
       client: client,
+      startDate: startDate,
+      endDate: endDate,
     );
   }
 
@@ -64,24 +76,32 @@ class Booking {
     }
     final String id = doc.id;
     final Activity activity = Activity.fromJson(data['activity']);
-    final Client client = Client.fromJson(data['client'], doc.id);
+    final Client client = Client.fromFBJson(data['client'], doc.id);
     final coaches = List<String>.from(data['coaches']);
+    final DateTime startDate = data['startDate'].toDate();
+    final DateTime endDate = data['endDate'].toDate();
     return Booking(
       id: id,
       activity: activity,
       coachesUids: coaches,
       client: client,
+      startDate: startDate,
+      endDate: endDate,
     );
   }
 
   factory Booking.fromBookingTemplate(BookingTemplate bookingTemplate) {
     final List<String> coaches =
         bookingTemplate.assignedCoaches.map((ac) => ac.coach.uid).toList();
+    final DateTime startDate = bookingTemplate.sessions.first.arrivalTime;
+    final DateTime endDate = bookingTemplate.sessions.last.leaveTime;
     return Booking(
       id: bookingTemplate.bookingId,
       activity: bookingTemplate.activity,
       coachesUids: coaches,
       client: bookingTemplate.client,
+      startDate: startDate,
+      endDate: endDate,
     );
   }
 
@@ -90,12 +110,16 @@ class Booking {
     Activity? activity,
     List<String>? coachesUids,
     Client? client,
+    DateTime? startDate,
+    DateTime? endDate,
   }) {
     return Booking(
       id: id ?? this.id,
-      coachesUids: coachesUids ?? this.coachesUids,
       activity: activity ?? this.activity,
+      coachesUids: coachesUids ?? this.coachesUids,
       client: client ?? this.client,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
     );
   }
 }

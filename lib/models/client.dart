@@ -11,7 +11,7 @@ class Client {
   final bool isDeis;
   final int classrooms;
   final int students;
-  final DateTime joinDate;
+  final DateTime? joinDate;
   final List<String> previousBookingIds;
   final bool? hasHall;
   final bool? hasParking;
@@ -35,7 +35,7 @@ class Client {
     required this.isDeis,
     required this.classrooms,
     required this.students,
-    required this.joinDate,
+    this.joinDate,
     this.previousBookingIds = const [],
     this.hasHall,
     this.hasParking,
@@ -49,19 +49,16 @@ class Client {
     this.notes,
   });
 
-  factory Client.fromJson(Map<String, dynamic> json, String id) {
-    final String name = json['name'] ?? 'N/A';
-    final String town = json['addressLine1'] ?? 'N/A';
-    final String county = json['addressLine2'] ?? 'N/A';
+  factory Client.fromFBJson(Map<String, dynamic> json, String id) {
     final String eircode = json['eircode'] ?? 'N/A';
     final String rollNumber = json['rollNumber'] ?? 'N/A';
     final ClientType type = ClientType.fromString(json['type']['id'] ?? '');
     final bool isDeis = json['isDeis'] ?? false;
     final int classrooms = json['classrooms'] ?? 0;
     final int students = json['students'] ?? 0;
-    final DateTime joinDate = json['joinDate'];
-    final List<String> previousBookingIds =
-        List<String>.from(json['previousBookingIds'] ?? []);
+    final String name = json['name'] ?? 'N/A';
+    final String town = json['town'] ?? 'N/A';
+    final String county = json['county'] ?? 'N/A';
     final bool? hasHall = json['hasHall'];
     final bool? hasParking = json['hasParking'];
     final int? largestClassSize = json['largestClassSize'];
@@ -72,6 +69,9 @@ class Client {
     final String? principalName = json['principalName'];
     final String? principalEmail = json['principalEmail'];
     final String? notes = json['notes'];
+    final DateTime? joinDate = json['joinDate'] != null
+        ? DateTime.fromMillisecondsSinceEpoch(json['joinDate'])
+        : null;
     return Client(
       id: id,
       name: name,
@@ -81,10 +81,9 @@ class Client {
       town: town,
       county: county,
       isDeis: isDeis,
+      joinDate: joinDate,
       classrooms: classrooms,
       students: students,
-      joinDate: joinDate,
-      previousBookingIds: previousBookingIds,
       hasHall: hasHall,
       hasParking: hasParking,
       largestClassSize: largestClassSize,
@@ -98,7 +97,7 @@ class Client {
     );
   }
 
-  factory Client.fromFBJson(Map<String, dynamic> json, String id) {
+  factory Client.fromJson(Map<String, dynamic> json, String id) {
     final String eircode = json['eircode'] ?? 'N/A';
     final String rollNumber = json['rollNumber'] ?? 'N/A';
     final ClientType type = ClientType.fromString(json['type'] ?? '');
@@ -118,6 +117,9 @@ class Client {
     final String? principalName = json['principalName'];
     final String? principalEmail = json['principalEmail'];
     final String? notes = json['notes'];
+    final DateTime? joinDate = json['joinDate'] != null
+        ? DateTime.fromMillisecondsSinceEpoch(json['joinDate'])
+        : null;
     return Client(
       id: id,
       name: name,
@@ -127,9 +129,9 @@ class Client {
       town: town,
       county: county,
       isDeis: isDeis,
+      joinDate: joinDate,
       classrooms: classrooms,
       students: students,
-      joinDate: DateTime.now(),
       hasHall: hasHall,
       hasParking: hasParking,
       largestClassSize: largestClassSize,
@@ -149,13 +151,13 @@ class Client {
       'name': name,
       'eircode': eircode,
       'rollNumber': rollNumber,
-      'type': type.id,
+      'type': type.toJson(),
       'town': town,
       'county': county,
       'isDeis': isDeis,
       'classrooms': classrooms,
       'students': students,
-      'joinDate': joinDate,
+      'joinDate': joinDate?.millisecondsSinceEpoch,
       'previousBookingIds': previousBookingIds,
       'hasHall': hasHall,
       'hasParking': hasParking,
@@ -175,7 +177,7 @@ class Client {
       'name': name,
       'eircode': eircode,
       'rollNumber': rollNumber,
-      'type': type.id,
+      'type': type.toJson(),
       'town': town,
       'county': county,
       'isDeis': isDeis,

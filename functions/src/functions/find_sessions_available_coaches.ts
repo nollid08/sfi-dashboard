@@ -11,6 +11,7 @@ import { BookingSession, BookingSessionData } from "../models/session";
 import { TravelEstimate } from "../models/travel_estimate";
 import { defineSecret } from "firebase-functions/params";
 import { AssignedCoach } from "../models/assigned_coach";
+import { Leave, LeaveStatus } from "../models/leave";
 
 const mapsApiKey = defineSecret('MAPS_API_KEY');
 export const find_sessions_available_coaches_function = onCall({ secrets: [mapsApiKey] }, async (request: CallableRequest) => {
@@ -131,7 +132,46 @@ export const find_sessions_available_coaches_function = onCall({ secrets: [mapsA
 
     const overlappingCoachesUids = overlappingSessions.map(session => session.coaches).flat();
 
-    const availableCoachesWhoCoverActivity = coachesWhoCoverActivity.filter(coach => !overlappingCoachesUids.includes(coach.uid));
+    const notWorkingCoachesWhoCoverActivity = coachesWhoCoverActivity.filter(coach => !overlappingCoachesUids.includes(coach.uid));
+
+    //Now Filter For Coaches who are not on leave
+    const leaveRef = db.collection('leaves');
+    const leaveDocs = await leaveRef.where('coachUid', 'in', notWorkingCoachesWhoCoverActivity.map(coach => coach.uid)).get();
+    const leaves: Leave[] = leaveDocs.docs.map((doc: any) => {
+        const leave = doc.data();
+        return {
+            id: doc.id,
+            coachUid: leave.coachUid,
+            startDate: leave.startDate.toDate(),
+            endDate: leave.endDate.toDate(),
+            type: leave.type,
+            status: leave.status,
+        };
+    });
+
+    const onLeaveCoaches: Coach[] = [];
+    for (const leave of leaves) {
+        if (leave.status != LeaveStatus.rejected) {
+            if (leave.startDate <= session.arrivalTime && leave.endDate >= session.endTime) {
+                onLeaveCoaches.push(notWorkingCoachesWhoCoverActivity.find(coach => coach.uid === leave.coachUid) as Coach);
+            }
+            if (leave.startDate >= session.arrivalTime && leave.startDate <= session.endTime) {
+                onLeaveCoaches.push(notWorkingCoachesWhoCoverActivity.find(coach => coach.uid === leave.coachUid) as Coach);
+            }
+            if (leave.endDate >= session.arrivalTime && leave.endDate <= session.endTime) {
+                onLeaveCoaches.push(notWorkingCoachesWhoCoverActivity.find(coach => coach.uid === leave.coachUid) as Coach);
+            }
+        }
+    }
+
+    const availableCoachesWhoCoverActivity = notWorkingCoachesWhoCoverActivity.filter(coach => !onLeaveCoaches.includes(coach));
+
+
+
+
+
+
+
 
 
     let coachRecommendations: CoachRecomendation[] = [];

@@ -1,7 +1,14 @@
 import 'package:dashboard/models/coach_calendar_source.dart';
 import 'package:dashboard/providers/my_calendar_provider.dart';
+import 'package:dashboard/views/widgets/calendar.dart';
+import 'package:dashboard/views/widgets/request_annual_leave_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
@@ -14,81 +21,52 @@ class MyCalendar extends ConsumerWidget {
         ref.watch(myCalendarProvider);
 
     final calendarController = CalendarController();
-    return Center(
-      child: myCalendar.when(
-        data: (CoachCalendarSource? coachCalendarSource) {
-          return Card(
-            margin: const EdgeInsets.all(16),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SfCalendar(
-                controller: calendarController,
-                view: CalendarView.month,
-                allowViewNavigation: true,
-                allowAppointmentResize: false,
-                allowDragAndDrop: false,
-                showDatePickerButton: true,
-                allowedViews: const [
-                  CalendarView.day,
-                  CalendarView.workWeek,
-                  CalendarView.week,
-                  CalendarView.month,
-                  CalendarView.schedule,
-                ],
-                onTap: (CalendarTapDetails details) {
-                  if (details.targetElement == CalendarElement.appointment) {
-                    final Appointment appointment = details.appointments![0];
-                    //Show appointment details
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(appointment.subject.toString()),
-                          content: Text(
-                              'Start Time: ${appointment.startTime}\nEnd Time: ${appointment.endTime}\nLocation: ${appointment.location}'),
-                          actions: [
-                            if (appointment.location != null)
-                              TextButton(
-                                onPressed: () {
-                                  MapsLauncher.launchQuery(
-                                    appointment.location!,
-                                  );
-                                },
-                                child: const Text('Directions'),
-                              ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Close'),
-                            ),
-                          ],
+    return myCalendar.when(
+      data: (CoachCalendarSource? coachCalendarSource) {
+        return Card(
+          margin: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Calendar(
+                      calendarController: calendarController,
+                      coachCalendarSource: coachCalendarSource!),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FilledButton.icon(
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return RequestAnnualLeaveDialog(
+                              coachUid: FirebaseAuth.instance.currentUser!.uid,
+                            );
+                          },
                         );
                       },
-                    );
-                  }
-                },
-                monthViewSettings: const MonthViewSettings(
-                    agendaViewHeight: 100,
-                    appointmentDisplayCount: 5,
-                    appointmentDisplayMode:
-                        MonthAppointmentDisplayMode.appointment),
-                showCurrentTimeIndicator: true,
-                showTodayButton: false,
-                showNavigationArrow: true,
-                showWeekNumber: true,
-                dataSource: coachCalendarSource,
-              ),
-            ),
-          );
-        },
-        loading: () {
-          return const CircularProgressIndicator();
-        },
-        error: (error, stackTrace) {
-          return Text('Error: $error');
-        },
-      ),
+                      label: const Text('Request Annual Leave'),
+                      icon: const Icon(Icons.beach_access),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      },
+      loading: () {
+        return const CircularProgressIndicator();
+      },
+      error: (error, stackTrace) {
+        throw error;
+      },
     );
   }
 }

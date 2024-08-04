@@ -146,10 +146,9 @@ class ManageSessionNotes extends ConsumerWidget {
           child: SizedBox(
             width: double.infinity,
             child: Column(
-              // Show camp notes in a textbox
               children: [
                 const Text(
-                  'Camp Notes',
+                  'Session Notes',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                 ),
                 Padding(
@@ -169,7 +168,7 @@ class ManageSessionNotes extends ConsumerWidget {
                     if (formKey.currentState?.saveAndValidate() ?? false) {
                       final Map<String, dynamic> formValues =
                           formKey.currentState!.value;
-                      final String newNotes = formValues['camp-notes'];
+                      final String newNotes = formValues['session-notes'];
                       final String bookingId = session.bookingId;
                       final String sessionId = session.id;
                       await ref
@@ -181,7 +180,7 @@ class ManageSessionNotes extends ConsumerWidget {
                           );
                     }
                   },
-                  child: const Text('Update Camp Notes'),
+                  child: const Text('Update Session Notes'),
                 ),
               ],
             ),

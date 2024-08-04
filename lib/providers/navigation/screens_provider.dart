@@ -14,16 +14,22 @@ List<ScreenItem> screens(ScreensRef ref) {
       activeRouteIdentifier: '/myCalendar',
     ),
     ScreenItem(
-      '/myProfile',
-      title: 'My Profile',
-      icon: Icons.person,
-      activeRouteIdentifier: '/myProfile',
+      '/myFutureBookings',
+      title: 'Future Bookings',
+      icon: Icons.update,
+      activeRouteIdentifier: '/myFutureBookings',
     ),
     ScreenItem(
-      '/mySettings',
-      title: 'My Settings',
-      icon: Icons.settings,
-      activeRouteIdentifier: '/mySettings',
+      '/myPastBookings',
+      title: 'Past Bookings',
+      icon: Icons.history,
+      activeRouteIdentifier: '/myPastBookings',
+    ),
+    ScreenItem(
+      '/myLeave',
+      title: 'My Leave',
+      icon: Icons.beach_access,
+      activeRouteIdentifier: '/myProfile',
     ),
     ScreenItem(
       '/adminTools',
@@ -67,7 +73,13 @@ List<ScreenItem> screens(ScreensRef ref) {
           title: 'Manage Bookings',
           icon: Icons.book,
           activeRouteIdentifier: '/adminTools/manageBookings',
-        )
+        ),
+        ScreenItem(
+          '/adminTools/manageLeaveRequests',
+          title: 'Manage Leave Requests',
+          icon: Icons.beach_access,
+          activeRouteIdentifier: '/adminTools/manageLeaveRequests',
+        ),
       ],
     ),
   ];

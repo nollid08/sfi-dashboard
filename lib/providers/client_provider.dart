@@ -11,7 +11,7 @@ class SingleClient extends _$SingleClient {
   Stream<Client> build(String clientId) {
     final db = FirebaseFirestore.instance;
     return db.collection('clients').doc(clientId).snapshots().map((doc) {
-      return Client.fromFBJson(doc.data()!, doc.id);
+      return Client.fromJson(doc.data()!, doc.id);
     });
   }
 

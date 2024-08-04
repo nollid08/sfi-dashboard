@@ -50,7 +50,7 @@ class GatherBookingInfo extends ConsumerWidget {
                       compareFn: (client, candidate) => client == candidate,
                     ),
                     loading: () => const CircularProgressIndicator(),
-                    error: (error, _) => Text('Error: $error'),
+                    error: (error, st) => Text('Error: $error, stack: $st'),
                   ),
                 ),
                 const VerticalDivider(),

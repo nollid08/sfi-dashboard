@@ -82,7 +82,7 @@ class Session {
         )
         .toList();
     final Activity activity = Activity.fromJson(data['activity']);
-    final Client client = Client.fromJson(data['client'], doc.id);
+    final Client client = Client.fromFBJson(data['client'], doc.id);
     return Session(
       id: id,
       startTime: startTime,
@@ -117,7 +117,7 @@ class Session {
         )
         .toList();
     final Activity activity = Activity.fromJson(data['activity']);
-    final Client client = Client.fromJson(data['client'], doc.id);
+    final Client client = Client.fromFBJson(data['client'], doc.id);
     return Session(
       id: id,
       startTime: startTime,

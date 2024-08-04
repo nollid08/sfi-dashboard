@@ -11,6 +11,7 @@ import { QoutaInfo } from "../models/qouta_info";
 import { BookingSession, BookingSessionData } from "../models/session";
 import { TravelEstimate } from "../models/travel_estimate";
 import { defineSecret } from "firebase-functions/params";
+import { Leave, LeaveStatus } from "../models/leave";
 
 const mapsApiKey = defineSecret('MAPS_API_KEY');
 export const find_bookings_available_coaches_function = onCall({ secrets: [mapsApiKey] }, async (request: CallableRequest) => {
@@ -88,7 +89,7 @@ export const find_bookings_available_coaches_function = onCall({ secrets: [mapsA
 
     // Filter for coaches who can cover the entire booking e.g don't have a session in db that overlaps with the new sessions
     const baseQuery = db.collection('sessions').where('coaches', 'array-contains-any', coachesWhoCoverActivity.map(coach => coach.uid));
-    const busyCoachUids: String[] = [];
+    const workingCoachUids: String[] = [];
     for (let session of booking.sessions) {
         const fullOverlapSession = await baseQuery.where('arrivalTime', '<=', session.arrivalTime).where('leaveTime', '>=', session.endTime).get();
         const beginningOverlapSession = await baseQuery.where('arrivalTime', '>=', session.arrivalTime).where('arrivalTime', '<=', session.endTime).get();
@@ -124,12 +125,56 @@ export const find_bookings_available_coaches_function = onCall({ secrets: [mapsA
         const coachUids = overlappingSessions.map(session => session.coaches).flat();
 
         for (let coachUid of coachUids) {
-            if (!busyCoachUids.includes(coachUid)) {
-                busyCoachUids.push(coachUid);
+            if (!workingCoachUids.includes(coachUid)) {
+                workingCoachUids.push(coachUid);
             }
         }
     }
-    const availableCoachesWhoCoverActivity = coachesWhoCoverActivity.filter(coach => !busyCoachUids.includes(coach.uid));
+    const notWorkingCoachesWhoCoverActivity = coachesWhoCoverActivity.filter(coach => !workingCoachUids.includes(coach.uid));
+
+    // Fliter for coaches who are on leave during any of the sessions
+    const leaveRef = db.collection('leaves');
+    const leaveQuery = leaveRef.where('coachUid', 'in', notWorkingCoachesWhoCoverActivity.map(coach => coach.uid));
+    const leaveDocs = await leaveQuery.get();
+    const leaves: Leave[] = leaveDocs.docs.map((doc: any) => {
+        const leave = doc.data();
+        return {
+            id: doc.id,
+            coachUid: leave.coachUid,
+            startDate: leave.startDate.toDate(),
+            endDate: leave.endDate.toDate(),
+            type: leave.type,
+            status: leave.status,
+        };
+    });
+    const applicableLeaves: Leave[] = leaves.filter(leave => {
+        if (leave.status === LeaveStatus.rejected) {
+            return false;
+        }
+        return true;
+    });
+    //Now check each session against the leaves
+    const onLeaveCoaches: Coach[] = [];
+    for (let session of booking.sessions) {
+        for (let leave of applicableLeaves) {
+            if (session.startTime >= leave.startDate && session.endTime <= leave.endDate) {
+                if (!onLeaveCoaches.map(coach => coach.uid).includes(leave.coachUid)) {
+                    onLeaveCoaches.push(notWorkingCoachesWhoCoverActivity.find(coach => coach.uid === leave.coachUid)!);
+                }
+            }
+            if (session.startTime <= leave.startDate && session.endTime >= leave.startDate) {
+                if (!onLeaveCoaches.map(coach => coach.uid).includes(leave.coachUid)) {
+                    onLeaveCoaches.push(notWorkingCoachesWhoCoverActivity.find(coach => coach.uid === leave.coachUid)!);
+                }
+            }
+            if (session.startTime <= leave.endDate && session.endTime >= leave.endDate) {
+                if (!onLeaveCoaches.map(coach => coach.uid).includes(leave.coachUid)) {
+                    onLeaveCoaches.push(notWorkingCoachesWhoCoverActivity.find(coach => coach.uid === leave.coachUid)!);
+                }
+            }
+        }
+    }
+    const availableCoachesWhoCoverActivity: Coach[] = notWorkingCoachesWhoCoverActivity.filter(coach => !onLeaveCoaches.includes(coach));
 
 
     let coachRecommendations: CoachRecomendation[] = [];
@@ -170,7 +215,9 @@ export const find_bookings_available_coaches_function = onCall({ secrets: [mapsA
     }
     return coachRecommendations;
 
-});
+}
+);
+
 
 
 
