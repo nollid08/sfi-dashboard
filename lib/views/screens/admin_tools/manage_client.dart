@@ -174,13 +174,12 @@ class ManageClient extends ConsumerWidget {
                                 const SizedBox(height: 10),
                                 FormBuilderTextField(
                                   name: 'joinDate',
-                                  initialValue: client.joinDate.toString(),
+                                  initialValue: client.joinDate?.toString(),
                                   decoration: const InputDecoration(
                                     labelText: 'Join Date',
                                     border: OutlineInputBorder(),
                                   ),
                                   validator: FormBuilderValidators.compose([
-                                    FormBuilderValidators.required(),
                                     FormBuilderValidators.dateString(),
                                   ]),
                                 ),

@@ -76,7 +76,8 @@ class Booking {
     }
     final String id = doc.id;
     final Activity activity = Activity.fromJson(data['activity']);
-    final Client client = Client.fromFBJson(data['client'], doc.id);
+    final Client client =
+        Client.fromFBJson(data['client'], data['client']['id']);
     final coaches = List<String>.from(data['coaches']);
     final DateTime startDate = data['startDate'].toDate();
     final DateTime endDate = data['endDate'].toDate();
