@@ -15,10 +15,12 @@ class RequestAnnualLeaveDialog extends ConsumerWidget {
   RequestAnnualLeaveDialog({
     super.key,
     required this.coachUid,
+    this.onPop,
   });
 
   final GlobalKey<FormBuilderState> formKey = GlobalKey<FormBuilderState>();
   final String coachUid;
+  final Function? onPop;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -140,6 +142,9 @@ class RequestAnnualLeaveDialog extends ConsumerWidget {
               await ref
                   .read(leavesProvider(<String>[].lock).notifier)
                   .addLeave(leave);
+              if (onPop != null) {
+                onPop!();
+              }
               if (context.mounted) {
                 Navigator.of(context).pop();
               }

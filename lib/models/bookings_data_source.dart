@@ -1,8 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/bookings_with_sessions.dart';
-import 'package:dashboard/models/client.dart';
-import 'package:dashboard/models/client_types.dart';
-import 'package:dashboard/providers/bookings_with_sessions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 

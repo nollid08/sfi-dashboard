@@ -1,19 +1,60 @@
 import 'package:dashboard/models/assigned_coach.dart';
-import 'package:dashboard/models/booking.dart';
-import 'package:dashboard/models/functions.dart';
 import 'package:dashboard/models/leave.dart';
-import 'package:dashboard/models/travel_estimate.dart';
 import 'package:dashboard/models/session.dart';
+import 'package:dashboard/providers/effective_leaves.dart';
+import 'package:dashboard/providers/sessions_provider.dart';
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CoachCalendarSource extends CalendarDataSource {
-  CoachCalendarSource(List<Appointment> source) {
+  final WidgetRef ref;
+  final String coachUid;
+  bool hasLoaded = false;
+  CoachCalendarSource(List<Appointment> source,
+      {required this.ref, required this.coachUid}) {
     appointments = source;
   }
 
-  factory CoachCalendarSource.fromData({
+  @override
+  Future<void> handleLoadMore(DateTime startDate, DateTime endDate) async {
+    final IList<String> prop = [coachUid].lock;
+    final List<Session> sessions =
+        await ref.read(sessionsProvider(coachIds: prop).future);
+    final List<Leave> leaves =
+        await ref.read(effectiveLeavesProvider(coachUid).future);
+    final List<Appointment> newAppointments = appointmentsFromData(
+      sessions: sessions,
+      leaves: leaves,
+      coachUid: coachUid,
+    );
+    appointments = [];
+    notifyListeners(CalendarDataSourceAction.reset, appointments!);
+    appointments?.addAll(newAppointments);
+    notifyListeners(CalendarDataSourceAction.add, newAppointments);
+    hasLoaded = true;
+  }
+
+  Future<void> invalidate() async {
+    final IList<String> prop = [coachUid].lock;
+    final List<Session> sessions =
+        await ref.read(sessionsProvider(coachIds: prop).future);
+    final List<Leave> leaves =
+        await ref.read(effectiveLeavesProvider(coachUid).future);
+    final List<Appointment> newAppointments = appointmentsFromData(
+      sessions: sessions,
+      leaves: leaves,
+      coachUid: coachUid,
+    );
+    appointments = [];
+    notifyListeners(CalendarDataSourceAction.reset, appointments!);
+    appointments?.addAll(newAppointments);
+    notifyListeners(CalendarDataSourceAction.add, newAppointments);
+    hasLoaded = true;
+  }
+
+  List<Appointment> appointmentsFromData({
     required List<Session> sessions,
     required List<Leave> leaves,
     required String? coachUid,
@@ -21,81 +62,6 @@ class CoachCalendarSource extends CalendarDataSource {
     sessions.sort((a, b) => a.arrivalTime.compareTo(b.arrivalTime));
     final List<Appointment> appointments = [];
     for (final leave in leaves) {
-      // final int daysCovered =
-      //     inclusiveDaysBetween(leave.startDate, leave.endDate);
-      // if (daysCovered == 1) {
-      //   appointments.add(
-      //     Appointment(
-      //       startTime: leave.startDate,
-      //       endTime: leave.endDate,
-      //       subject: 'Leave',
-      //       color: Colors.red,
-      //       id: {"leave": leave},
-      //     ),
-      //   );
-      // } else if (daysCovered == 2) {
-      //   appointments.add(
-      //     Appointment(
-      //       startTime: leave.startDate,
-      //       endTime: leave.startDate.copyWith(hour: 24),
-      //       subject: 'Leave',
-      //       color: Colors.red,
-      //       id: {"leave": leave},
-      //     ),
-      //   );
-      //   appointments.add(
-      //     Appointment(
-      //       startTime: leave.endDate.copyWith(hour: 0),
-      //       endTime: leave.endDate,
-      //       subject: 'Leave',
-      //       color: Colors.red,
-      //       id: {"leave": leave},
-      //     ),
-      //   );
-      // } else {
-      //   for (int i = 0; i < daysCovered; i++) {
-      //     if (i == 0) {
-      //       appointments.add(
-      //         Appointment(
-      //           startTime: leave.startDate,
-      //           endTime: leave.startDate.copyWith(hour: 23, minute: 59),
-      //           subject: 'Leave',
-      //           color: Colors.red,
-      //           id: {"leave": leave},
-      //           isAllDay: false,
-      //         ),
-      //       );
-      //     } else if (i == daysCovered - 1) {
-      //       appointments.add(
-      //         Appointment(
-      //           startTime: leave.endDate.copyWith(
-      //             hour: 0,
-      //           ),
-      //           endTime: leave.endDate,
-      //           subject: 'Leave',
-      //           color: Colors.red,
-      //           id: {"leave": leave},
-      //           isAllDay: false,
-      //         ),
-      //       );
-      //     } else {
-      //       appointments.add(
-      //         Appointment(
-      //           startTime: leave.startDate
-      //               .add(Duration(days: i))
-      //               .copyWith(hour: 0, minute: 1),
-      //           endTime: leave.startDate
-      //               .add(Duration(days: i))
-      //               .copyWith(hour: 23, minute: 59),
-      //           isAllDay: false,
-      //           subject: 'Leave',
-      //           color: Colors.red,
-      //           id: {"leave": leave},
-      //         ),
-      //       );
-      //     }
-      //   }
-      // }
       appointments.add(
         Appointment(
           startTime: leave.startDate,
@@ -163,6 +129,6 @@ class CoachCalendarSource extends CalendarDataSource {
             }));
       }
     }
-    return CoachCalendarSource(appointments);
+    return appointments;
   }
 }
