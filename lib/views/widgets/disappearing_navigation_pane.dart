@@ -24,7 +24,9 @@ class DisappearingNavigationRail extends ConsumerWidget {
       autoSelectedIndex:
           false, // must be false if you want to handle state external
       onItemSelected: (index) {
-        ref.read(selectedScreenIndexProvider.notifier).state = index;
+        ref
+            .read(selectedScreenIndexProvider.notifier)
+            .updateIndexBasedOnRouteName(indexedScreens[index].route);
         GoRouter.of(context).go(indexedScreens[index].route);
       },
       itemSelectedColor:

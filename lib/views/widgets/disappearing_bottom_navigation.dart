@@ -14,7 +14,7 @@ class DisappearingBottomNavigationBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final screens = ref.watch(screensProvider);
-    int selectedIndex = 0;
+    int selectedIndex = ref.watch(selectedScreenIndexProvider);
     final navigationDestinations = ref.watch(navigationDestinationsProvider);
     return NavigationBar(
       elevation: 0,
@@ -22,13 +22,8 @@ class DisappearingBottomNavigationBar extends ConsumerWidget {
       destinations: navigationDestinations,
       selectedIndex: selectedIndex,
       onDestinationSelected: (index) {
-        //TODO: Mobile Navigation
-        // //NOTE: Since some items are desktop only, we need to map the index to the actual index in the screens list
-        // final int navIndex = screens.indexWhere(
-        //     (element) => element.title == navigationDestinations[index].label);
-        // //Now we can route to the nav Index, but must set selected index to the actual index
-        // ref.read(selectedScreenIndexProvider.notifier).state = index;
-        // GoRouter.of(context).go(screens[navIndex].route);
+        ref.read(selectedScreenIndexProvider.notifier).updateIndex(index);
+        context.go(screens[index].route);
       },
     );
   }

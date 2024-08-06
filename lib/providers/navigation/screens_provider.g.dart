@@ -6,7 +6,7 @@ part of 'screens_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$screensHash() => r'edd5df043d8ce7ee5d5e75e0a3e752c92272ad9d';
+String _$screensHash() => r'a329ada4639c91b00747ac058930b8ee961061ed';
 
 /// See also [screens].
 @ProviderFor(screens)

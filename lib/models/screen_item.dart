@@ -19,7 +19,7 @@ class ScreenItem {
   });
 
   bool isActive(String currentRoute) {
-    if (currentRoute.contains(activeRouteIdentifier)) {
+    if (currentRoute.contains(route)) {
       return true;
     } else {
       return false;

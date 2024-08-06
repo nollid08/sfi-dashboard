@@ -20,14 +20,11 @@ class IndexedScreens extends _$IndexedScreens {
   }
 
   int getIndexFromRoute(String route) {
-    for (ScreenItem screenItem in state) {
-      if (screenItem.children?.isNotEmpty ?? false) {
-        for (ScreenItem child in screenItem.children!) {
-          if (child.isActive(route)) {
-            return state.indexOf(screenItem);
-          }
-        }
-      } else if (screenItem.isActive(route)) {
+    //sort longest to shortest
+    final List<ScreenItem> sortedScreenItems = [...state]
+      ..sort((a, b) => b.route.length.compareTo(a.route.length));
+    for (ScreenItem screenItem in sortedScreenItems) {
+      if (screenItem.isActive(route)) {
         return state.indexOf(screenItem);
       }
     }

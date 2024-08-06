@@ -22,7 +22,9 @@ class TravelInfo {
 
   factory TravelInfo.fromJson(Map<String, dynamic> json) {
     return TravelInfo(
-      distance: json['distance'],
+      distance: json['distance'].runtimeType == int
+          ? json['distance'].toDouble()
+          : json['distance'],
       duration: Duration(milliseconds: json['duration']),
       departureLocation: json['departureLocation'],
       returnLocation: json['returnLocation'],

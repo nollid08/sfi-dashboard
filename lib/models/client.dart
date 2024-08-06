@@ -52,7 +52,9 @@ class Client {
   factory Client.fromFBJson(Map<String, dynamic> json, String id) {
     final String eircode = json['eircode'] ?? 'N/A';
     final String rollNumber = json['rollNumber'] ?? 'N/A';
-    final ClientType type = ClientType.fromString(json['type']['id'] ?? '');
+    final ClientType type = json['type'].runtimeType == String
+        ? ClientType.fromString(json['type'] ?? 'school')
+        : ClientType.fromString(json['type']['id'] ?? 'school');
     final bool isDeis = json['isDeis'] ?? false;
     final int classrooms = json['classrooms'] ?? 0;
     final int students = json['students'] ?? 0;
@@ -100,7 +102,9 @@ class Client {
   factory Client.fromJson(Map<String, dynamic> json, String id) {
     final String eircode = json['eircode'] ?? 'N/A';
     final String rollNumber = json['rollNumber'] ?? 'N/A';
-    final ClientType type = ClientType.fromString(json['type'] ?? '');
+    final ClientType type = json['type'].runtimeType == String
+        ? ClientType.fromString(json['type'] ?? 'school')
+        : ClientType.fromString(json['type']['id'] ?? 'school');
     final bool isDeis = json['isDeis'] ?? false;
     final int classrooms = json['classrooms'] ?? 0;
     final int students = json['students'] ?? 0;

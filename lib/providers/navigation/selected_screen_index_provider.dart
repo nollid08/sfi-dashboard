@@ -18,4 +18,8 @@ class SelectedScreenIndex extends _$SelectedScreenIndex {
     final int index = screenItemsNotifier.getIndexFromRoute(currentRoute);
     state = index;
   }
+
+  void updateIndex(int index) {
+    state = index;
+  }
 }

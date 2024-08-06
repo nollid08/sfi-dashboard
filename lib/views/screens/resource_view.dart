@@ -41,7 +41,7 @@ class ResourceView extends ConsumerWidget {
         child: CircularProgressIndicator(),
       ),
       error: (error, stackTrace) => Center(
-        child: Text('Error: $error'),
+        child: Text('Error: $error, $stackTrace'),
       ),
     );
   }

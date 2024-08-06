@@ -324,9 +324,16 @@ class ManageClient extends ConsumerWidget {
                                             .currentState!
                                             .fields['students']!
                                             .value);
-                                        final DateTime joinDate =
-                                            DateTime.parse(formKey.currentState!
-                                                .fields['joinDate']!.value);
+                                        final DateTime? joinDate = formKey
+                                                    .currentState!
+                                                    .fields['joinDate']!
+                                                    .value !=
+                                                null
+                                            ? DateTime.parse(formKey
+                                                .currentState!
+                                                .fields['joinDate']!
+                                                .value)
+                                            : null;
                                         final bool? hasHall = formKey
                                             .currentState!
                                             .fields['hasHall']!

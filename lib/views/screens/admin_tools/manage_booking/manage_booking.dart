@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../providers/navigation/selected_screen_index_provider.dart';
+
 class ManageBooking extends ConsumerWidget {
   final String id;
 
@@ -79,7 +81,7 @@ class ManageBooking extends ConsumerWidget {
   }
 }
 
-class ClientInfo extends StatelessWidget {
+class ClientInfo extends ConsumerWidget {
   const ClientInfo({
     super.key,
     required this.client,
@@ -88,7 +90,7 @@ class ClientInfo extends StatelessWidget {
   final Client client;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       color: Colors.blue[50],
       child: Padding(
@@ -234,7 +236,11 @@ class ClientInfo extends StatelessWidget {
                 ),
               ElevatedButton.icon(
                 onPressed: () {
-                  context.go('/adminTools/manageClients/${client.id}');
+                  var route = '/adminTools/manageClients/${client.id}';
+                  ref
+                      .read(selectedScreenIndexProvider.notifier)
+                      .updateIndexBasedOnRouteName(route);
+                  context.go(route);
                 },
                 label: const Text('Edit Client Info'),
               )

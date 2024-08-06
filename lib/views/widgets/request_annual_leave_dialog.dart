@@ -115,7 +115,7 @@ class RequestAnnualLeaveDialog extends ConsumerWidget {
             child: CircularProgressIndicator(),
           ),
           error: (error, stackTrace) {
-            return Text('Error: $error');
+            return Text('Error: $error, $stackTrace');
           },
         ),
       ),

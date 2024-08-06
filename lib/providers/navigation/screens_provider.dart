@@ -29,20 +29,20 @@ List<ScreenItem> screens(ScreensRef ref) {
       '/myLeave',
       title: 'My Leave',
       icon: Icons.beach_access,
-      activeRouteIdentifier: '/myProfile',
+      activeRouteIdentifier: '/myLeave',
     ),
     ScreenItem(
       '/adminTools',
       title: 'Admin Tools',
       icon: Icons.admin_panel_settings,
-      activeRouteIdentifier: '/adminTools',
+      activeRouteIdentifier: 'adminTools',
       isDesktopOnly: true,
       children: [
         ScreenItem(
           '/adminTools/manageActivities',
           title: 'Manage Activities',
           icon: Icons.sports_soccer,
-          activeRouteIdentifier: '/adminTools/manageActivities',
+          activeRouteIdentifier: 'manageActivities',
         ),
         ScreenItem(
           '/adminTools/manageClients',
