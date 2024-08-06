@@ -1,10 +1,7 @@
 import 'package:dashboard/models/activity.dart';
-import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/booking_template.dart';
 import 'package:dashboard/models/client.dart';
-import 'package:dashboard/models/client_types.dart';
 import 'package:dashboard/providers/auth_provider.dart';
-import 'package:dashboard/providers/navigation/selected_screen_index_provider.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_activities.dart';
 import 'package:dashboard/views/screens/admin_tools/admin_tools.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_booking/add_booking_session.dart';
@@ -41,213 +38,250 @@ part 'router.g.dart';
 @riverpod
 GoRouter router(RouterRef ref) {
   final authState = ref.watch(authProvider);
-  final List<RouteBase> mainScreens = [
-    GoRoute(
-      path: '/myCalendar',
-      builder: (context, state) {
-        return const MyCalendar();
-      },
-    ),
-    GoRoute(
-      path: '/myFutureBookings',
-      builder: (context, state) {
-        return const MyFutureBookingsView();
-      },
-    ),
-    GoRoute(
-      path: '/myleave',
-      builder: (context, state) {
-        return const MyLeaveScreen();
-      },
-    ),
-    ShellRoute(
-      builder: (context, state, child) {
-        final bookingId = state.pathParameters['bookingId']!;
-        final int? sessionIndex = state.pathParameters['sessionIndex'] != null
-            ? int.parse(state.pathParameters['sessionIndex']!)
-            : null;
-        return MyBookingShell(
-          bookingId: bookingId,
-          sessionIndex: sessionIndex,
-          child: child,
-        );
-      },
-      routes: [
-        GoRoute(
-          path: '/myBookings/:bookingId',
-          builder: (context, state) {
-            final bookingId = state.pathParameters['bookingId']!;
-            return ViewBooking(id: bookingId);
-          },
-        ),
-        GoRoute(
-          path: '/myBookings/:bookingId/sessions/:sessionIndex',
-          builder: (context, state) {
-            final bookingId = state.pathParameters['bookingId']!;
-            final int sessionIndex =
-                int.parse(state.pathParameters['sessionIndex'] ?? "-1");
-            return ViewSession(
-              key: ValueKey(sessionIndex),
-              bookingId: bookingId,
-              sessionIndex: sessionIndex,
-            );
-          },
-        ),
-      ],
-    ),
-    GoRoute(
-      path: '/myPastBookings',
-      builder: (context, state) {
-        return const MyPastBookingsView();
-      },
-    ),
-    GoRoute(
-      path: '/adminTools',
-      builder: (context, state) {
-        return const AdminTools();
-      },
-    ),
-    GoRoute(
-      path: '/adminTools/manageCoaches',
-      builder: (context, state) {
-        return const ManageCoachesScreen();
-      },
-    ),
-    GoRoute(
-      path: '/adminTools/manageActivities',
-      builder: (context, state) {
-        return const Activities();
-      },
-    ),
-    GoRoute(
-      path: '/adminTools/resourceView',
-      builder: (context, state) {
-        return const ResourceView();
-      },
-    ),
-    GoRoute(
-        path: '/adminTools/manageClients',
-        builder: (context, state) {
-          return const ManageSchools();
-        },
-        routes: [
-          GoRoute(
-            path: ':clientId',
-            builder: (context, state) {
-              final clientId = state.pathParameters['clientId']!;
-              return ManageClient(clientId);
-            },
-          ),
-        ]),
-    ShellRoute(
-      builder: (context, state, child) {
-        return ManualBookingShell(child);
-      },
-      routes: [
-        GoRoute(
-          path: '/adminTools/createManualBooking',
-          builder: (context, state) {
-            return const GatherBookingInfo();
-          },
-        ),
-        GoRoute(
-          path: '/adminTools/createManualBooking/date',
-          builder: (context, state) {
-            if (state.extra == null) return const GatherBookingInfo();
-            Map<String, dynamic> selections =
-                state.extra as Map<String, dynamic>;
-            final Activity selectedActivity =
-                selections['activity'] as Activity;
-            final selectedClient = selections['client'] as Client;
+  // return GoRouter(
+  //   routes: [
+  //     ShellRoute(
+  //       builder: (context, state, child) {
+  //         return NavigationShell(child: child);
+  //       },
+  //       routes: [
+  //
+  //   ],
 
-            return SelectDatesScreen(
-              selectedActivity: selectedActivity,
-              selectedClient: selectedClient,
-            );
-          },
-        ),
-        GoRoute(
-          path: '/adminTools/createManualBooking/coach',
-          builder: (context, state) {
-            final bookingTemplate = state.extra as BookingTemplate;
-            return SelectCoachesScreen(bookingTemplate);
-          },
-          redirect: (context, state) {
-            if (state.extra == null) return '/adminTools/createManualBooking';
-            return null;
-          },
-        ),
-        GoRoute(
-            path: '/adminTools/manageLeaveRequests',
-            builder: (context, state) {
-              return const ManageLeaveRequests();
-            }),
-        GoRoute(
-          path: '/adminTools/manageBookings',
-          builder: (context, state) {
-            return const ManageBookings();
-          },
-        ),
-        ShellRoute(
-          builder: (context, state, child) {
-            final bookingId = state.pathParameters['bookingId']!;
-            final int? sessionIndex =
-                state.pathParameters['sessionIndex'] != null
-                    ? int.parse(state.pathParameters['sessionIndex']!)
-                    : null;
-            final bool isAddingNewSession =
-                state.fullPath?.contains('addSession') ?? false;
-            return ManageBookingShell(
-              bookingId: bookingId,
-              sessionIndex: sessionIndex,
-              isAddingNewSession: isAddingNewSession,
-              child: child,
-            );
-          },
-          routes: [
-            GoRoute(
-              path: '/adminTools/manageBookings/:bookingId',
-              builder: (context, state) {
-                final bookingId = state.pathParameters['bookingId']!;
-                return ManageBooking(id: bookingId);
-              },
-            ),
-            GoRoute(
-              path:
-                  '/adminTools/manageBookings/:bookingId/sessions/:sessionIndex',
-              builder: (context, state) {
-                final bookingId = state.pathParameters['bookingId']!;
-                final int sessionIndex =
-                    int.parse(state.pathParameters['sessionIndex'] ?? "-1");
-                return ManageSession(
-                  key: ValueKey(sessionIndex),
-                  bookingId: bookingId,
-                  sessionIndex: sessionIndex,
-                );
-              },
-            ),
-            GoRoute(
-              path: '/adminTools/manageBookings/:bookingId/addSession',
-              builder: (context, state) {
-                final bookingId = state.pathParameters['bookingId']!;
-                return AddBookingSession(bookingId: bookingId);
-              },
-            ),
-          ],
-        ),
-      ],
-    ),
-  ];
+  // );
+
+  // private navigators
+  final rootNavigatorKey = GlobalKey<NavigatorState>();
+  final shellNavigatorAKey = GlobalKey<NavigatorState>(debugLabel: 'shellA');
+  final shellNavigatorBKey = GlobalKey<NavigatorState>(debugLabel: 'shellB');
+
+// the one and only GoRouter instance
   return GoRouter(
     initialLocation: '/splash',
-    observers: [MyNavObserver()],
+    navigatorKey: rootNavigatorKey,
     routes: [
-      ShellRoute(
-        builder: (context, state, child) {
-          return NavigationShell(child: child);
-        },
-        routes: mainScreens,
+      // Stateful nested navigation based on:
+      // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            NavigationShell(child: navigationShell),
+        branches: [
+          // first branch (A)
+          StatefulShellBranch(
+            navigatorKey: shellNavigatorAKey,
+            initialLocation: '/myLeave',
+            routes: [
+              GoRoute(
+                path: '/myFutureBookings',
+                builder: (context, state) {
+                  return const MyFutureBookingsView();
+                },
+              ),
+              GoRoute(
+                path: '/myleave',
+                builder: (context, state) {
+                  return const MyLeaveScreen();
+                },
+              ),
+              ShellRoute(
+                builder: (context, state, child) {
+                  final bookingId = state.pathParameters['bookingId']!;
+                  final int? sessionIndex =
+                      state.pathParameters['sessionIndex'] != null
+                          ? int.parse(state.pathParameters['sessionIndex']!)
+                          : null;
+                  return MyBookingShell(
+                    bookingId: bookingId,
+                    sessionIndex: sessionIndex,
+                    child: child,
+                  );
+                },
+                routes: [
+                  GoRoute(
+                    path: '/myBookings/:bookingId',
+                    builder: (context, state) {
+                      final bookingId = state.pathParameters['bookingId']!;
+                      return ViewBooking(id: bookingId);
+                    },
+                  ),
+                  GoRoute(
+                    path: '/myBookings/:bookingId/sessions/:sessionIndex',
+                    builder: (context, state) {
+                      final bookingId = state.pathParameters['bookingId']!;
+                      final int sessionIndex = int.parse(
+                          state.pathParameters['sessionIndex'] ?? "-1");
+                      return ViewSession(
+                        key: ValueKey(sessionIndex),
+                        bookingId: bookingId,
+                        sessionIndex: sessionIndex,
+                      );
+                    },
+                  ),
+                ],
+              ),
+              GoRoute(
+                path: '/myPastBookings',
+                builder: (context, state) {
+                  return const MyPastBookingsView();
+                },
+              ),
+              GoRoute(
+                path: '/adminTools',
+                builder: (context, state) {
+                  return const AdminTools();
+                },
+              ),
+              GoRoute(
+                path: '/adminTools/manageCoaches',
+                builder: (context, state) {
+                  return const ManageCoachesScreen();
+                },
+              ),
+              GoRoute(
+                path: '/adminTools/manageActivities',
+                builder: (context, state) {
+                  return const Activities();
+                },
+              ),
+              GoRoute(
+                path: '/adminTools/resourceView',
+                builder: (context, state) {
+                  return const ResourceView();
+                },
+              ),
+              GoRoute(
+                  path: '/adminTools/manageClients',
+                  builder: (context, state) {
+                    return const ManageSchools();
+                  },
+                  routes: [
+                    GoRoute(
+                      path: ':clientId',
+                      builder: (context, state) {
+                        final clientId = state.pathParameters['clientId']!;
+                        return ManageClient(clientId);
+                      },
+                    ),
+                  ]),
+              ShellRoute(
+                builder: (context, state, child) {
+                  return ManualBookingShell(child);
+                },
+                routes: [
+                  GoRoute(
+                    path: '/adminTools/createManualBooking',
+                    builder: (context, state) {
+                      return const GatherBookingInfo();
+                    },
+                  ),
+                  GoRoute(
+                    path: '/adminTools/createManualBooking/date',
+                    builder: (context, state) {
+                      if (state.extra == null) return const GatherBookingInfo();
+                      Map<String, dynamic> selections =
+                          state.extra as Map<String, dynamic>;
+                      final Activity selectedActivity =
+                          selections['activity'] as Activity;
+                      final selectedClient = selections['client'] as Client;
+
+                      return SelectDatesScreen(
+                        selectedActivity: selectedActivity,
+                        selectedClient: selectedClient,
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: '/adminTools/createManualBooking/coach',
+                    builder: (context, state) {
+                      final bookingTemplate = state.extra as BookingTemplate;
+                      return SelectCoachesScreen(bookingTemplate);
+                    },
+                    redirect: (context, state) {
+                      if (state.extra == null) {
+                        return '/adminTools/createManualBooking';
+                      }
+                      return null;
+                    },
+                  ),
+                  GoRoute(
+                      path: '/adminTools/manageLeaveRequests',
+                      builder: (context, state) {
+                        return const ManageLeaveRequests();
+                      }),
+                  GoRoute(
+                    path: '/adminTools/manageBookings',
+                    builder: (context, state) {
+                      return const ManageBookings();
+                    },
+                  ),
+                  ShellRoute(
+                    builder: (context, state, child) {
+                      final bookingId = state.pathParameters['bookingId']!;
+                      final int? sessionIndex =
+                          state.pathParameters['sessionIndex'] != null
+                              ? int.parse(state.pathParameters['sessionIndex']!)
+                              : null;
+                      final bool isAddingNewSession =
+                          state.fullPath?.contains('addSession') ?? false;
+                      return ManageBookingShell(
+                        bookingId: bookingId,
+                        sessionIndex: sessionIndex,
+                        isAddingNewSession: isAddingNewSession,
+                        child: child,
+                      );
+                    },
+                    routes: [
+                      GoRoute(
+                        path: '/adminTools/manageBookings/:bookingId',
+                        builder: (context, state) {
+                          final bookingId = state.pathParameters['bookingId']!;
+                          return ManageBooking(id: bookingId);
+                        },
+                      ),
+                      GoRoute(
+                        path:
+                            '/adminTools/manageBookings/:bookingId/sessions/:sessionIndex',
+                        builder: (context, state) {
+                          final bookingId = state.pathParameters['bookingId']!;
+                          final int sessionIndex = int.parse(
+                              state.pathParameters['sessionIndex'] ?? "-1");
+                          return ManageSession(
+                            key: ValueKey(sessionIndex),
+                            bookingId: bookingId,
+                            sessionIndex: sessionIndex,
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path:
+                            '/adminTools/manageBookings/:bookingId/addSession',
+                        builder: (context, state) {
+                          final bookingId = state.pathParameters['bookingId']!;
+                          return AddBookingSession(bookingId: bookingId);
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: shellNavigatorBKey,
+            initialLocation: '/myCalendar',
+            routes: [
+              GoRoute(
+                path: '/myCalendar',
+                builder: (context, state) {
+                  return const MyCalendar();
+                },
+              ),
+            ],
+          ),
+        ],
       ),
+      // second branch (B)
+
       GoRoute(
         path: '/login',
         builder: (context, state) {
@@ -282,38 +316,4 @@ GoRouter router(RouterRef ref) {
       return isAuth ? null : '/splash';
     },
   );
-}
-
-class MyNavObserver extends NavigatorObserver {
-  MyNavObserver();
-
-  @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    updateScreenIndex(route);
-  }
-
-  @override
-  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    updateScreenIndex(previousRoute!);
-  }
-
-  @override
-  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    updateScreenIndex(previousRoute!);
-  }
-
-  @override
-  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
-    updateScreenIndex(newRoute!);
-  }
-
-  void updateScreenIndex(Route<dynamic> newRoute) {
-    // final container = ProviderContainer();
-    // final currentRoute = newRoute.settings.name;
-    // final authState = container
-    //     .read(selectedScreenIndexProvider.notifier)
-    //     .updateIndexBasedOnRouteName(currentRoute ?? '/');
-
-    // container.dispose();
-  }
 }

@@ -133,8 +133,8 @@ class ManageBookingShell extends ConsumerWidget {
           child: SizedBox.square(
               dimension: 100, child: CircularProgressIndicator())),
       error: (error, stackTrace) {
-        print(error);
-        throw Exception(error);
+        return Text(' Error: $error, $stackTrace');
+        // throw Exception(error);
       },
     );
   }

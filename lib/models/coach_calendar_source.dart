@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CoachCalendarSource extends CalendarDataSource {
-  final WidgetRef ref;
+  final ProviderRef ref;
   final String coachUid;
   bool hasLoaded = false;
   CoachCalendarSource(List<Appointment> source,

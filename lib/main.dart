@@ -56,6 +56,11 @@ class MainApp extends ConsumerWidget {
                 TargetPlatform.windows: GoTransitions.cupertino,
               },
             ),
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.lightBlue,
+              brightness: Brightness.light,
+            ),
           ),
           routerConfig: router,
         ),

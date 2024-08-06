@@ -178,6 +178,7 @@ class Client {
 
   Map<String, dynamic> toFBJson() {
     return {
+      'id': id,
       'name': name,
       'eircode': eircode,
       'rollNumber': rollNumber,

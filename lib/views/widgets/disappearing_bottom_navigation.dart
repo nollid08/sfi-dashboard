@@ -18,7 +18,6 @@ class DisappearingBottomNavigationBar extends ConsumerWidget {
     final navigationDestinations = ref.watch(navigationDestinationsProvider);
     return NavigationBar(
       elevation: 0,
-      backgroundColor: Colors.white,
       destinations: navigationDestinations,
       selectedIndex: selectedIndex,
       onDestinationSelected: (index) {
