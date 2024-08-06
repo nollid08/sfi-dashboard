@@ -135,6 +135,12 @@ class _ManageBookingsState extends ConsumerState<ManageBookings> {
               ),
               width: columnWidths['No. Sessions']!,
             ),
+            GridColumn(
+              columnName: 'bookingWithSessions',
+              label: Container(),
+              width: 0,
+              visible: false,
+            ),
           ],
         );
       },

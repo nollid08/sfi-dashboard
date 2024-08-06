@@ -21,54 +21,57 @@ class SessionInfoDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text("${session.activity.name} - ${session.client.name}"),
-      content: Column(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.directions_car),
-            title: Text(
-                'Leave Home By: ${DateFormat("hh:mm dd/MM/yy").format(session.arrivalTime.subtract(travelInfo.duration))}'),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.calendar_month),
-            title: Text(
-                'Arrival Time: ${DateFormat("hh:mm dd/MM/yy").format(session.arrivalTime)}'),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.calendar_month),
-            title: Text(
-                'Start Time: ${DateFormat("hh:mm dd/MM/yy").format(session.startTime)}'),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.calendar_month),
-            title: Text(
-                'End Time: ${DateFormat("hh:mm dd/MM/yy").format(session.endTime)}'),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.calendar_month),
-            title: Text(
-                'Leave Time: ${DateFormat("hh:mm dd/MM/yy").format(session.leaveTime)}'),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.location_on),
-            title: Text(
-                'Location: ${session.client.eircode}, ${session.client.town}, ${session.client.county}'),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.people),
-            title: Text(
-              'Coaches: ${session.assignedCoaches.map((ac) {
-                return ac.coach.name;
-              }).join(', ')}',
+      content: SizedBox(
+        width: double.maxFinite,
+        child: ListView(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.directions_car),
+              title: Text(
+                  'Leave Home By: ${DateFormat("hh:mm dd/MM/yy").format(session.arrivalTime.subtract(travelInfo.duration))}'),
             ),
-          ),
-          const Divider(),
-        ],
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.calendar_month),
+              title: Text(
+                  'Arrival Time: ${DateFormat("hh:mm dd/MM/yy").format(session.arrivalTime)}'),
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.calendar_month),
+              title: Text(
+                  'Start Time: ${DateFormat("hh:mm dd/MM/yy").format(session.startTime)}'),
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.calendar_month),
+              title: Text(
+                  'End Time: ${DateFormat("hh:mm dd/MM/yy").format(session.endTime)}'),
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.calendar_month),
+              title: Text(
+                  'Leave Time: ${DateFormat("hh:mm dd/MM/yy").format(session.leaveTime)}'),
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.location_on),
+              title: Text(
+                  'Location: ${session.client.eircode}, ${session.client.town}, ${session.client.county}'),
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.people),
+              title: Text(
+                'Coaches: ${session.assignedCoaches.map((ac) {
+                  return ac.coach.name;
+                }).join(', ')}',
+              ),
+            ),
+            const Divider(),
+          ],
+        ),
       ),
       actions: [
         FilledButton(

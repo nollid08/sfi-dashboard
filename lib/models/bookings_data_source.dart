@@ -33,6 +33,9 @@ class BookingsDataSource extends DataGridSource {
                     columnName: 'No. Sessions',
                     value: bookingWithSessions.sessions.length.toString(),
                   ),
+                  DataGridCell(
+                      columnName: 'bookingWithSessions',
+                      value: bookingWithSessions),
                 ]))
         .toList();
   }
@@ -44,12 +47,18 @@ class BookingsDataSource extends DataGridSource {
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
+    final BookingWithSessions bookingWithSessions = row.getCells().last.value;
     return DataGridRowAdapter(
+        color: bookingWithSessions.sessions.isEmpty
+            ? Colors.red
+            : bookingWithSessions.coachesUids.isEmpty
+                ? Colors.orange
+                : Colors.white,
         cells: row.getCells().map<Widget>((dataGridCell) {
-      return Container(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(dataGridCell.value.toString()),
-      );
-    }).toList());
+          return Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(dataGridCell.value.toString()),
+          );
+        }).toList());
   }
 }

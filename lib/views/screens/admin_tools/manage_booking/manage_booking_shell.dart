@@ -2,6 +2,7 @@ import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/bookings_with_sessions.dart';
 import 'package:dashboard/models/session.dart';
 import 'package:dashboard/providers/booking_with_sessions_provider.dart';
+import 'package:dashboard/providers/is_wide_screen_provider.dart';
 import 'package:dashboard/providers/single_booking_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,6 +25,8 @@ class ManageBookingShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final bool isWideScreen =
+        ref.watch(isWideScreenProvider(MediaQuery.of(context)));
     final AsyncValue<BookingWithSessions> bookingWithSessions =
         ref.watch(singleBookingWithSessionsProvider(bookingId));
 
@@ -114,6 +117,7 @@ class ManageBookingShell extends ConsumerWidget {
                     ),
                     const Divider(),
                     //Back button
+
                     BackButton(
                       onPressed: () {
                         context.go('/adminTools/manageBookings');
@@ -121,11 +125,13 @@ class ManageBookingShell extends ConsumerWidget {
                     ),
                   ],
                 )),
-            const VerticalDivider(),
-            Flexible(
-              flex: 3,
-              child: child,
-            )
+            if (isWideScreen) ...[
+              const VerticalDivider(),
+              Flexible(
+                flex: 3,
+                child: child,
+              )
+            ]
           ],
         );
       },

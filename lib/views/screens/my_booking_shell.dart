@@ -1,6 +1,7 @@
 import 'package:dashboard/models/bookings_with_sessions.dart';
 import 'package:dashboard/models/session.dart';
 import 'package:dashboard/providers/booking_with_sessions_provider.dart';
+import 'package:dashboard/providers/is_wide_screen_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +21,8 @@ class MyBookingShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final bool isWideScreen =
+        ref.watch(isWideScreenProvider(MediaQuery.of(context)));
     final AsyncValue<BookingWithSessions> bookingWithSessions =
         ref.watch(singleBookingWithSessionsProvider(bookingId));
 
@@ -48,7 +51,11 @@ class MyBookingShell extends ConsumerWidget {
                                 size: 20,
                               ),
                               onTap: () {
-                                context.go('/myBookings/$bookingId');
+                                if (isWideScreen) {
+                                  context.go('/myBookings/$bookingId');
+                                } else {
+                                  context.go('/myBookings/booking/$bookingId/');
+                                }
                               },
                             );
                           }
@@ -84,8 +91,13 @@ class MyBookingShell extends ConsumerWidget {
                                     ),
                                   ),
                             onTap: () {
-                              context.go(
-                                  '/myBookings/$bookingId/sessions/${index - 1}');
+                              if (isWideScreen) {
+                                context.go(
+                                    '/myBookings/$bookingId/sessions/${index - 1}');
+                              } else {
+                                context.go(
+                                    '/myBookings/booking/$bookingId/sessions/${index - 1}');
+                              }
                             },
                           );
                         },
@@ -102,11 +114,13 @@ class MyBookingShell extends ConsumerWidget {
                     ),
                   ],
                 )),
-            const VerticalDivider(),
-            Flexible(
-              flex: 3,
-              child: child,
-            )
+            if (isWideScreen) ...[
+              const VerticalDivider(),
+              Flexible(
+                flex: 3,
+                child: child,
+              )
+            ]
           ],
         );
       },

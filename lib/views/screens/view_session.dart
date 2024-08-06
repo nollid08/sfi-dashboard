@@ -115,30 +115,33 @@ class _ViewSessionState extends ConsumerState<ViewSession> {
                         ),
                       ),
                     ),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            const Text(
-                              'Assigned Coaches',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                    Flexible(
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              const Text(
+                                'Assigned Coaches',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
                               ),
-                            ),
-                            ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: session.assignedCoaches.length,
-                              itemBuilder: (context, index) {
-                                final ac = session.assignedCoaches[index];
-                                return ListTile(
-                                  leading: const Icon(Icons.person),
-                                  title: Text(ac.coach.name),
-                                );
-                              },
-                            ),
-                          ],
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: session.assignedCoaches.length,
+                                  itemBuilder: (context, index) {
+                                    final ac = session.assignedCoaches[index];
+                                    return ListTile(
+                                      leading: const Icon(Icons.person),
+                                      title: Text(ac.coach.name),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

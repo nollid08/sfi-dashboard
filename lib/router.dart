@@ -120,6 +120,26 @@ GoRouter router(RouterRef ref) {
                 ],
               ),
               GoRoute(
+                path: '/myBookings/booking/:bookingId',
+                builder: (context, state) {
+                  final bookingId = state.pathParameters['bookingId']!;
+                  return ViewBooking(id: bookingId);
+                },
+              ),
+              GoRoute(
+                path: '/myBookings/booking/:bookingId/sessions/:sessionIndex',
+                builder: (context, state) {
+                  final bookingId = state.pathParameters['bookingId']!;
+                  final int sessionIndex =
+                      int.parse(state.pathParameters['sessionIndex'] ?? "-1");
+                  return ViewSession(
+                    key: ValueKey(sessionIndex),
+                    bookingId: bookingId,
+                    sessionIndex: sessionIndex,
+                  );
+                },
+              ),
+              GoRoute(
                 path: '/myPastBookings',
                 builder: (context, state) {
                   return const MyPastBookingsView();
