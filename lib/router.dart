@@ -1,7 +1,9 @@
 import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/booking_template.dart';
 import 'package:dashboard/models/client.dart';
+import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/providers/auth_provider.dart';
+import 'package:dashboard/providers/current_coach_provider.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_activities.dart';
 import 'package:dashboard/views/screens/admin_tools/admin_tools.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_booking/add_booking_session.dart';
@@ -150,11 +152,23 @@ GoRouter router(RouterRef ref) {
                 builder: (context, state) {
                   return const AdminTools();
                 },
+                redirect: (context, state) async {
+                  final Coach? coach =
+                      await ref.watch(currentCoachProvider.future);
+                  final isAdmin = coach?.isAdmin ?? false;
+                  return isAdmin ? null : '/myCalendar';
+                },
               ),
               GoRoute(
                 path: '/adminTools/manageCoaches',
                 builder: (context, state) {
                   return const ManageCoachesScreen();
+                },
+                redirect: (context, state) async {
+                  final Coach? coach =
+                      await ref.watch(currentCoachProvider.future);
+                  final isAdmin = coach?.isAdmin ?? false;
+                  return isAdmin ? null : '/myCalendar';
                 },
               ),
               GoRoute(
@@ -162,17 +176,35 @@ GoRouter router(RouterRef ref) {
                 builder: (context, state) {
                   return const Activities();
                 },
+                redirect: (context, state) async {
+                  final Coach? coach =
+                      await ref.watch(currentCoachProvider.future);
+                  final isAdmin = coach?.isAdmin ?? false;
+                  return isAdmin ? null : '/myCalendar';
+                },
               ),
               GoRoute(
                 path: '/adminTools/resourceView',
                 builder: (context, state) {
                   return const ResourceView();
                 },
+                redirect: (context, state) async {
+                  final Coach? coach =
+                      await ref.watch(currentCoachProvider.future);
+                  final isAdmin = coach?.isAdmin ?? false;
+                  return isAdmin ? null : '/myCalendar';
+                },
               ),
               GoRoute(
                   path: '/adminTools/manageClients',
                   builder: (context, state) {
                     return const ManageSchools();
+                  },
+                  redirect: (context, state) async {
+                    final Coach? coach =
+                        await ref.watch(currentCoachProvider.future);
+                    final isAdmin = coach?.isAdmin ?? false;
+                    return isAdmin ? null : '/myCalendar';
                   },
                   routes: [
                     GoRoute(
@@ -186,6 +218,12 @@ GoRouter router(RouterRef ref) {
               ShellRoute(
                 builder: (context, state, child) {
                   return ManualBookingShell(child);
+                },
+                redirect: (context, state) async {
+                  final Coach? coach =
+                      await ref.watch(currentCoachProvider.future);
+                  final isAdmin = coach?.isAdmin ?? false;
+                  return isAdmin ? null : '/myCalendar';
                 },
                 routes: [
                   GoRoute(
@@ -300,6 +338,7 @@ GoRouter router(RouterRef ref) {
           ),
         ],
       ),
+
       // second branch (B)
 
       GoRoute(

@@ -36,7 +36,7 @@ List<ScreenItem> screens(ScreensRef ref) {
       title: 'Admin Tools',
       icon: Icons.admin_panel_settings,
       activeRouteIdentifier: 'adminTools',
-      isDesktopOnly: true,
+      isAdminOnly: true,
       children: [
         ScreenItem(
           '/adminTools/manageActivities',

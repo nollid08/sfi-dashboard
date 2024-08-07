@@ -5,12 +5,14 @@ class Coach {
   final String name;
   final String? baseEircode;
   final List<String> activitiesCovered;
+  final bool isAdmin;
 
   Coach({
     required this.name,
     required this.uid,
     required this.baseEircode,
     required this.activitiesCovered,
+    required this.isAdmin,
   });
 
   factory Coach.fromQueryDocSnapshot(
@@ -20,11 +22,13 @@ class Coach {
     final List<String> activitiesCovered = data['activitiesCovered'] != null
         ? List<String>.from(data['activitiesCovered'])
         : [];
+    final bool isAdmin = data['isAdmin'] ?? false;
     return Coach(
       uid: doc.id,
       name: doc['name'],
       baseEircode: baseEircode,
       activitiesCovered: activitiesCovered,
+      isAdmin: isAdmin,
     );
   }
 
@@ -37,11 +41,13 @@ class Coach {
     final List<String> activitiesCovered = data['activitiesCovered'] != null
         ? List<String>.from(data['activitiesCovered'])
         : [];
+    final bool isAdmin = data['isAdmin'] ?? false;
     return Coach(
       uid: doc.id,
       name: doc['name'],
       baseEircode: baseEircode,
       activitiesCovered: activitiesCovered,
+      isAdmin: isAdmin,
     );
   }
 
@@ -51,6 +57,7 @@ class Coach {
       name: json['name'],
       baseEircode: json['baseEircode'],
       activitiesCovered: List<String>.from(json['activitiesCovered']),
+      isAdmin: json['isAdmin'] ?? false,
     );
   }
 
@@ -60,6 +67,7 @@ class Coach {
       'name': name,
       'eircode': baseEircode,
       'activitiesCovered': activitiesCovered,
+      'isAdmin': isAdmin,
     };
   }
 }

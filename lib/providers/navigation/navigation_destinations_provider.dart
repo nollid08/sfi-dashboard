@@ -10,7 +10,7 @@ List<NavigationDestination> navigationDestinations(
   final screens = ref.watch(screensProvider);
   return screens
       .map((screen) {
-        if (!screen.isDesktopOnly) {
+        if (!screen.isAdminOnly) {
           return NavigationDestination(
             icon: Icon(screen.icon),
             label: screen.title,

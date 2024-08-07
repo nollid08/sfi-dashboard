@@ -7,7 +7,7 @@ part of 'navigation_destinations_provider.dart';
 // **************************************************************************
 
 String _$navigationDestinationsHash() =>
-    r'862f5149dcfc94a81af5d40a130e3f75317613ff';
+    r'17acbeaf31489ac1c68a95383ed996f37af795fa';
 
 /// See also [navigationDestinations].
 @ProviderFor(navigationDestinations)

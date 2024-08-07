@@ -7,22 +7,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'current_coach_provider.g.dart';
 
 @riverpod
-Stream<Coach?> currentCoach(CurrentCoachRef ref) {
-  final AsyncValue<User?> user = ref.watch(authProvider);
+Stream<Coach?> currentCoach(CurrentCoachRef ref) async* {
+  final User? user = await ref.watch(authProvider.future);
 
-  user.when(
-    data: (User? user) {
-      if (user == null) {
-        return null;
-      }
-      return ref.watch(coachProvider(user.uid));
-    },
-    loading: () {
-      return null;
-    },
-    error: (error, stackTrace) {
-      throw error;
-    },
-  );
-  return Stream.value(null);
+  if (user == null) {
+    yield null;
+  }
+
+  final Coach coach = await ref.watch(coachProvider(user?.uid ?? '').future);
+
+  yield coach;
 }

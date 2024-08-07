@@ -5,7 +5,7 @@ class ScreenItem {
   final String title;
   final IconData icon;
   final String route;
-  final bool isDesktopOnly;
+  final bool isAdminOnly;
   final List<ScreenItem>? children;
   final String activeRouteIdentifier;
 
@@ -13,7 +13,7 @@ class ScreenItem {
     this.route, {
     required this.title,
     required this.icon,
-    this.isDesktopOnly = false,
+    this.isAdminOnly = false,
     this.children,
     required this.activeRouteIdentifier,
   });
