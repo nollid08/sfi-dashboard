@@ -130,7 +130,7 @@ class ManageBookingShell extends ConsumerWidget {
               Flexible(
                 flex: 3,
                 child: child,
-              )
+              ),
             ]
           ],
         );
