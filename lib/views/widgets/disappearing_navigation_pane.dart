@@ -38,9 +38,9 @@ class DisappearingNavigationRail extends ConsumerWidget {
           autoSelectedIndex:
               false, // must be false if you want to handle state external
           onItemSelected: (index) {
-            ref
-                .read(selectedScreenIndexProvider.notifier)
-                .updateIndexBasedOnRouteName(indexedScreens[index].route);
+            // ref
+            //     .read(selectedScreenIndexProvider.notifier)
+            //     .updateIndexBasedOnRouteName(indexedScreens[index].route);
             final screen = indexedScreens[index];
             GoRouter.of(context).go(screen.route);
           },
@@ -75,9 +75,9 @@ class DisappearingNavigationRail extends ConsumerWidget {
           autoSelectedIndex:
               false, // must be false if you want to handle state external
           onItemSelected: (index) {
-            ref
-                .read(selectedScreenIndexProvider.notifier)
-                .updateIndexBasedOnRouteName(indexedScreens[index].route);
+            // ref
+            //     .read(selectedScreenIndexProvider.notifier)
+            //     .updateIndexBasedOnRouteName(indexedScreens[index].route);
             GoRouter.of(context).go(indexedScreens[index].route);
           },
           itemSelectedColor:

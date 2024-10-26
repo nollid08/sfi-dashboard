@@ -16,11 +16,6 @@ const bool useEmulator = true;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(
-    const ProviderScope(
-      child: SplashScreen(),
-    ),
-  );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

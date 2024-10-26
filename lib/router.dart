@@ -4,6 +4,8 @@ import 'package:dashboard/models/client.dart';
 import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/providers/auth_provider.dart';
 import 'package:dashboard/providers/current_coach_provider.dart';
+import 'package:dashboard/providers/navigation/indexed_screens_provider.dart';
+import 'package:dashboard/providers/navigation/selected_screen_index_provider.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_activities.dart';
 import 'package:dashboard/views/screens/admin_tools/admin_tools.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_booking/add_booking_session.dart';
@@ -356,8 +358,6 @@ GoRouter router(RouterRef ref) {
         ],
       ),
 
-      // second branch (B)
-
       GoRoute(
         path: '/login',
         builder: (context, state) {
@@ -372,6 +372,12 @@ GoRouter router(RouterRef ref) {
       ),
     ],
     redirect: (context, state) {
+      print('Currently On to ${state.uri}, ${state.fullPath}');
+      Future(() {
+        ref
+            .read(selectedScreenIndexProvider.notifier)
+            .updateIndexBasedOnRouteName(state.uri.path);
+      });
       // If our async state is loading, don't perform redirects, yet
       if (authState.isLoading || authState.hasError) return null;
 
@@ -383,13 +389,35 @@ GoRouter router(RouterRef ref) {
 
       final isSplash = state.uri.path == '/splash';
       if (isSplash) {
-        return isAuth ? '/myCalendar' : '/login';
+        if (isAuth) {
+          print('Auth, Splash -> Redirect To MyCalendar');
+          return '/myCalendar';
+        } else {
+          print('No Auth, Splash -> Redirect To Login');
+          return '/login';
+        }
       }
+      final isLoginScreen = state.uri.path == '/login';
 
-      final isLoggingIn = state.uri.path == '/login';
-      if (isLoggingIn) return isAuth ? '/myCalendar' : null;
-
-      return isAuth ? null : '/splash';
+      if (isLoginScreen) {
+        if (isAuth) {
+          print('Auth, Login -> Redirect To MyCalendar');
+          return '/myCalendar';
+        } else {
+          print('No Auth, Login -> No Redirect');
+          return null;
+        }
+      }
+      if (!isSplash && !isLoginScreen) {
+        if (isAuth) {
+          print('Auth, Standard Screen -> No Redirect');
+          return null;
+        } else {
+          print('No Auth, Standard Screen -> Redirect To Splash');
+          return '/splash';
+        }
+      }
+      return null;
     },
   );
 }

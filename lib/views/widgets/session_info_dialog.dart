@@ -86,7 +86,7 @@ class SessionInfoDialog extends StatelessWidget {
           onPressed: () {
             final String url =
                 '/myBookings/${session.bookingId}/sessions/$sessionIndex';
-            context.go(url);
+            context.push(url);
             Navigator.of(context).pop();
           },
           child: const Text('View Session'),
@@ -94,7 +94,7 @@ class SessionInfoDialog extends StatelessWidget {
         FilledButton(
           onPressed: () {
             final String url = '/myBookings/${session.bookingId}';
-            context.go(url);
+            context.push(url);
             Navigator.of(context).pop();
           },
           child: const Text('View Booking'),

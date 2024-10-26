@@ -241,9 +241,9 @@ class ClientInfo extends ConsumerWidget {
               ElevatedButton.icon(
                 onPressed: () {
                   var route = '/adminTools/manageClients/${client.id}';
-                  ref
-                      .read(selectedScreenIndexProvider.notifier)
-                      .updateIndexBasedOnRouteName(route);
+                  // ref
+                  //     .read(selectedScreenIndexProvider.notifier)
+                  //     .updateIndexBasedOnRouteName(route);
                   context.go(route);
                 },
                 label: const Text('Edit Client Info'),
