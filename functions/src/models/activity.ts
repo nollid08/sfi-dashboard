@@ -1,24 +1,24 @@
 export class Activity {
-    id: String;
-    name: String;
-    icon: String;
-    color: String;
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
 
-    constructor(id: String, name: String, icon: String, color: String) {
-        this.id = id;
-        this.name = name;
-        this.icon = icon;
-        this.color = color;
-    }
+  constructor(id: string, name: string, icon: string, color: string) {
+    this.id = id;
+    this.name = name;
+    this.icon = icon;
+    this.color = color;
+  }
 
-    toString() {
-        return `Activity: ${this.id}, ${this.name}, ${this.icon}, ${this.color}`;
-    }
+  toString() {
+    return `Activity: ${this.id}, ${this.name}, ${this.icon}, ${this.color}`;
+  }
 }
 
 export interface ActivityData {
-    id: String;
-    name: String;
-    icon: String;
-    color: String;
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
 }

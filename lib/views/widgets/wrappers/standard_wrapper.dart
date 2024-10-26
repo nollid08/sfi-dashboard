@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Swrap extends ConsumerWidget {
-  const Swrap({super.key, required this.child});
+  const Swrap({super.key, required this.child, this.padding = 0.0});
+  final double padding;
   final Widget child;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,7 +17,10 @@ class Swrap extends ConsumerWidget {
     if (isWideScreen) {
       return Card(
         margin: const EdgeInsets.all(16),
-        child: child,
+        child: Padding(
+          padding: EdgeInsets.all(padding),
+          child: child,
+        ),
       );
     } else {
       return child;

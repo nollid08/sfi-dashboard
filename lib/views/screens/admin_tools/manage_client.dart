@@ -9,7 +9,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 
 class ManageClient extends ConsumerWidget {
   const ManageClient(this.clientId, {super.key});
-  final clientId;
+  final String clientId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -148,13 +148,12 @@ class ManageClient extends ConsumerWidget {
                                 const SizedBox(height: 10),
                                 FormBuilderTextField(
                                   name: 'classrooms',
-                                  initialValue: client.classrooms.toString(),
+                                  initialValue: client.classrooms?.toString(),
                                   decoration: const InputDecoration(
                                     labelText: 'Classrooms',
                                     border: OutlineInputBorder(),
                                   ),
                                   validator: FormBuilderValidators.compose([
-                                    FormBuilderValidators.required(),
                                     FormBuilderValidators.numeric(),
                                   ]),
                                 ),
@@ -316,10 +315,13 @@ class ManageClient extends ConsumerWidget {
                                                 .currentState!
                                                 .fields['type']!
                                                 .value);
-                                        final int classrooms = int.parse(formKey
-                                            .currentState!
-                                            .fields['classrooms']!
-                                            .value);
+                                        final int? classrooms = formKey
+                                                    .currentState!
+                                                    .fields['classrooms'] !=
+                                                null
+                                            ? int.parse(formKey.currentState!
+                                                .fields['classrooms']!.value)
+                                            : null;
                                         final int students = int.parse(formKey
                                             .currentState!
                                             .fields['students']!

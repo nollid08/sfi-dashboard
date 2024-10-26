@@ -56,7 +56,7 @@ class MainApp extends ConsumerWidget {
             theme: ThemeData(
               pageTransitionsTheme: const PageTransitionsTheme(
                 builders: {
-                  TargetPlatform.android: GoTransitions.cupertino,
+                  TargetPlatform.android: GoTransitions.invisible,
                   TargetPlatform.iOS: GoTransitions.cupertino,
                   TargetPlatform.macOS: GoTransitions.cupertino,
                   TargetPlatform.windows: GoTransitions.cupertino,

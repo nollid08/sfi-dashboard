@@ -19,17 +19,18 @@ import 'package:dashboard/views/screens/admin_tools/manual_booking/gather_info_s
 import 'package:dashboard/views/screens/admin_tools/manual_booking/manual_booking_shell.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/select_coaches.dart';
 import 'package:dashboard/views/screens/admin_tools/manual_booking/select_dates.dart';
-import 'package:dashboard/views/screens/my_future_bookings.dart';
+import 'package:dashboard/views/screens/mobile_booking_info.dart';
+import 'package:dashboard/views/screens/my_bookings.dart';
 import 'package:dashboard/views/screens/login_screen.dart';
-import 'package:dashboard/views/screens/my_booking_shell.dart';
+import 'package:dashboard/views/screens/desktop_booking_shell.dart';
 import 'package:dashboard/views/screens/my_calendar.dart';
 import 'package:dashboard/views/screens/my_leave_screen.dart';
-import 'package:dashboard/views/screens/my_past_bookings.dart';
 import 'package:dashboard/views/screens/navigation_shell.dart';
 import 'package:dashboard/views/screens/resource_view.dart';
 import 'package:dashboard/views/screens/splash_screen.dart';
 import 'package:dashboard/views/screens/view_booking.dart';
 import 'package:dashboard/views/screens/view_session.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -40,17 +41,6 @@ part 'router.g.dart';
 @riverpod
 GoRouter router(RouterRef ref) {
   final authState = ref.watch(authProvider);
-  // return GoRouter(
-  //   routes: [
-  //     ShellRoute(
-  //       builder: (context, state, child) {
-  //         return NavigationShell(child: child);
-  //       },
-  //       routes: [
-  //
-  //   ],
-
-  // );
 
   // private navigators
   final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -74,9 +64,19 @@ GoRouter router(RouterRef ref) {
             initialLocation: '/myLeave',
             routes: [
               GoRoute(
+                path: '/myPastBookings',
+                builder: (context, state) {
+                  return const MyBookingsView(
+                    bookingsToDisplay: BookingsToDisplay.past,
+                  );
+                },
+              ),
+              GoRoute(
                 path: '/myFutureBookings',
                 builder: (context, state) {
-                  return const MyFutureBookingsView();
+                  return const MyBookingsView(
+                    bookingsToDisplay: BookingsToDisplay.future,
+                  );
                 },
               ),
               GoRoute(
@@ -92,24 +92,33 @@ GoRouter router(RouterRef ref) {
                       state.pathParameters['sessionIndex'] != null
                           ? int.parse(state.pathParameters['sessionIndex']!)
                           : null;
-                  return MyBookingShell(
+                  return DesktopBookingShell(
                     bookingId: bookingId,
                     sessionIndex: sessionIndex,
                     child: child,
                   );
+                },
+                redirect: (context, state) {
+                  if (!kIsWeb) {
+                    return '/myBookings/mobile/${state.pathParameters['bookingId']}';
+                  }
+                  return null;
                 },
                 routes: [
                   GoRoute(
                     path: '/myBookings/:bookingId',
                     builder: (context, state) {
                       final bookingId = state.pathParameters['bookingId']!;
-                      return ViewBooking(id: bookingId);
+                      return ViewBookingInfo(id: bookingId);
                     },
                   ),
                   GoRoute(
                     path: '/myBookings/:bookingId/sessions/:sessionIndex',
                     builder: (context, state) {
                       final bookingId = state.pathParameters['bookingId']!;
+                      if (state.pathParameters['sessionIndex'] == '') {
+                        return ViewBookingInfo(id: bookingId);
+                      }
                       final int sessionIndex = int.parse(
                           state.pathParameters['sessionIndex'] ?? "-1");
                       return ViewSession(
@@ -122,12 +131,26 @@ GoRouter router(RouterRef ref) {
                 ],
               ),
               GoRoute(
-                path: '/myBookings/booking/:bookingId',
+                path: '/myBookings/mobile/:bookingId',
                 builder: (context, state) {
-                  final bookingId = state.pathParameters['bookingId']!;
-                  return ViewBooking(id: bookingId);
+                  return MobileBookingOverview(
+                    bookingId: state.pathParameters['bookingId']!,
+                  );
+                },
+                redirect: (context, state) {
+                  if (kIsWeb) {
+                    return '/myBookings/${state.pathParameters['bookingId']}';
+                  }
+                  return null;
                 },
               ),
+              // GoRoute(
+              //   path: '/myBookings/booking/:bookingId',
+              //   builder: (context, state) {
+              //     final bookingId = state.pathParameters['bookingId']!;
+              //     return ViewMobileBooking(id: bookingId);
+              //   },
+              // ),
               GoRoute(
                 path: '/myBookings/booking/:bookingId/sessions/:sessionIndex',
                 builder: (context, state) {
@@ -139,12 +162,6 @@ GoRouter router(RouterRef ref) {
                     bookingId: bookingId,
                     sessionIndex: sessionIndex,
                   );
-                },
-              ),
-              GoRoute(
-                path: '/myPastBookings',
-                builder: (context, state) {
-                  return const MyPastBookingsView();
                 },
               ),
               GoRoute(

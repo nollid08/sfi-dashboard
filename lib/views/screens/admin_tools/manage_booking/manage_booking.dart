@@ -31,8 +31,13 @@ class ManageBooking extends ConsumerWidget {
             ),
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Flexible(
-                child: ClientInfo(
-                  client: booking.client,
+                child: SizedBox(
+                  height: 800,
+                  child: SingleChildScrollView(
+                    child: ClientInfo(
+                      client: booking.client,
+                    ),
+                  ),
                 ),
               ),
               Flexible(

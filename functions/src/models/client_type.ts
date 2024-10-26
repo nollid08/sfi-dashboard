@@ -1,13 +1,13 @@
 export class ClientType {
-    id: String;
-    name: String;
+  id: string;
+  name: string;
 
-    constructor(id: String, name: String) {
-        this.id = id;
-        this.name = name;
-    }
+  constructor(id: string, name: string) {
+    this.id = id;
+    this.name = name;
+  }
 
-    toString() {
-        return `ClientType: ${this.id}, ${this.name}`;
-    }
+  toString() {
+    return `ClientType: ${this.id}, ${this.name}`;
+  }
 }

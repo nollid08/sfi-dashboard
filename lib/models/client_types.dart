@@ -5,12 +5,12 @@ class ClientType {
   ClientType({required this.id, required this.name});
 
   factory ClientType.fromString(String type) {
-    if (type == 'primarySchool') {
-      return ClientType(id: type, name: 'School');
-    } else if (type == 'youth-project') {
-      return ClientType(id: type, name: 'Youth Project');
-    } else if (type == 'club') {
-      return ClientType(id: type, name: 'Community Group');
+    if (type == 'national.mainstream') {
+      return ClientType(id: type, name: 'Primary Mainstream');
+    } else if (type == 'national.special') {
+      return ClientType(id: type, name: 'Special Mainstream');
+    } else if (type == 'secondary.mainstream') {
+      return ClientType(id: type, name: 'Secondary Mainstream');
     } else {
       return ClientType(id: type, name: 'Other');
     }

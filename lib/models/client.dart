@@ -5,11 +5,11 @@ class Client {
   final String name;
   final String eircode;
   final String rollNumber;
-  final ClientType type;
+  final ClientType type; //Stored As String !Important!
   final String town;
   final String county;
   final bool isDeis;
-  final int classrooms;
+  final int? classrooms;
   final int students;
   final DateTime? joinDate;
   final List<String> previousBookingIds;
@@ -33,7 +33,7 @@ class Client {
     required this.town,
     required this.county,
     required this.isDeis,
-    required this.classrooms,
+    this.classrooms,
     required this.students,
     this.joinDate,
     this.previousBookingIds = const [],
@@ -52,11 +52,11 @@ class Client {
   factory Client.fromFBJson(Map<String, dynamic> json, String id) {
     final String eircode = json['eircode'] ?? 'N/A';
     final String rollNumber = json['rollNumber'] ?? 'N/A';
-    final ClientType type = json['type'].runtimeType == String
-        ? ClientType.fromString(json['type'] ?? 'school')
-        : ClientType.fromString(json['type']['id'] ?? 'school');
+    final ClientType type = ClientType.fromString(
+      json['type'],
+    );
     final bool isDeis = json['isDeis'] ?? false;
-    final int classrooms = json['classrooms'] ?? 0;
+    final int? classrooms = json['classrooms'];
     final int students = json['students'] ?? 0;
     final String name = json['name'] ?? 'N/A';
     final String town = json['town'] ?? 'N/A';
@@ -102,11 +102,17 @@ class Client {
   factory Client.fromJson(Map<String, dynamic> json, String id) {
     final String eircode = json['eircode'] ?? 'N/A';
     final String rollNumber = json['rollNumber'] ?? 'N/A';
-    final ClientType type = json['type'].runtimeType == String
-        ? ClientType.fromString(json['type'] ?? 'school')
-        : ClientType.fromString(json['type']['id'] ?? 'school');
+    final ClientType type =
+        ClientType.fromString(json['type'] ?? 'national.mainstream');
     final bool isDeis = json['isDeis'] ?? false;
-    final int classrooms = json['classrooms'] ?? 0;
+
+    int? classrooms = 0;
+
+    try {
+      classrooms = json['classrooms'];
+    } catch (e) {
+      print(e);
+    }
     final int students = json['students'] ?? 0;
     final String name = json['name'] ?? 'N/A';
     final String town = json['town'] ?? 'N/A';
@@ -155,7 +161,7 @@ class Client {
       'name': name,
       'eircode': eircode,
       'rollNumber': rollNumber,
-      'type': type.toJson(),
+      'type': type.id,
       'town': town,
       'county': county,
       'isDeis': isDeis,
@@ -182,7 +188,7 @@ class Client {
       'name': name,
       'eircode': eircode,
       'rollNumber': rollNumber,
-      'type': type.toJson(),
+      'type': type.id,
       'town': town,
       'county': county,
       'isDeis': isDeis,

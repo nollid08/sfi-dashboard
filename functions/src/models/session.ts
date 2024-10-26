@@ -4,39 +4,57 @@ import { Activity, ActivityData } from "./activity";
 import { Client, ClientData } from "./client";
 
 export class BookingSession {
-    id: String;
+  id: string;
+  arrivalTime: Date;
+  startTime: Date;
+  endTime: Date;
+  leaveTime: Date;
+  activity: Activity;
+  assignedCoaches: AssignedCoach[];
+  coaches: string[];
+  client: Client;
+
+  constructor({
+    id,
+    arrivalTime,
+    startTime,
+    endTime,
+    leaveTime,
+    activity,
+    assignedCoaches,
+    coaches,
+    client,
+  }: {
+    id: string;
     arrivalTime: Date;
     startTime: Date;
     endTime: Date;
     leaveTime: Date;
     activity: Activity;
     assignedCoaches: AssignedCoach[];
-    coaches: String[];
+    coaches: string[];
     client: Client;
-
-
-    constructor({ id, arrivalTime, startTime, endTime, leaveTime, activity, assignedCoaches, coaches, client }: { id: String, arrivalTime: Date, startTime: Date, endTime: Date, leaveTime: Date, activity: Activity, assignedCoaches: AssignedCoach[], coaches: String[], client: Client }) {
-        this.id = id;
-        this.arrivalTime = arrivalTime;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.leaveTime = leaveTime;
-        this.activity = activity;
-        this.assignedCoaches = assignedCoaches;
-        this.coaches = coaches;
-        this.client = client;
-    }
-
+  }) {
+    this.id = id;
+    this.arrivalTime = arrivalTime;
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.leaveTime = leaveTime;
+    this.activity = activity;
+    this.assignedCoaches = assignedCoaches;
+    this.coaches = coaches;
+    this.client = client;
+  }
 }
 
 export interface BookingSessionData {
-    id: String;
-    arrivalTime: Timestamp;
-    assignedCoaches: AssignedCoach[];
-    leaveTime: Timestamp;
-    startTime: Timestamp;
-    endTime: Timestamp;
-    coaches: String[];
-    activity: ActivityData;
-    client: ClientData;
+  id: string;
+  arrivalTime: Timestamp;
+  assignedCoaches: AssignedCoach[];
+  leaveTime: Timestamp;
+  startTime: Timestamp;
+  endTime: Timestamp;
+  coaches: string[];
+  activity: ActivityData;
+  client: ClientData;
 }

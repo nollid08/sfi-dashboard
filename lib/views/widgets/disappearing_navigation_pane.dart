@@ -41,7 +41,8 @@ class DisappearingNavigationRail extends ConsumerWidget {
             ref
                 .read(selectedScreenIndexProvider.notifier)
                 .updateIndexBasedOnRouteName(indexedScreens[index].route);
-            GoRouter.of(context).go(indexedScreens[index].route);
+            final screen = indexedScreens[index];
+            GoRouter.of(context).go(screen.route);
           },
           itemSelectedColor:
               const Color.fromARGB(255, 10, 222, 219).withOpacity(0.35),

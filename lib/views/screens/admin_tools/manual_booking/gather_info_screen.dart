@@ -28,7 +28,7 @@ class GatherBookingInfo extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 SizedBox(
-                  width: 300,
+                  width: 500,
                   child: clients.when(
                     data: (clientsList) =>
                         FormBuilderSearchableDropdown<String>(
@@ -39,11 +39,15 @@ class GatherBookingInfo extends ConsumerWidget {
                       ),
                       name: 'client',
                       validator: FormBuilderValidators.required(),
-                      items: clientsList.map((client) => client.name).toList(),
-                      initialValue: clientsList.first.name,
+                      items: clientsList
+                          .map((client) =>
+                              '${client.rollNumber} - ${client.name}')
+                          .toList(),
+                      initialValue:
+                          '${clientsList.first.rollNumber} - ${clientsList.first.name}',
                       valueTransformer: (value) {
-                        return clientsList
-                            .firstWhere((client) => client.name == value);
+                        return clientsList.firstWhere((client) =>
+                            '${client.rollNumber} - ${client.name}' == value);
                       },
                       decoration:
                           const InputDecoration(labelText: 'Select a Client'),
