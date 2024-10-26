@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 
 class MobileBookingOverview extends ConsumerWidget {
   final String bookingId;
@@ -50,7 +51,7 @@ class MobileBookingOverview extends ConsumerWidget {
                                         .toString(),
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 20),
+                                        fontSize: 16),
                                   ),
                                 ),
                                 const Divider(),
@@ -60,7 +61,7 @@ class MobileBookingOverview extends ConsumerWidget {
                                       bookingWithSessions.activity.name,
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 20)),
+                                          fontSize: 16)),
                                 ),
                                 const Divider(),
                                 const ListTile(
@@ -72,7 +73,7 @@ class MobileBookingOverview extends ConsumerWidget {
                                 const Divider(),
                                 ListTile(
                                   title: const Text(
-                                    'Client:',
+                                    'Client Info:',
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
@@ -89,6 +90,23 @@ class MobileBookingOverview extends ConsumerWidget {
                                       Text(bookingWithSessions.client.eircode)
                                     ],
                                   ),
+                                  trailing: IconButton(
+                                    icon: const Icon(Icons.directions),
+                                    onPressed: () {
+                                      MapsLauncher.launchQuery(
+                                        bookingWithSessions.client.eircode,
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const Divider(),
+                                ListTile(
+                                  title: const Text("Type:"),
+                                  trailing: Text(
+                                      bookingWithSessions.client.type.name,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16)),
                                 ),
                                 if (bookingWithSessions.client.classrooms !=
                                     null) ...[
@@ -100,7 +118,7 @@ class MobileBookingOverview extends ConsumerWidget {
                                             .toString(),
                                         style: const TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 20)),
+                                            fontSize: 16)),
                                   ),
                                 ],
                                 ListTile(
@@ -110,19 +128,86 @@ class MobileBookingOverview extends ConsumerWidget {
                                           .toString(),
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 20)),
+                                          fontSize: 16)),
                                 ),
-                                ListTile(
-                                  title: const Text("Client Join Date:"),
-                                  trailing: Text(
-                                      DateFormat("dd/MM/yy").format(
-                                        bookingWithSessions.client.joinDate ??
-                                            DateTime.now(),
-                                      ),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20)),
-                                ),
+                                if (bookingWithSessions.client.joinDate !=
+                                    null) ...[
+                                  const Divider(),
+                                  ListTile(
+                                    title: const Text("Client Join Date:"),
+                                    trailing: Text(
+                                        DateFormat("dd/MM/yy").format(
+                                            bookingWithSessions
+                                                .client.joinDate!),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16)),
+                                  ),
+                                ],
+                                if (bookingWithSessions.client.contactName !=
+                                    null) ...[
+                                  const Divider(),
+                                  ListTile(
+                                    title: const Text("Contact Name:"),
+                                    trailing: Text(
+                                        bookingWithSessions.client.contactName!,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16)),
+                                  ),
+                                ],
+                                if (bookingWithSessions.client.contactPhone !=
+                                    null) ...[
+                                  const Divider(),
+                                  ListTile(
+                                    title: const Text("Contact Phone:"),
+                                    trailing: Text(
+                                        bookingWithSessions
+                                            .client.contactPhone!,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16)),
+                                  ),
+                                ],
+                                if (bookingWithSessions.client.contactEmail !=
+                                    null) ...[
+                                  const Divider(),
+                                  ListTile(
+                                    title: const Text("Contact Email:"),
+                                    trailing: Text(
+                                        bookingWithSessions
+                                            .client.contactEmail!,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16)),
+                                  ),
+                                ],
+                                if (bookingWithSessions.client.principalName !=
+                                    null) ...[
+                                  const Divider(),
+                                  ListTile(
+                                    title: const Text("Principal Name:"),
+                                    trailing: Text(
+                                        bookingWithSessions
+                                            .client.principalName!,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16)),
+                                  ),
+                                ],
+                                if (bookingWithSessions.client.principalEmail !=
+                                    null) ...[
+                                  const Divider(),
+                                  ListTile(
+                                    title: const Text("Principal Email:"),
+                                    trailing: Text(
+                                        bookingWithSessions
+                                            .client.principalEmail!,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16)),
+                                  ),
+                                ],
                               ],
                             )),
                       ]);
@@ -151,7 +236,54 @@ class MobileBookingOverview extends ConsumerWidget {
                           ),
                         ),
                   children: [
-                    Text('Session Type: ${session.arrivalTime}'),
+                    Card(
+                      color: Colors.grey[50],
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: const Text("Arrival Time:"),
+                            trailing: Text(
+                                DateFormat("dd/MM/yy")
+                                    .format(session.arrivalTime),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16)),
+                          ),
+                          const Divider(),
+                          ListTile(
+                            title: const Text("Start Time:"),
+                            trailing: Text(
+                                DateFormat("dd/MM/yy")
+                                    .format(session.startTime),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16)),
+                          ),
+                          const Divider(),
+                          ListTile(
+                            title: const Text("End Time:"),
+                            trailing: Text(
+                                DateFormat("dd/MM/yy").format(session.endTime),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16)),
+                          ),
+                          const Divider(),
+                          ListTile(
+                            title: const Text("Leave Time:"),
+                            trailing: Text(
+                                DateFormat("dd/MM/yy")
+                                    .format(session.leaveTime),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16)),
+                          ),
+                          if (session.notes != null) ...[
+                            const Divider(),
+                            ListTile(
+                              title: const Text("Notes:"),
+                              subtitle: Text(session.notes!),
+                            ),
+                          ],
+                        ],
+                      ),
+                    )
                   ],
                 );
               },
