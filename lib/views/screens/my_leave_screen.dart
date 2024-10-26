@@ -4,7 +4,6 @@ import 'package:dashboard/providers/leaves_provider.dart';
 import 'package:dashboard/views/widgets/wrappers/standard_wrapper.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';

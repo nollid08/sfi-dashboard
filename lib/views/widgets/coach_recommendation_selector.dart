@@ -1,7 +1,6 @@
 import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/models/coach_recommendation.dart';
 import 'package:dashboard/views/widgets/coach_recommendation_selector_card.dart';
-import 'package:dashboard/views/widgets/fortnightly_breakdown.dart';
 import 'package:flutter/material.dart';
 
 class CoachRecommenationSelector extends StatelessWidget {

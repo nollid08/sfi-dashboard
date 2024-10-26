@@ -1,6 +1,5 @@
 import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/models/coach_recommendation.dart';
-import 'package:dashboard/models/travel_estimate.dart';
 import 'package:dashboard/models/travel_info.dart';
 
 class AssignedCoach {

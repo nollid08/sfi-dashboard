@@ -1,4 +1,3 @@
-import 'package:dashboard/providers/navigation.dart';
 import 'package:dashboard/providers/navigation/navigation_destinations_provider.dart';
 import 'package:dashboard/providers/navigation/screens_provider.dart';
 import 'package:dashboard/providers/navigation/selected_screen_index_provider.dart';

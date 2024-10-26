@@ -1,5 +1,4 @@
 import 'package:dashboard/models/coach.dart';
-import 'package:dashboard/models/travel_estimate.dart';
 import 'package:dashboard/models/session.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 

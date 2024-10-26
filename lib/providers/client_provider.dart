@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/client.dart';
-import 'package:dashboard/providers/clients_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'client_provider.g.dart';

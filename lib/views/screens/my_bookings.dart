@@ -2,7 +2,6 @@ import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/providers/is_wide_screen_provider.dart';
 import 'package:dashboard/providers/my_future_bookings.dart';
 import 'package:dashboard/providers/my_past_bookings.dart';
-import 'package:dashboard/views/screens/admin_tools/manual_booking/select_dates.dart';
 import 'package:dashboard/views/widgets/wrappers/standard_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

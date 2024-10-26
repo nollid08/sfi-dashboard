@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/bookings_with_sessions.dart';
 import 'package:dashboard/models/coach.dart';
-import 'package:dashboard/models/session.dart';
 import 'package:dashboard/providers/bookings_provider.dart';
 import 'package:dashboard/providers/sessions_provider.dart';
-import 'package:dashboard/providers/single_booking_provider.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

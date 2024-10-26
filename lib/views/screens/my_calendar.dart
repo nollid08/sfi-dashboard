@@ -1,4 +1,3 @@
-import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/models/coach_calendar_source.dart';
 import 'package:dashboard/providers/coach_calendar_source_provider.dart';
 import 'package:dashboard/views/widgets/calendar.dart';

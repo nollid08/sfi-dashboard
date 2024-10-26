@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/coach.dart';
-import 'package:dashboard/views/screens/my_calendar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coaches_provider.g.dart';

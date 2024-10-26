@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/leave.dart';
 import 'package:dashboard/models/session.dart';
 import 'package:dashboard/providers/future_sessions_and_leaves.dart';
-import 'package:dashboard/providers/future_sessions_provider.dart';
 import 'package:dashboard/providers/leaves_provider.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';

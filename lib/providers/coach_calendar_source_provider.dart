@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:dashboard/models/coach_calendar_source.dart';
 import 'package:firebase_auth/firebase_auth.dart';

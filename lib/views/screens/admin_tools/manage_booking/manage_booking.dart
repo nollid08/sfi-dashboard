@@ -1,7 +1,6 @@
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/client.dart';
 import 'package:dashboard/providers/booking_provider.dart';
-import 'package:dashboard/providers/bookings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

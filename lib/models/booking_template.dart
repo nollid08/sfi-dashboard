@@ -3,7 +3,6 @@ import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/assigned_coach.dart';
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/client.dart';
-import 'package:dashboard/models/travel_estimate.dart';
 import 'package:dashboard/models/session.dart';
 import 'package:rrule/rrule.dart';
 

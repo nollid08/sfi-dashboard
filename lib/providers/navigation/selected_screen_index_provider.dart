@@ -1,6 +1,4 @@
-import 'package:dashboard/models/screen_item.dart';
 import 'package:dashboard/providers/navigation/indexed_screens_provider.dart';
-import 'package:dashboard/providers/navigation/screens_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

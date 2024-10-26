@@ -1,4 +1,3 @@
-import 'package:dashboard/models/coach.dart';
 
 class TravelEstimate {
   final double distance;

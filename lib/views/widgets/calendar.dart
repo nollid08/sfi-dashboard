@@ -4,7 +4,6 @@ import 'package:dashboard/models/session.dart';
 import 'package:dashboard/models/travel_info.dart';
 import 'package:dashboard/views/widgets/leave_details_dialog.dart.dart';
 import 'package:dashboard/views/widgets/session_info_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';

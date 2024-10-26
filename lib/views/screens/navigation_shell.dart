@@ -1,6 +1,5 @@
 import 'package:dashboard/models/screen_item.dart';
 import 'package:dashboard/providers/navigation/indexed_screens_provider.dart';
-import 'package:dashboard/providers/navigation/screens_provider.dart';
 import 'package:dashboard/providers/navigation/selected_screen_index_provider.dart';
 import 'package:dashboard/views/widgets/disappearing_bottom_navigation.dart';
 import 'package:dashboard/views/widgets/disappearing_navigation_pane.dart';

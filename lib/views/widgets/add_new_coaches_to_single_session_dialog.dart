@@ -1,7 +1,6 @@
 import 'package:dashboard/models/assigned_coach.dart';
 import 'package:dashboard/models/coach_recommendation.dart';
 import 'package:dashboard/models/session.dart';
-import 'package:dashboard/providers/find_bookings_available_coaches.dart';
 import 'package:dashboard/providers/find_sessions_available_coaches.dart';
 import 'package:dashboard/providers/sessions_provider.dart';
 import 'package:dashboard/views/widgets/coach_recommendation_selector.dart';

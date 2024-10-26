@@ -1,12 +1,8 @@
 import 'package:dashboard/models/bookings_with_sessions.dart';
 import 'package:dashboard/models/session.dart';
 import 'package:dashboard/providers/booking_with_sessions_provider.dart';
-import 'package:dashboard/providers/is_wide_screen_provider.dart';
-import 'package:dashboard/views/widgets/wrappers/standard_wrapper.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/models/coach_linked_leave.dart';
 import 'package:dashboard/models/leave.dart';
-import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coach_linked_leaves_provider.g.dart';

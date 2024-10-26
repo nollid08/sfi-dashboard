@@ -1,12 +1,9 @@
 import 'package:dashboard/models/session.dart';
 import 'package:dashboard/providers/sessions_provider.dart';
-import 'package:dashboard/views/widgets/manage_session_times.dart';
-import 'package:dashboard/views/widgets/manage_sessions_assigned_coaches.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 

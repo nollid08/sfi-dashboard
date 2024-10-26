@@ -3,7 +3,6 @@ import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/booking_template.dart';
 import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/models/session.dart';
-import 'package:dashboard/providers/coach_calendar_source_provider.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

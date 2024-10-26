@@ -1,8 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/booking_template.dart';
 import 'package:dashboard/models/coach_recommendation.dart';
-import 'package:dashboard/models/travel_estimate.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'find_booking_templates_available_coaches.g.dart';
