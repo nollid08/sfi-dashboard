@@ -7,11 +7,12 @@ part of 'coach_calendar_source_provider.dart';
 // **************************************************************************
 
 String _$coachCalendarSourceHash() =>
-    r'9b8903ed283859e23cca01206a86eed09b4cd3b5';
+    r'57fd3b8ffdd8cc79150d7775cb60a694f9b37262';
 
 /// See also [coachCalendarSource].
 @ProviderFor(coachCalendarSource)
-final coachCalendarSourceProvider = Provider<CoachCalendarSource>.internal(
+final coachCalendarSourceProvider =
+    AutoDisposeProvider<CoachCalendarSource>.internal(
   coachCalendarSource,
   name: r'coachCalendarSourceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,6 +22,6 @@ final coachCalendarSourceProvider = Provider<CoachCalendarSource>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef CoachCalendarSourceRef = ProviderRef<CoachCalendarSource>;
+typedef CoachCalendarSourceRef = AutoDisposeProviderRef<CoachCalendarSource>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -7,7 +7,7 @@ part of 'resource_calendar_source_provider.dart';
 // **************************************************************************
 
 String _$resourceCalendarSourceHash() =>
-    r'b9fd43a33cebac968f4d15f5072eac20d191b14e';
+    r'b4e050ffba8b4aab65d409acddbb12a7ef924058';
 
 /// See also [resourceCalendarSource].
 @ProviderFor(resourceCalendarSource)

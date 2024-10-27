@@ -6,7 +6,7 @@ part of 'sessions_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sessionsHash() => r'd8b2d0a3c5de379b154b4e4dbb96cbf0900ec772';
+String _$sessionsHash() => r'aafc35b641937982be84a3d06cbade7b7a6ca2cd';
 
 /// Copied from Dart SDK
 class _SystemHash {
