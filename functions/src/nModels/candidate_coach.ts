@@ -35,7 +35,7 @@ export class CandidateCoach {
     const skillFactor = 1;
     const contractFillledPercentage = 0.7;
 
-    const skill = 1;
+    const skill = 1; //TODO: Implement skill calculation
     const averageContractFilledPercentage =
       this.fortnightlyQoutaInfos.reduce(
         (acc, fortnightlyQoutaInfo) =>

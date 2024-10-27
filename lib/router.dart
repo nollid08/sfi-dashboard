@@ -66,6 +66,12 @@ GoRouter router(RouterRef ref) {
             initialLocation: '/myLeave',
             routes: [
               GoRoute(
+                path: '/myCalendar',
+                builder: (context, state) {
+                  return const MyCalendar();
+                },
+              ),
+              GoRoute(
                 path: '/myPastBookings',
                 builder: (context, state) {
                   return const MyBookingsView(
@@ -172,6 +178,11 @@ GoRouter router(RouterRef ref) {
                   return const AdminTools();
                 },
                 redirect: (context, state) async {
+                  Future(() {
+                    ref
+                        .read(selectedScreenIndexProvider.notifier)
+                        .updateIndexBasedOnRouteName(state.uri.path);
+                  });
                   final Coach? coach =
                       await ref.watch(currentCoachProvider.future);
                   final isAdmin = coach?.isAdmin ?? false;
@@ -184,6 +195,11 @@ GoRouter router(RouterRef ref) {
                   return const ManageCoachesScreen();
                 },
                 redirect: (context, state) async {
+                  Future(() {
+                    ref
+                        .read(selectedScreenIndexProvider.notifier)
+                        .updateIndexBasedOnRouteName(state.uri.path);
+                  });
                   final Coach? coach =
                       await ref.watch(currentCoachProvider.future);
                   final isAdmin = coach?.isAdmin ?? false;
@@ -196,6 +212,11 @@ GoRouter router(RouterRef ref) {
                   return const Activities();
                 },
                 redirect: (context, state) async {
+                  Future(() {
+                    ref
+                        .read(selectedScreenIndexProvider.notifier)
+                        .updateIndexBasedOnRouteName(state.uri.path);
+                  });
                   final Coach? coach =
                       await ref.watch(currentCoachProvider.future);
                   final isAdmin = coach?.isAdmin ?? false;
@@ -208,6 +229,11 @@ GoRouter router(RouterRef ref) {
                   return const ResourceView();
                 },
                 redirect: (context, state) async {
+                  Future(() {
+                    ref
+                        .read(selectedScreenIndexProvider.notifier)
+                        .updateIndexBasedOnRouteName(state.uri.path);
+                  });
                   final Coach? coach =
                       await ref.watch(currentCoachProvider.future);
                   final isAdmin = coach?.isAdmin ?? false;
@@ -220,6 +246,11 @@ GoRouter router(RouterRef ref) {
                     return const ManageSchools();
                   },
                   redirect: (context, state) async {
+                    Future(() {
+                      ref
+                          .read(selectedScreenIndexProvider.notifier)
+                          .updateIndexBasedOnRouteName(state.uri.path);
+                    });
                     final Coach? coach =
                         await ref.watch(currentCoachProvider.future);
                     final isAdmin = coach?.isAdmin ?? false;
@@ -239,6 +270,11 @@ GoRouter router(RouterRef ref) {
                   return ManualBookingShell(child);
                 },
                 redirect: (context, state) async {
+                  Future(() {
+                    ref
+                        .read(selectedScreenIndexProvider.notifier)
+                        .updateIndexBasedOnRouteName(state.uri.path);
+                  });
                   final Coach? coach =
                       await ref.watch(currentCoachProvider.future);
                   final isAdmin = coach?.isAdmin ?? false;
@@ -345,10 +381,10 @@ GoRouter router(RouterRef ref) {
           ),
           StatefulShellBranch(
             navigatorKey: shellNavigatorBKey,
-            initialLocation: '/myCalendar',
+            initialLocation: '/myBCalendar',
             routes: [
               GoRoute(
-                path: '/myCalendar',
+                path: '/myBCalendar',
                 builder: (context, state) {
                   return const MyCalendar();
                 },

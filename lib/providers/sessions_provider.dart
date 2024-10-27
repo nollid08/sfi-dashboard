@@ -24,10 +24,15 @@ class Sessions extends _$Sessions {
           .where('bookingId', whereIn: bookingIds)
           .orderBy('arrivalTime', descending: false)
           .snapshots();
-    } else {
+    } else if (coachIds != null ? coachIds.isNotEmpty : false) {
       sessionSnapshots = db
           .collection('sessions')
           .where('coaches', arrayContainsAny: coachIds)
+          .snapshots();
+    } else {
+      sessionSnapshots = db
+          .collection('sessions')
+          .orderBy('arrivalTime', descending: false)
           .snapshots();
     }
     yield* sessionSnapshots.map((snapshot) {
