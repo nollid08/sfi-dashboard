@@ -17,10 +17,6 @@ Stream<List<Leave>> effectiveLeaves(EffectiveLeavesRef ref, String uid) async* {
         'status',
         isNotEqualTo: LeaveStatus.rejected.index,
       )
-      .where(
-        'endDate',
-        isGreaterThanOrEqualTo: DateTime.now(),
-      )
       .snapshots()
       .map(
         (querySnapshot) => querySnapshot.docs

@@ -6,7 +6,7 @@ part of 'effective_leaves.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$effectiveLeavesHash() => r'1cb3ca29229d7c38a54e58e356a9f0810d0cdb39';
+String _$effectiveLeavesHash() => r'325ba0a44e1c4824146ecb2713d871104711d0f5';
 
 /// Copied from Dart SDK
 class _SystemHash {
