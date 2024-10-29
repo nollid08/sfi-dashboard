@@ -11,9 +11,10 @@ class SelectedScreenIndex extends _$SelectedScreenIndex {
     return 0;
   }
 
-  void updateIndexBasedOnRouteName(String currentRoute) {
+  void updateIndexBasedOnRouteName(String currentRoute, int currentIndex) {
     final screenItemsNotifier = ref.watch(indexedScreensProvider.notifier);
-    final int index = screenItemsNotifier.getIndexFromRoute(currentRoute);
+    final int index =
+        screenItemsNotifier.getIndexFromRoute(currentRoute, currentIndex);
     state = index;
   }
 

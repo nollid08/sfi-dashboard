@@ -14,12 +14,6 @@ class CoachRecommendation {
   });
 
   factory CoachRecommendation.fromJson(Map<String, dynamic> jsonData) {
-    final coach = Coach.fromJson(jsonData['coach']);
-    final travelEstimate = TravelEstimate.fromJson(jsonData['travelEstimate']);
-    final qoutaInfoMS = jsonData['qoutaInfo'];
-    final qoutaInfoML = jsonData['qoutaInfo'];
-    final qoutaInfo = QoutaInfo.fromJson(qoutaInfoMS);
-
     return CoachRecommendation(
       coach: Coach.fromJson(jsonData['coach']),
       travelEstimate: TravelEstimate.fromJson(jsonData['travelEstimate']),

@@ -1,3 +1,4 @@
+import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/models/coach_recommendation.dart';
 import 'package:dashboard/views/widgets/fortnightly_breakdown.dart';
@@ -11,6 +12,7 @@ class CoachRecommenationSelectorCard extends StatelessWidget {
     required this.selectedCoaches,
     required this.coach,
     required this.departureTime,
+    required this.activity,
   });
 
   final Function(CoachRecommendation p1) onCoachSelected;
@@ -18,6 +20,7 @@ class CoachRecommenationSelectorCard extends StatelessWidget {
   final List<CoachRecommendation> selectedCoaches;
   final Coach coach;
   final DateTime departureTime;
+  final Activity activity;
 
   @override
   Widget build(BuildContext context) {
@@ -77,29 +80,36 @@ class CoachRecommenationSelectorCard extends StatelessWidget {
                 ],
               ),
               const Divider(),
-              Column(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                  Text(
+                      "Auto Activity Rating: ${coach.autoActivityRatings[activity.id] ?? 0}"),
+                  Column(
                     children: [
-                      const Text(
-                        'Current FN Breakdown: ',
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const Text(
+                            'Current FN Breakdown: ',
+                          ),
+                          FornightlyBreakdown(
+                            fortnightlyQoutaPercentages: coachRecommendation
+                                .qoutaInfo.currentFortnightlyQoutaPercentages,
+                          ),
+                        ],
                       ),
-                      FornightlyBreakdown(
-                        fortnightlyQoutaPercentages: coachRecommendation
-                            .qoutaInfo.currentFortnightlyQoutaPercentages,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      const Text(
-                        'Projected FN Breakdown: ',
-                      ),
-                      FornightlyBreakdown(
-                        fortnightlyQoutaPercentages: coachRecommendation
-                            .qoutaInfo.projectedFortnightlyQoutaPercentages,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const Text(
+                            'Projected FN Breakdown: ',
+                          ),
+                          FornightlyBreakdown(
+                            fortnightlyQoutaPercentages: coachRecommendation
+                                .qoutaInfo.projectedFortnightlyQoutaPercentages,
+                          ),
+                        ],
                       ),
                     ],
                   ),

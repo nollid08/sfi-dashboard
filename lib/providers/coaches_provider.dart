@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/models/coach.dart';
+import 'package:dashboard/providers/activity_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coaches_provider.g.dart';
@@ -7,10 +8,11 @@ part 'coaches_provider.g.dart';
 @riverpod
 class Coaches extends _$Coaches {
   @override
-  Stream<List<Coach>> build() {
+  Stream<List<Coach>> build() async* {
+    final activities = await ref.watch(activitiesProvider.future);
     final db = FirebaseFirestore.instance;
     final coachesCollection = db.collection('users');
-    return coachesCollection.snapshots().map((snapshot) {
+    yield* coachesCollection.snapshots().map((snapshot) {
       if (snapshot.docs.isEmpty) {
         return [];
       }
@@ -46,10 +48,32 @@ class Coaches extends _$Coaches {
     state = state;
     return isCoveredAfterToggle;
   }
+
+  Future<int> updateAutoActivityRating(
+      {required String coachId,
+      required String activityId,
+      required int newRating}) async {
+    final db = FirebaseFirestore.instance;
+
+    await db
+        .collection('users')
+        .doc(coachId)
+        .update({'auto_score-$activityId': newRating});
+    return newRating;
+  }
+
+  Future<Coach> updateCoach(Coach updatedCoach) async {
+    final db = FirebaseFirestore.instance;
+    await db.collection('users').doc(updatedCoach.uid).update(
+          updatedCoach.toJson(),
+        );
+    return updatedCoach;
+  }
 }
 
 @riverpod
 Future<Coach> coach(CoachRef ref, String coachId) async {
+  final activities = await ref.watch(activitiesProvider.future);
   final db = FirebaseFirestore.instance;
   final coachDoc = db.collection('users').doc(coachId);
   final DocumentSnapshot<Map<String, dynamic>> coachData = await coachDoc.get();

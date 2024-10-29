@@ -53,6 +53,7 @@ class _SelectCoachesScreenState extends ConsumerState<SelectCoachesScreen> {
                               CoachRecommenationSelector(
                             selectedCoaches: selectedCoaches,
                             coachRecommendations: coachRecommendations,
+                            activity: widget.bookingTemplate.activity,
                             onCoachSelected: (CoachRecommendation coach) {
                               setState(() {
                                 if (selectedCoaches.contains(coach)) {

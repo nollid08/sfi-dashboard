@@ -1,3 +1,4 @@
+import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/models/coach_recommendation.dart';
 import 'package:dashboard/views/widgets/coach_recommendation_selector_card.dart';
@@ -8,6 +9,7 @@ class CoachRecommenationSelector extends StatelessWidget {
   final List<CoachRecommendation> coachRecommendations;
   final Function(CoachRecommendation) onCoachSelected;
   final DateTime arrivalTime;
+  final Activity activity;
 
   const CoachRecommenationSelector({
     super.key,
@@ -15,6 +17,7 @@ class CoachRecommenationSelector extends StatelessWidget {
     required this.coachRecommendations,
     required this.onCoachSelected,
     required this.arrivalTime,
+    required this.activity,
   });
 
   @override
@@ -32,7 +35,8 @@ class CoachRecommenationSelector extends StatelessWidget {
             coachRecommendation: coachRecommendation,
             selectedCoaches: selectedCoaches,
             coach: coach,
-            departureTime: departureTime);
+            departureTime: departureTime,
+            activity: activity);
       },
       itemCount: coachRecommendations.length,
     );

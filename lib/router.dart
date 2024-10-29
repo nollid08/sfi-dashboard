@@ -57,8 +57,15 @@ GoRouter router(RouterRef ref) {
       // Stateful nested navigation based on:
       // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) =>
-            NavigationShell(child: navigationShell),
+        builder: (context, state, navigationShell) {
+          Future(() {
+            int currentIndex = ref.read(selectedScreenIndexProvider);
+            ref
+                .read(selectedScreenIndexProvider.notifier)
+                .updateIndexBasedOnRouteName(state.uri.path, currentIndex);
+          });
+          return NavigationShell(child: navigationShell);
+        },
         branches: [
           // first branch (A)
           StatefulShellBranch(
@@ -178,11 +185,6 @@ GoRouter router(RouterRef ref) {
                   return const AdminTools();
                 },
                 redirect: (context, state) async {
-                  Future(() {
-                    ref
-                        .read(selectedScreenIndexProvider.notifier)
-                        .updateIndexBasedOnRouteName(state.uri.path);
-                  });
                   final Coach? coach =
                       await ref.watch(currentCoachProvider.future);
                   final isAdmin = coach?.isAdmin ?? false;
@@ -195,11 +197,6 @@ GoRouter router(RouterRef ref) {
                   return const ManageCoachesScreen();
                 },
                 redirect: (context, state) async {
-                  Future(() {
-                    ref
-                        .read(selectedScreenIndexProvider.notifier)
-                        .updateIndexBasedOnRouteName(state.uri.path);
-                  });
                   final Coach? coach =
                       await ref.watch(currentCoachProvider.future);
                   final isAdmin = coach?.isAdmin ?? false;
@@ -212,11 +209,6 @@ GoRouter router(RouterRef ref) {
                   return const Activities();
                 },
                 redirect: (context, state) async {
-                  Future(() {
-                    ref
-                        .read(selectedScreenIndexProvider.notifier)
-                        .updateIndexBasedOnRouteName(state.uri.path);
-                  });
                   final Coach? coach =
                       await ref.watch(currentCoachProvider.future);
                   final isAdmin = coach?.isAdmin ?? false;
@@ -229,11 +221,6 @@ GoRouter router(RouterRef ref) {
                   return const ResourceView();
                 },
                 redirect: (context, state) async {
-                  Future(() {
-                    ref
-                        .read(selectedScreenIndexProvider.notifier)
-                        .updateIndexBasedOnRouteName(state.uri.path);
-                  });
                   final Coach? coach =
                       await ref.watch(currentCoachProvider.future);
                   final isAdmin = coach?.isAdmin ?? false;
@@ -246,11 +233,6 @@ GoRouter router(RouterRef ref) {
                     return const ManageSchools();
                   },
                   redirect: (context, state) async {
-                    Future(() {
-                      ref
-                          .read(selectedScreenIndexProvider.notifier)
-                          .updateIndexBasedOnRouteName(state.uri.path);
-                    });
                     final Coach? coach =
                         await ref.watch(currentCoachProvider.future);
                     final isAdmin = coach?.isAdmin ?? false;
@@ -270,11 +252,6 @@ GoRouter router(RouterRef ref) {
                   return ManualBookingShell(child);
                 },
                 redirect: (context, state) async {
-                  Future(() {
-                    ref
-                        .read(selectedScreenIndexProvider.notifier)
-                        .updateIndexBasedOnRouteName(state.uri.path);
-                  });
                   final Coach? coach =
                       await ref.watch(currentCoachProvider.future);
                   final isAdmin = coach?.isAdmin ?? false;
@@ -409,10 +386,11 @@ GoRouter router(RouterRef ref) {
     ],
     redirect: (context, state) {
       print('Currently On to ${state.uri}, ${state.fullPath}');
+      int currentIndex = ref.read(selectedScreenIndexProvider);
       Future(() {
         ref
             .read(selectedScreenIndexProvider.notifier)
-            .updateIndexBasedOnRouteName(state.uri.path);
+            .updateIndexBasedOnRouteName(state.uri.path, currentIndex);
       });
       // If our async state is loading, don't perform redirects, yet
       if (authState.isLoading || authState.hasError) return null;

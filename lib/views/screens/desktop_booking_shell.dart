@@ -113,13 +113,6 @@ class DesktopBookingShell extends ConsumerWidget {
                           ),
                         ),
                         const Divider(),
-                        //Back button
-                        if (kIsWeb)
-                          BackButton(
-                            onPressed: () {
-                              context.pop();
-                            },
-                          ),
                       ],
                     )),
                 if (isWideScreen) ...[

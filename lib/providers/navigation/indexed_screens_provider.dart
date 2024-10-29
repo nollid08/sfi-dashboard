@@ -19,7 +19,11 @@ class IndexedScreens extends _$IndexedScreens {
     return indexedScreens;
   }
 
-  int getIndexFromRoute(String route) {
+  int getIndexFromRoute(String route, int currentIndex) {
+    // If My Bookings is selected, return the current index
+    if (route.contains('myBookings')) {
+      return currentIndex;
+    }
     //sort longest to shortest
     final List<ScreenItem> sortedScreenItems = [...state]
       ..sort((a, b) => b.route.length.compareTo(a.route.length));

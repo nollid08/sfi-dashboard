@@ -54,6 +54,7 @@ class _AddNewCoachesToBookingDialogState
               return CoachRecommenationSelector(
                 selectedCoaches: selectedCoaches,
                 coachRecommendations: coachRecommendations,
+                activity: widget.session.activity,
                 onCoachSelected: (CoachRecommendation selectedCoach) {
                   setState(() {
                     if (selectedCoaches.contains(selectedCoach)) {

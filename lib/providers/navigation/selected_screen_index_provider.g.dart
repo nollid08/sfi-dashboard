@@ -7,7 +7,7 @@ part of 'selected_screen_index_provider.dart';
 // **************************************************************************
 
 String _$selectedScreenIndexHash() =>
-    r'b2e2d17f20ea249b4963675389d666f345d456ee';
+    r'bbe26bcf8ee5fa6156203b2b11f30ed856ce3772';
 
 /// See also [SelectedScreenIndex].
 @ProviderFor(SelectedScreenIndex)

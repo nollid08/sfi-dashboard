@@ -1,10 +1,13 @@
 import 'package:dashboard/models/activity.dart';
 import 'package:dashboard/models/coach.dart';
+import 'package:dashboard/models/coaches_data_source.dart';
 import 'package:dashboard/providers/activity_provider.dart';
 import 'package:dashboard/providers/coaches_provider.dart';
-import 'package:dashboard/views/widgets/request_annual_leave_dialog.dart';
+import 'package:dashboard/views/dialogs/edit_coach_dialog.dart';
+import 'package:dashboard/views/dialogs/request_annual_leave_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ManageCoachesScreen extends ConsumerStatefulWidget {
   const ManageCoachesScreen({super.key});
@@ -18,112 +21,99 @@ class _ManageCoachesScreenState extends ConsumerState<ManageCoachesScreen> {
   int? selectedCoachindex;
   @override
   Widget build(BuildContext context) {
-    final AsyncValue<List<Coach>> coaches = ref.watch(coachesProvider);
-    final AsyncValue<List<Activity>> activities = ref.watch(activitiesProvider);
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Card(
-        child: coaches.when(
-          data: (List<Coach> coaches) {
-            return Row(
-              children: [
-                Flexible(
-                  child: ListView.builder(
-                    itemCount: coaches.length,
-                    itemBuilder: (context, index) {
-                      final Coach coach = coaches[index];
-                      return ListTile(
-                        title: Text(coach.name),
-                        subtitle: Text(coach.baseEircode ?? 'No Base Eircode'),
-                        tileColor: selectedCoachindex == index
-                            ? Colors.blue.withOpacity(0.4)
-                            : null,
-                        onTap: () {
-                          setState(() {
-                            selectedCoachindex = index;
-                          });
-                        },
-                      );
-                    },
-                  ),
-                ),
-                const VerticalDivider(),
-                if (selectedCoachindex != null)
-                  Flexible(
-                    child: Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            child: Text(coaches[selectedCoachindex!].name[0]),
+    final AsyncValue<List<Coach>> coachesRef = ref.watch(coachesProvider);
+    final AsyncValue<List<Activity>> activitiesRef =
+        ref.watch(activitiesProvider);
+
+    return coachesRef.when(
+      data: (List<Coach> coaches) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Card(
+            child: activitiesRef.when(
+              data: (List<Activity> activities) {
+                final CoachesRatingsDataSource coachesDataSource =
+                    CoachesRatingsDataSource(
+                  coaches: coaches,
+                  activities: activities,
+                  ref: ref,
+                );
+
+                return SfDataGrid(
+                  source: coachesDataSource,
+                  columnWidthMode: ColumnWidthMode.fill,
+                  headerRowHeight: 80,
+                  headerGridLinesVisibility: GridLinesVisibility.both,
+                  gridLinesVisibility: GridLinesVisibility.both,
+                  allowFiltering: true,
+                  allowSorting: true,
+                  allowEditing: true,
+                  selectionMode: SelectionMode.single,
+                  navigationMode: GridNavigationMode.cell,
+                  allowColumnsResizing: true,
+                  onCellTap: (details) {
+                    openEditCoachModal(details, coachesDataSource, activities);
+                  },
+                  onCellDoubleTap: (details) {
+                    openEditCoachModal(details, coachesDataSource, activities);
+                  },
+                  columns: [
+                        GridColumn(
+                          columnName: 'coachId',
+                          visible: false,
+                          label: const Text("ID"),
+                          allowEditing: false,
+                        ),
+                        GridColumn(
+                          columnName: 'coachName',
+                          allowEditing: false,
+                          columnWidthMode: ColumnWidthMode.fitByCellValue,
+                          label: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            alignment: Alignment.center,
+                            child: const Text("Coach"),
                           ),
-                          Text(coaches[selectedCoachindex!].name),
-                          if (coaches[selectedCoachindex!].baseEircode !=
-                              null) ...[
-                            Text(coaches[selectedCoachindex!].baseEircode!),
-                            Text(
-                              'Activities Covered  -${coaches[selectedCoachindex!].activitiesCovered}',
-                            ),
-                            activities.when(
-                              data: (List<Activity> activities) {
-                                return Column(
-                                  children: activities
-                                      .map(
-                                        (activity) => CheckboxListTile(
-                                          title: Text(activity.name),
-                                          value: coaches[selectedCoachindex!]
-                                              .activitiesCovered
-                                              .contains(activity.id),
-                                          onChanged: (bool? value) {
-                                            ref
-                                                .read(coachesProvider.notifier)
-                                                .toggleActivity(
-                                                  coaches[selectedCoachindex!]
-                                                      .uid,
-                                                  activity.id,
-                                                );
-                                          },
-                                        ),
-                                      )
-                                      .toList(),
-                                );
-                              },
-                              loading: () => const SizedBox.square(
-                                child: CircularProgressIndicator(),
-                              ),
-                              error: (error, stackTrace) => throw error,
-                            ),
-                            FilledButton.icon(
-                              onPressed: () async {
-                                await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return RequestAnnualLeaveDialog(
-                                      coachUid:
-                                          coaches[selectedCoachindex!].uid,
-                                    );
-                                  },
-                                );
-                              },
-                              label: const Text('Add Annual Leave'),
-                              icon: const Icon(Icons.beach_access),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  )
-              ],
-            );
-          },
-          loading: () => const SizedBox.square(
-            child: CircularProgressIndicator(),
+                        )
+                      ] +
+                      activities.map((Activity activity) {
+                        return GridColumn(
+                          columnName: activity.id,
+                          label: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            alignment: Alignment.center,
+                            child: Text(activity.name),
+                          ),
+                        );
+                      }).toList(),
+                );
+              },
+              error: (error, stackTrace) => throw error,
+              loading: () => const SizedBox.shrink(),
+            ),
           ),
-          error: (error, stackTrace) => throw error,
-        ),
-      ),
+        );
+      },
+      error: (error, stackTrace) => throw error,
+      loading: () => const SizedBox.shrink(),
     );
+  }
+
+  void openEditCoachModal(details, coachesDataSource, activities) {
+    // If the user taps on the coach name, show the dialog
+    if (details.rowColumnIndex.columnIndex == 1) {
+      final int selectedRowIndex = details.rowColumnIndex.rowIndex - 1;
+      final DataGridRow row =
+          coachesDataSource.rows.elementAt(selectedRowIndex);
+      final Coach coach = row.getCells().first.value;
+      showDialog(
+        context: context,
+        builder: (context) {
+          return EditCoachDialog(
+            coach: coach,
+            activities: activities,
+          );
+        },
+      );
+    }
   }
 }
