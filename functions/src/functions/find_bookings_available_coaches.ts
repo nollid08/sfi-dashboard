@@ -86,7 +86,12 @@ export const find_bookings_available_coaches_function = onCall(
     const coachesWhoCoverActivity: Coach[] = coachesWhoCoverActivityDocs.docs
       .map((doc: any) => {
         const coach = doc.data();
-        if (coach.baseEircode == undefined) {
+        if (
+          coach.baseEircode == undefined ||
+          coach.baseEircode == "" ||
+          coach.timeToCover == undefined ||
+          coach.timeToCover == 0
+        ) {
           console.log(`${coach.name} does not have a base eircode`);
           return;
         } else {

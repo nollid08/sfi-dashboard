@@ -89,7 +89,7 @@ class Coach {
     return {
       'uid': uid,
       'name': name,
-      'eircode': baseEircode,
+      'baseEircode': baseEircode,
       'activitiesCovered': manuallyBookableActivites,
       'isAdmin': isAdmin,
       ...autoActivityRatings
