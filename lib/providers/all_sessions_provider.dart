@@ -11,18 +11,16 @@ part 'all_sessions_provider.g.dart';
 @riverpod
 class AllSessions extends _$AllSessions {
   @override
-  Stream<List<Session>> build() async* {
+  Future<List<Session>> build() async {
     final db = FirebaseFirestore.instance;
-    final Stream<QuerySnapshot> sessionSnapshots;
-    sessionSnapshots = db
+    // Get all sessions from the server (Workaround as firebase snapshots have strange caching behaviour that doesnt respect where clauses)
+    final querySnaps = await db
         .collection('sessions')
-        .orderBy('arrivalTime', descending: false)
-        .snapshots();
-    yield* sessionSnapshots.map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Session.fromQueryDocSnapshot(doc);
-      }).toList();
-    });
+        .get(const GetOptions(source: Source.server));
+
+    return querySnaps.docs
+        .map((doc) => Session.fromQueryDocSnapshot(doc))
+        .toList();
   }
 
   Future<void> updateSessionDateTimes({
