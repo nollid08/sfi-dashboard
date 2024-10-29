@@ -6,32 +6,18 @@ import 'package:dashboard/models/session.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'sessions_provider.g.dart';
+part 'all_sessions_provider.g.dart';
 
 @riverpod
-class Sessions extends _$Sessions {
+class AllSessions extends _$AllSessions {
   @override
-  Stream<List<Session>> build(
-      {IList<String>? bookingIds, IList<String>? coachIds}) async* {
+  Stream<List<Session>> build() async* {
     final db = FirebaseFirestore.instance;
     final Stream<QuerySnapshot> sessionSnapshots;
-    if (bookingIds != null ? bookingIds.isNotEmpty : false) {
-      sessionSnapshots = db
-          .collection('sessions')
-          .where('bookingId', whereIn: bookingIds)
-          .orderBy('arrivalTime', descending: false)
-          .snapshots();
-    } else if (coachIds != null ? coachIds.isNotEmpty : false) {
-      sessionSnapshots = db
-          .collection('sessions')
-          .where('coaches', arrayContainsAny: coachIds)
-          .snapshots();
-    } else {
-      sessionSnapshots = db
-          .collection('sessions')
-          .orderBy('arrivalTime', descending: false)
-          .snapshots();
-    }
+    sessionSnapshots = db
+        .collection('sessions')
+        .orderBy('arrivalTime', descending: false)
+        .snapshots();
     yield* sessionSnapshots.map((snapshot) {
       return snapshot.docs.map((doc) {
         return Session.fromQueryDocSnapshot(doc);

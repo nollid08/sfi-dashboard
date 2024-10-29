@@ -1,6 +1,7 @@
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/bookings_with_sessions.dart';
 import 'package:dashboard/models/coach.dart';
+import 'package:dashboard/providers/all_sessions_provider.dart';
 import 'package:dashboard/providers/bookings_provider.dart';
 import 'package:dashboard/providers/sessions_provider.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
@@ -14,8 +15,7 @@ class BookingsWithSessions extends _$BookingsWithSessions {
   Stream<List<BookingWithSessions>> build() async* {
     final List<Booking> bookings =
         await ref.watch(bookingsProvider(<Coach>[].lock).future);
-    final sessions =
-        await ref.watch(sessionsProvider(bookingIds: <String>[].lock).future);
+    final sessions = await ref.read(allSessionsProvider.future);
 
     final List<BookingWithSessions> bookingsWithSessions = [];
     for (final booking in bookings) {

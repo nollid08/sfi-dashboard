@@ -7,7 +7,7 @@ part of 'bookings_with_sessions_provider.dart';
 // **************************************************************************
 
 String _$bookingsWithSessionsHash() =>
-    r'6e4b2468aeba9a11aa7828d5abea4a6bf1604c79';
+    r'8eeff6e754159880502c45c3517f5cdcca4dbaa6';
 
 /// See also [BookingsWithSessions].
 @ProviderFor(BookingsWithSessions)
