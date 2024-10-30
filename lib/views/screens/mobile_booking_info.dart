@@ -239,7 +239,7 @@ class MobileBookingOverview extends ConsumerWidget {
                           ListTile(
                             title: const Text("Arrival Time:"),
                             trailing: Text(
-                                DateFormat("dd/MM/yy")
+                                DateFormat("dd/MM/yy hh:mm")
                                     .format(session.arrivalTime),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16)),
@@ -248,7 +248,7 @@ class MobileBookingOverview extends ConsumerWidget {
                           ListTile(
                             title: const Text("Start Time:"),
                             trailing: Text(
-                                DateFormat("dd/MM/yy")
+                                DateFormat("dd/MM/yy hh:mm")
                                     .format(session.startTime),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16)),
@@ -257,7 +257,8 @@ class MobileBookingOverview extends ConsumerWidget {
                           ListTile(
                             title: const Text("End Time:"),
                             trailing: Text(
-                                DateFormat("dd/MM/yy").format(session.endTime),
+                                DateFormat("dd/MM/yy hh:mm")
+                                    .format(session.endTime),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16)),
                           ),
@@ -265,7 +266,7 @@ class MobileBookingOverview extends ConsumerWidget {
                           ListTile(
                             title: const Text("Leave Time:"),
                             trailing: Text(
-                                DateFormat("dd/MM/yy")
+                                DateFormat("dd/MM/yy hh:mm")
                                     .format(session.leaveTime),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16)),
