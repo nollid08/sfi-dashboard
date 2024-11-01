@@ -22,50 +22,35 @@ class Coach {
     QueryDocumentSnapshot<Map<String, dynamic>> doc,
   ) {
     final data = doc.data();
-    final String? baseEircode = data['baseEircode'];
-    final List<String> manuallyBookableActivites =
-        data['activitiesCovered'] != null
-            ? List<String>.from(data['activitiesCovered'])
-            : [];
-    final bool isAdmin = data['isAdmin'] ?? false;
-    final Map<String, int> autoActivityRatings = {
-      for (String key in data.keys)
-        if (key.startsWith('auto_score-'))
-          key.substring('auto_score-'.length): data[key] as int? ?? 0
-    };
     return Coach(
       uid: doc.id,
-      name: doc['name'],
-      baseEircode: baseEircode,
-      manuallyBookableActivites: manuallyBookableActivites,
-      isAdmin: isAdmin,
-      autoActivityRatings: autoActivityRatings,
+      name: data['name'],
+      baseEircode: data['baseEircode'],
+      manuallyBookableActivites:
+          List<String>.from(data['activitiesCovered'] ?? []),
+      isAdmin: data['isAdmin'] ?? false,
+      autoActivityRatings: {
+        for (String key in data.keys)
+          if (key.startsWith('auto_score-'))
+            key.substring('auto_score-'.length): data[key] as int? ?? 0
+      },
     );
   }
 
   factory Coach.fromDocSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
-    final data = doc.data();
-    if (data == null) {
-      throw Exception('Coach not found');
-    }
-    final String baseEircode = data['baseEircode'] ?? 'p67RC92';
-    final List<String> manuallyBookableActivites =
-        data['activitiesCovered'] != null
-            ? List<String>.from(data['activitiesCovered'])
-            : [];
-    final bool isAdmin = data['isAdmin'] ?? false;
-    final Map<String, int> autoActivityRatings = {
-      for (String key in data.keys)
-        if (key.startsWith('auto_score-'))
-          key.substring('auto_score-'.length): data[key] as int? ?? 0
-    };
+    final data = doc.data() ?? {};
     return Coach(
       uid: doc.id,
-      name: doc['name'],
-      baseEircode: baseEircode,
-      manuallyBookableActivites: manuallyBookableActivites,
-      isAdmin: isAdmin,
-      autoActivityRatings: autoActivityRatings,
+      name: data['name'],
+      baseEircode: data['baseEircode'],
+      manuallyBookableActivites:
+          List<String>.from(data['activitiesCovered'] ?? []),
+      isAdmin: data['isAdmin'] ?? false,
+      autoActivityRatings: {
+        for (String key in data.keys)
+          if (key.startsWith('auto_score-'))
+            key.substring('auto_score-'.length): data[key] as int? ?? 0
+      },
     );
   }
 

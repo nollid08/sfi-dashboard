@@ -7,6 +7,8 @@ import 'package:dashboard/views/widgets/add_new_coaches_to_all_sessions_dialog.d
 import 'package:dashboard/views/widgets/add_new_coaches_to_single_session_dialog.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ManageSessionsAssignedCoaches extends ConsumerStatefulWidget {
@@ -90,22 +92,40 @@ class _ManageSessionsAssignedCoachesState
                                       ),
                                     ),
                                     Text(
-                                      'Base Eircode: ${coach.baseEircode}',
+                                      'Departing Eircode: ${travelInfo.departureLocation}',
+                                    ),
+                                    Text(
+                                      'Returning Eircode: ${travelInfo.returnLocation}',
                                     ),
                                   ],
                                 ),
-                                Column(
-                                  children: [
-                                    Text(
-                                      'Distance: ${(travelInfo.distance / 1000).round()} km',
-                                    ),
-                                    Text(
-                                      'Travel Time: ${travelInfo.duration.inMinutes} minutes',
-                                    ),
-                                    Text(
-                                        'Leave Time: ${widget.session.arrivalTime.subtract(travelInfo.duration)}'),
-                                  ],
-                                ),
+                                Row(children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        'Distance: ${(travelInfo.distance / 1000).round()} km',
+                                      ),
+                                      Text(
+                                        'Travel Time: ${travelInfo.duration.inMinutes} minutes',
+                                      ),
+                                      Text(
+                                          'Leave Time: ${widget.session.arrivalTime.subtract(travelInfo.duration)}'),
+                                    ],
+                                  ),
+                                  IconButton.filled(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return EditInitialLocations(
+                                            assignedCoach: assignedCoach,
+                                          );
+                                        },
+                                      );
+                                    },
+                                    icon: const Icon(Icons.commute),
+                                  ),
+                                ]),
                               ],
                             ),
                           ],
@@ -201,6 +221,116 @@ class _ManageSessionsAssignedCoachesState
           ],
         ),
       ),
+    );
+  }
+}
+
+class EditInitialLocations extends ConsumerWidget {
+  EditInitialLocations({
+    super.key,
+    required this.assignedCoach,
+  });
+
+  final AssignedCoach assignedCoach;
+  final formKey = GlobalKey<FormBuilderState>();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return AlertDialog(
+      title: const Text('Edit Initial Locations'),
+      content: FormBuilder(
+        key: formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              initialValue: assignedCoach.travelInfo.departureLocation,
+              decoration: const InputDecoration(labelText: 'Departure Eircode'),
+              maxLength: 7,
+              inputFormatters: [
+                UpperCaseTextFormatter(),
+              ],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a valid Eircode';
+                }
+                //length == 7
+                if (value.length != 7) {
+                  return 'Eircode must be 7 characters long';
+                }
+                //Regex Check
+                if (!RegExp(r'([AC-FHKNPRTV-Y]\d{2}|D6W)[0-9AC-FHKNPRTV-Y]{4}')
+                    .hasMatch(value.toUpperCase().replaceAll(' ', ''))) {
+                  return 'Please enter a valid Eircode';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              initialValue: assignedCoach.travelInfo.returnLocation,
+              decoration: const InputDecoration(labelText: 'Return Eircode'),
+              maxLength: 7,
+              inputFormatters: [
+                UpperCaseTextFormatter(),
+              ],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a valid Eircode';
+                }
+                //length == 7
+                if (value.length != 7) {
+                  return 'Eircode must be 7 characters long';
+                }
+                //Regex Check
+                if (!RegExp(r'([AC-FHKNPRTV-Y]\d{2}|D6W)[0-9AC-FHKNPRTV-Y]{4}')
+                    .hasMatch(value.toUpperCase().replaceAll(' ', ''))) {
+                  return 'Please enter a valid Eircode';
+                }
+                return null;
+              },
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            if (formKey.currentState?.saveAndValidate() ?? false) {
+              final values = formKey.currentState!.value;
+              final String departureLocation = values['departureLocation']
+                  .toString()
+                  .replaceAll(' ', '')
+                  .toUpperCase();
+              final String returnLocation = values['returnLocation']
+                  .toString()
+                  .replaceAll(' ', '')
+                  .toUpperCase();
+
+              print('Departure Location: $departureLocation');
+              print('Return Location: $returnLocation');
+              Navigator.of(context).pop();
+            }
+          },
+          child: const Text('Save'),
+        ),
+      ],
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase().replaceAll(' ', ''),
+      selection: newValue.selection,
     );
   }
 }
