@@ -6,6 +6,7 @@ import { getFirestore } from "firebase-admin/firestore";
 import { find_available_booking_options_function } from "./functions/find_available_booking_options";
 import { getAuth } from "firebase-admin/auth";
 import { defineString } from "firebase-functions/params";
+import { update_travel_info_function } from "./functions/update_travel_info";
 
 const brevoApiKey = defineString("BREVO_API_KEY");
 
@@ -17,6 +18,7 @@ export const find_sessions_available_coaches =
   find_sessions_available_coaches_function;
 export const find_available_booking_options =
   find_available_booking_options_function;
+export const update_travel_info = update_travel_info_function;
 
 export const normalise_client_data = fbTriggers
   .document("clients/{clientId}")

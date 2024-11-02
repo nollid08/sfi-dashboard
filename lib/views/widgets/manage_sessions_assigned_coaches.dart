@@ -101,16 +101,37 @@ class _ManageSessionsAssignedCoachesState
                                 ),
                                 Row(children: [
                                   Column(
+                                    // children: [
+                                    //   Text(
+                                    //     'Distance: ${(travelInfo.outwardDistance / 1000).round()} km',
+                                    //   ),
+                                    //   Text(
+                                    //     'Travel Time: ${travelInfo.outwardDuration.inMinutes} minutes',
+                                    //   ),
+                                    //   Text(
+                                    //       'Leave Time: ${widget.session.arrivalTime.subtract(travelInfo.outwardDuration)}'),
+                                    // ],
                                     children: [
                                       Text(
-                                        'Distance: ${(travelInfo.distance / 1000).round()} km',
+                                        'Outward Distance: ${(travelInfo.outwardDistance / 1000).round()} km',
                                       ),
                                       Text(
-                                        'Travel Time: ${travelInfo.duration.inMinutes} minutes',
+                                        'Outward Travel Time: ${travelInfo.outwardDuration.inMinutes} minutes',
                                       ),
                                       Text(
-                                          'Leave Time: ${widget.session.arrivalTime.subtract(travelInfo.duration)}'),
+                                          'Leave Time: ${widget.session.arrivalTime.subtract(travelInfo.outwardDuration)}'),
+                                      Text(
+                                        'Return Distance: ${(travelInfo.homewardDistance / 1000).round()} km',
+                                      ),
+                                      Text(
+                                        'Return Travel Time: ${travelInfo.homewardDuration.inMinutes} minutes',
+                                      ),
+                                      Text(
+                                          'Leave Time: ${widget.session.leaveTime.add(travelInfo.homewardDuration)}'),
                                     ],
+                                  ),
+                                  const SizedBox(
+                                    width: 8,
                                   ),
                                   IconButton.filled(
                                     onPressed: () {
@@ -118,6 +139,7 @@ class _ManageSessionsAssignedCoachesState
                                         context: context,
                                         builder: (context) {
                                           return EditInitialLocations(
+                                            sessionId: widget.session.id,
                                             assignedCoach: assignedCoach,
                                           );
                                         },
@@ -229,9 +251,11 @@ class EditInitialLocations extends ConsumerWidget {
   EditInitialLocations({
     super.key,
     required this.assignedCoach,
+    required this.sessionId,
   });
 
   final AssignedCoach assignedCoach;
+  final String sessionId;
   final formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -243,7 +267,8 @@ class EditInitialLocations extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextFormField(
+            FormBuilderTextField(
+              name: 'departureLocation',
               initialValue: assignedCoach.travelInfo.departureLocation,
               decoration: const InputDecoration(labelText: 'Departure Eircode'),
               maxLength: 7,
@@ -266,7 +291,8 @@ class EditInitialLocations extends ConsumerWidget {
                 return null;
               },
             ),
-            TextFormField(
+            FormBuilderTextField(
+              name: 'returnLocation',
               initialValue: assignedCoach.travelInfo.returnLocation,
               decoration: const InputDecoration(labelText: 'Return Eircode'),
               maxLength: 7,
@@ -312,8 +338,16 @@ class EditInitialLocations extends ConsumerWidget {
                   .replaceAll(' ', '')
                   .toUpperCase();
 
-              print('Departure Location: $departureLocation');
-              print('Return Location: $returnLocation');
+              final sessionsNotifier = ref.read(sessionsProvider(
+                bookingIds: <String>[].lock,
+              ).notifier);
+
+              sessionsNotifier.updateSessionAssignedCoachLocations(
+                assignedCoach: assignedCoach,
+                sessionId: sessionId,
+                newDepartureLocation: departureLocation,
+                newReturnLocation: returnLocation,
+              );
               Navigator.of(context).pop();
             }
           },

@@ -1,20 +1,26 @@
 class TravelInfo {
-  final double distance;
-  final Duration duration;
+  final double outwardDistance;
+  final Duration outwardDuration;
+  final double homewardDistance;
+  final Duration homewardDuration;
   final String departureLocation;
   final String returnLocation;
 
   TravelInfo({
-    required this.distance,
-    required this.duration,
+    required this.outwardDistance,
+    required this.outwardDuration,
+    required this.homewardDistance,
+    required this.homewardDuration,
     required this.departureLocation,
     required this.returnLocation,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'distance': distance,
-      'duration': duration.inMilliseconds,
+      'outwardDistance': outwardDistance,
+      'outwardDuration': outwardDuration.inMilliseconds,
+      'homewardDistance': homewardDistance,
+      'homewardDuration': homewardDuration.inMilliseconds,
       'departureLocation': departureLocation,
       'returnLocation': returnLocation,
     };
@@ -22,10 +28,10 @@ class TravelInfo {
 
   factory TravelInfo.fromJson(Map<String, dynamic> json) {
     return TravelInfo(
-      distance: json['distance'].runtimeType == int
-          ? json['distance'].toDouble()
-          : json['distance'],
-      duration: Duration(milliseconds: json['duration']),
+      outwardDistance: json['outwardDistance'],
+      outwardDuration: Duration(milliseconds: json['outwardDuration']),
+      homewardDistance: json['homewardDistance'],
+      homewardDuration: Duration(milliseconds: json['homewardDuration']),
       departureLocation: json['departureLocation'],
       returnLocation: json['returnLocation'],
     );

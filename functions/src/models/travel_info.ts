@@ -1,13 +1,31 @@
 export class TravelInfo {
-    distance: number;
-    duration: number;
+  outwardDistance: number;
+  outwardDuration: number;
+  homewardDistance: number;
+  homewardDuration: number;
+  departureLocation: string;
+  arrivalLocation: string;
+
+  constructor({
+    outwardDistance,
+    outwardDuration,
+    homewardDistance,
+    homewardDuration,
+    departureLocation,
+    arrivalLocation,
+  }: {
+    outwardDistance: number;
+    outwardDuration: number;
+    homewardDistance: number;
+    homewardDuration: number;
     departureLocation: string;
     arrivalLocation: string;
-
-    constructor({ distance, duration, departureLocation, arrivalLocation }: { distance: number, duration: number, departureLocation: string, arrivalLocation: string }) {
-        this.distance = distance;
-        this.duration = duration;
-        this.departureLocation = departureLocation;
-        this.arrivalLocation = arrivalLocation;
-    }
+  }) {
+    this.outwardDistance = outwardDistance;
+    this.outwardDuration = outwardDuration;
+    this.homewardDistance = homewardDistance;
+    this.homewardDuration = homewardDuration;
+    this.departureLocation = departureLocation;
+    this.arrivalLocation = arrivalLocation;
+  }
 }

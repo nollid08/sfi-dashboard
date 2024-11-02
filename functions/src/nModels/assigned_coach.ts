@@ -30,8 +30,10 @@ export class AssignedCoach {
     return new AssignedCoach({
       coach: candidateCoach.coach,
       travelInfo: new TravelInfo({
-        distance: candidateCoach.travelEstimate.distance,
-        duration: candidateCoach.travelEstimate.duration,
+        outwardDistance: candidateCoach.travelEstimate.distance,
+        outwardDuration: candidateCoach.travelEstimate.duration,
+        homewardDistance: candidateCoach.travelEstimate.distance,
+        homewardDuration: candidateCoach.travelEstimate.duration,
         departureLocation:
           departureLocation ?? candidateCoach.coach.baseEircode,
         arrivalLocation: client.eircode,

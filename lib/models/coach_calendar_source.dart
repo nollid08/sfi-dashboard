@@ -103,7 +103,7 @@ class CoachCalendarSource extends CalendarDataSource {
                 "travelInfo": assignedCoach.travelInfo,
               }),
         );
-        final Duration travelTime = assignedCoach.travelInfo.duration;
+        final Duration travelTime = assignedCoach.travelInfo.outwardDuration;
         final DateTime leaveHome = session.arrivalTime.subtract(travelTime);
         final DateTime arriveHome = session.leaveTime.add(travelTime);
         appointments.add(Appointment(

@@ -28,7 +28,7 @@ class SessionInfoDialog extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.directions_car),
               title: Text(
-                  'Leave Home By: ${DateFormat("hh:mm dd/MM/yy").format(session.arrivalTime.subtract(travelInfo.duration))}'),
+                  'Leave Home By: ${DateFormat("hh:mm dd/MM/yy").format(session.arrivalTime.subtract(travelInfo.outwardDuration))}'),
             ),
             const Divider(),
             ListTile(

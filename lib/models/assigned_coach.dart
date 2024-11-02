@@ -38,8 +38,10 @@ class AssignedCoach {
     return AssignedCoach(
       coach: coachRecommendation.coach,
       travelInfo: TravelInfo(
-        distance: coachRecommendation.travelEstimate.distance,
-        duration: coachRecommendation.travelEstimate.duration,
+        outwardDistance: coachRecommendation.travelEstimate.distance,
+        outwardDuration: coachRecommendation.travelEstimate.duration,
+        homewardDistance: coachRecommendation.travelEstimate.distance,
+        homewardDuration: coachRecommendation.travelEstimate.duration,
         departureLocation: coachRecommendation.coach.baseEircode ?? 'Unknown',
         returnLocation: coachRecommendation.coach.baseEircode ?? 'Unknown',
       ),

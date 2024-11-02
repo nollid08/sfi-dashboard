@@ -3,6 +3,7 @@ import 'package:dashboard/models/assigned_coach.dart';
 import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/models/coach_recommendation.dart';
 import 'package:dashboard/models/session.dart';
+import 'package:dashboard/models/travel_info.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -317,5 +318,55 @@ class Sessions extends _$Sessions {
   Future<void> addSession(Session newSession) async {
     final db = FirebaseFirestore.instance;
     await db.collection('sessions').doc(newSession.id).set(newSession.toDoc());
+  }
+
+  Future<void> updateSessionAssignedCoachLocations({
+    required String sessionId,
+    required AssignedCoach assignedCoach,
+    required String newDepartureLocation,
+    required String newReturnLocation,
+  }) async {
+    final db = FirebaseFirestore.instance;
+    // find the session
+    final DocumentReference<Map<String, dynamic>> sessionRef =
+        db.collection('sessions').doc(sessionId);
+    //Only update the locations of the assigned coach passed in
+    await db.runTransaction((transaction) async {
+      final DocumentSnapshot<Map<String, dynamic>> sessionSnapshot =
+          await transaction.get(sessionRef);
+      final Map<String, dynamic>? sessionData = sessionSnapshot.data();
+      if (sessionData == null) {
+        throw Exception('Session not found');
+      }
+
+      final List assignedCoachesData = sessionData['assignedCoaches'];
+      final List<AssignedCoach> assignedCoaches = assignedCoachesData
+          .map((assignedCoachData) => AssignedCoach.fromJson(assignedCoachData))
+          .toList();
+
+      final List<AssignedCoach> updatedAssignedCoaches =
+          assignedCoaches.map((coach) {
+        if (coach.coach.uid == assignedCoach.coach.uid) {
+          return AssignedCoach(
+            coach: coach.coach,
+            travelInfo: TravelInfo(
+              outwardDistance: assignedCoach.travelInfo.outwardDistance,
+              outwardDuration: assignedCoach.travelInfo.outwardDuration,
+              homewardDistance: assignedCoach.travelInfo.homewardDistance,
+              homewardDuration: assignedCoach.travelInfo.homewardDuration,
+              departureLocation: newDepartureLocation,
+              returnLocation: newReturnLocation,
+            ),
+            hasOvernightAllowance: coach.hasOvernightAllowance,
+          );
+        }
+        return coach;
+      }).toList();
+      transaction.update(sessionRef, {
+        'assignedCoaches': updatedAssignedCoaches
+            .map((assignedCoach) => assignedCoach.toJson())
+            .toList(),
+      });
+    });
   }
 }

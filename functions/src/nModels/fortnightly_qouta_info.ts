@@ -46,7 +46,7 @@ export class FortnightlyQoutaPercentage {
           const overallTravelInfo = session.assignedCoaches.filter(
             (assignedCoach) => assignedCoach.coach.uid == coach.uid
           )[0].travelInfo;
-          const OverallTravelTime = overallTravelInfo.duration * 2;
+          const OverallTravelTime = overallTravelInfo.outwardDuration * 2;
           let coveredTravelTime =
             OverallTravelTime >= 14400000
               ? OverallTravelTime
