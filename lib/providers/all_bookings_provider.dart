@@ -6,23 +6,17 @@ import 'package:dashboard/models/session.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'bookings_provider.g.dart';
+part 'all_bookings_provider.g.dart';
 
 @riverpod
-class Bookings extends _$Bookings {
+class AllBookings extends _$AllBookings {
   @override
-  Stream<List<Booking>> build(IList<Coach> coaches) async* {
+  Stream<List<Booking>> build() async* {
     final FirebaseFirestore db = FirebaseFirestore.instance;
-    final Stream<QuerySnapshot> bookingSnapshots = coaches.isNotEmpty
-        ? db
-            .collection('bookings')
-            .where('coachUids',
-                arrayContainsAny: coaches.map((coach) => coach.uid).toList())
-            .snapshots()
-        : db
-            .collection('bookings')
-            .snapshots()
-            .skipWhile((e) => e.metadata.isFromCache);
+    final Stream<QuerySnapshot> bookingSnapshots = db
+        .collection('bookings')
+        .snapshots()
+        .skipWhile((e) => e.metadata.isFromCache);
     yield* bookingSnapshots.map((QuerySnapshot<Object?> snapshot) {
       return snapshot.docs.map((doc) {
         return Booking.fromQueryDocSnapshot(

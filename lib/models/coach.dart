@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dashboard/models/activity.dart';
 
 class Coach {
   final String uid;
