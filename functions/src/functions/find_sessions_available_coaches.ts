@@ -96,12 +96,26 @@ export const find_sessions_available_coaches_function = onCall(
             `${coach.name} has a base eircode - ${coach.baseEircode}`
           );
         }
+        //DO IT LIKE THIS
+        // final Map<String, int> autoActivityRatings = {
+        //   for (String key in json.keys)
+        //     if (key.startsWith('auto_score-'))
+        //       key.substring('auto_score-'.length): json[key] as int? ?? 0
+        // }
+        const autoActivityRatings: { [activityId: string]: number } = {};
+        for (const key in coach) {
+          if (key.startsWith("auto_score-")) {
+            autoActivityRatings[key.substring("auto_score-".length)] =
+              coach[key];
+          }
+        }
         return new Coach({
           uid: doc.id,
           name: coach.name,
           baseEircode: coach.baseEircode,
           activitiesCovered: coach.activitiesCovered,
           timeToCover: coach.timeToCover,
+          autoActivityRatings,
         });
       })
       .filter(

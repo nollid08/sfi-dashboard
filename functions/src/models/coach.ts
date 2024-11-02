@@ -4,6 +4,7 @@ export class Coach {
   baseEircode: string;
   activitiesCovered: Array<string>;
   timeToCover: number;
+  autoActivityRatings: { [activityId: string]: number } = {};
 
   constructor({
     uid,
@@ -11,17 +12,20 @@ export class Coach {
     baseEircode,
     activitiesCovered,
     timeToCover,
+    autoActivityRatings,
   }: {
     uid: string;
     name: string;
     baseEircode: string;
     activitiesCovered: Array<string>;
     timeToCover: number;
+    autoActivityRatings: { [activityId: string]: number };
   }) {
     this.uid = uid;
     this.name = name;
     this.baseEircode = baseEircode;
     this.activitiesCovered = activitiesCovered;
     this.timeToCover = timeToCover;
+    this.autoActivityRatings = autoActivityRatings;
   }
 }

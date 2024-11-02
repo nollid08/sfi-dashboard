@@ -42,7 +42,7 @@ class _AddNewCoachesToBookingDialogState
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
           height: 600,
-          width: 500,
+          width: 800,
           child: suitableCoaches.when(
             data: (List<CoachRecommendation> provCoachRecommendations) {
               final List<CoachRecommendation> coachRecommendations =

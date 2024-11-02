@@ -23,7 +23,7 @@ class AssignedCoach {
 
   factory AssignedCoach.fromJson(Map<String, dynamic> json) {
     return AssignedCoach(
-      coach: Coach.fromJson(json['coach']),
+      coach: Coach.fromFBJson(json['coach']),
       travelInfo: TravelInfo.fromJson(json['travelInfo']),
       hasOvernightAllowance: json['hasOvernightAllowance'],
     );

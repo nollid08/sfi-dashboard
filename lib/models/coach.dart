@@ -54,12 +54,25 @@ class Coach {
     );
   }
 
-  factory Coach.fromJson(Map<String, dynamic> json) {
+  factory Coach.fromFBJson(Map<String, dynamic> json) {
     final Map<String, int> autoActivityRatings = {
       for (String key in json.keys)
         if (key.startsWith('auto_score-'))
           key.substring('auto_score-'.length): json[key] as int? ?? 0
     };
+    return Coach(
+      uid: json['uid'],
+      name: json['name'],
+      baseEircode: json['baseEircode'],
+      manuallyBookableActivites: List<String>.from(json['activitiesCovered']),
+      isAdmin: json['isAdmin'] ?? false,
+      autoActivityRatings: autoActivityRatings,
+    );
+  }
+
+  factory Coach.fromJson(Map<String, dynamic> json) {
+    final Map<String, int> autoActivityRatings =
+        Map.from(json['autoActivityRatings'] ?? {});
     return Coach(
       uid: json['uid'],
       name: json['name'],

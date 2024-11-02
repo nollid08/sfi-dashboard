@@ -99,12 +99,20 @@ export const find_bookings_available_coaches_function = onCall(
             `${coach.name} has a base eircode - ${coach.baseEircode}`
           );
         }
+        const autoActivityRatings: { [activityId: string]: number } = {};
+        for (const key in coach) {
+          if (key.startsWith("auto_score-")) {
+            autoActivityRatings[key.substring("auto_score-".length)] =
+              coach[key];
+          }
+        }
         return new Coach({
           uid: doc.id,
           name: coach.name,
           baseEircode: coach.baseEircode,
           activitiesCovered: coach.activitiesCovered,
           timeToCover: coach.timeToCover,
+          autoActivityRatings,
         });
       })
       .filter(
