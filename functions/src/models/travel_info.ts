@@ -4,7 +4,7 @@ export class TravelInfo {
   homewardDistance: number;
   homewardDuration: number;
   departureLocation: string;
-  arrivalLocation: string;
+  returnLocation: string;
 
   constructor({
     outwardDistance,
@@ -26,6 +26,6 @@ export class TravelInfo {
     this.homewardDistance = homewardDistance;
     this.homewardDuration = homewardDuration;
     this.departureLocation = departureLocation;
-    this.arrivalLocation = arrivalLocation;
+    this.returnLocation = arrivalLocation;
   }
 }

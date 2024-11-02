@@ -39,6 +39,28 @@ class RequestAnnualLeaveDialog extends ConsumerWidget {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                FormBuilderDropdown<LeaveType>(
+                  name: "leaveType",
+                  items: const [
+                    DropdownMenuItem(
+                      value: LeaveType.annual,
+                      child: Text('Annual Leave'),
+                    ),
+                    DropdownMenuItem(
+                      value: LeaveType.sick,
+                      child: Text('Sick Leave'),
+                    ),
+                    DropdownMenuItem(
+                      value: LeaveType.other,
+                      child: Text('Other'),
+                    ),
+                  ],
+                  decoration: const InputDecoration(
+                    labelText: 'Leave Type',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: FormBuilderValidators.required(),
+                ),
                 FormBuilderDateTimePicker(
                   name: 'start_date_time',
                   inputType: InputType.both,
