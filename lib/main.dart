@@ -12,7 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_transitions/go_transitions.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
-const bool useEmulator = true;
+const bool useEmulator = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

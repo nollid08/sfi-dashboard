@@ -59,7 +59,7 @@ export const update_travel_info_function = onDocumentWritten(
         const duration = elements[0].duration.value;
         const newTravelInfo = new TravelInfo({
           outwardDistance: distance,
-          outwardDuration: duration,
+          outwardDuration: duration * 1000,
           homewardDistance: updatedTravelInfo.homewardDistance,
           homewardDuration: updatedTravelInfo.homewardDuration,
           departureLocation: updatedTravelInfo.departureLocation,
@@ -104,7 +104,7 @@ export const update_travel_info_function = onDocumentWritten(
           outwardDistance: updatedTravelInfo.outwardDistance,
           outwardDuration: updatedTravelInfo.outwardDuration,
           homewardDistance: distance,
-          homewardDuration: duration,
+          homewardDuration: duration * 1000,
           departureLocation: updatedTravelInfo.departureLocation,
           arrivalLocation: updatedTravelInfo.returnLocation,
         });
