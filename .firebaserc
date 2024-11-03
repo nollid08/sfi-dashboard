@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "sfi-equipment-tracker"
-  }
+  },
+  "targets": {
+    "sfi-equipment-tracker": {
+      "hosting": {
+        "sfi-dashboard": [
+          "sfi-dashboard"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

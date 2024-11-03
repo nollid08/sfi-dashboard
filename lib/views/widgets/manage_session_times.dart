@@ -16,9 +16,9 @@ class ManageSessionTimes extends ConsumerStatefulWidget {
 
 class _ManageSessionTimesState extends ConsumerState<ManageSessionTimes> {
   bool datesHaveChanged = false;
+  final formKey = GlobalKey<FormBuilderState>();
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormBuilderState>();
     return Card(
       surfaceTintColor: Colors.blue[600],
       shadowColor: Colors.blue[900],
