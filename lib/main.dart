@@ -20,7 +20,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   _connectToFirebaseEmulator();
-  await dotenv.load(fileName: '.env');
+  await dotenv.load(fileName: 'env');
   FirebaseUIAuth.configureProviders([
     GoogleProvider(clientId: dotenv.env['GOOGLE_CLIENT_ID']!),
   ]);

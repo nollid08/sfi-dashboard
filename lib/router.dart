@@ -4,6 +4,7 @@ import 'package:dashboard/models/client.dart';
 import 'package:dashboard/models/coach.dart';
 import 'package:dashboard/providers/auth_provider.dart';
 import 'package:dashboard/providers/current_coach_provider.dart';
+import 'package:dashboard/providers/is_wide_screen_provider.dart';
 import 'package:dashboard/providers/navigation/indexed_screens_provider.dart';
 import 'package:dashboard/providers/navigation/selected_screen_index_provider.dart';
 import 'package:dashboard/views/screens/admin_tools/manage_activities.dart';
@@ -114,7 +115,9 @@ GoRouter router(RouterRef ref) {
                   );
                 },
                 redirect: (context, state) {
-                  if (!kIsWeb) {
+                  final bool isWideScreen =
+                      ref.watch(isWideScreenProvider(MediaQuery.of(context)));
+                  if (!isWideScreen) {
                     return '/myBookings/mobile/${state.pathParameters['bookingId']}';
                   }
                   return null;
@@ -153,7 +156,9 @@ GoRouter router(RouterRef ref) {
                   );
                 },
                 redirect: (context, state) {
-                  if (kIsWeb) {
+                  final bool isWideScreen =
+                      ref.watch(isWideScreenProvider(MediaQuery.of(context)));
+                  if (isWideScreen) {
                     return '/myBookings/${state.pathParameters['bookingId']}';
                   }
                   return null;

@@ -56,11 +56,11 @@ class DesktopBookingShell extends ConsumerWidget {
                                     size: 20,
                                   ),
                                   onTap: () {
-                                    if (kIsWeb) {
-                                      context.go('/myBookings/$bookingId');
-                                    } else {
-                                      context.push('/myBookings/$bookingId/');
-                                    }
+                                    // if (kIsWeb) {
+                                    //   context.go('/myBookings/$bookingId');
+                                    // } else {
+                                    context.push('/myBookings/$bookingId/');
+                                    // }
                                   },
                                 );
                               }
@@ -97,13 +97,13 @@ class DesktopBookingShell extends ConsumerWidget {
                                         ),
                                       ),
                                 onTap: () {
-                                  if (kIsWeb) {
-                                    context.go(
-                                        '/myBookings/$bookingId/sessions/${index - 1}');
-                                  } else {
-                                    context.push(
-                                        '/myBookings/$bookingId/sessions/${index - 1}');
-                                  }
+                                  // if (kIsWeb) {
+                                  //   context.go(
+                                  //       '/myBookings/$bookingId/sessions/${index - 1}');
+                                  // } else {
+                                  context.push(
+                                      '/myBookings/$bookingId/sessions/${index - 1}');
+                                  // }
                                 },
                               );
                             },
