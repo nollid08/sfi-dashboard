@@ -6,8 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../providers/navigation/selected_screen_index_provider.dart';
-
 class ManageBooking extends ConsumerWidget {
   final String id;
 
@@ -22,61 +20,58 @@ class ManageBooking extends ConsumerWidget {
 
     return booking.when(
       data: (Booking booking) {
-        return Column(
-          children: [
-            const Text(
-              'Booking Info',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Flexible(
-                child: SizedBox(
-                  height: 800,
-                  child: SingleChildScrollView(
-                    child: ClientInfo(
-                      client: booking.client,
-                    ),
-                  ),
-                ),
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              const Text(
+                'Booking Info',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              Flexible(
-                  child: Card(
-                color: Colors.blue[50],
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text('Booking Info',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        const Divider(),
-                        ListTile(
-                          leading: const Icon(Icons.calendar_today),
-                          title: const Text('Start Date'),
-                          subtitle: Text(DateFormat("dd/MM/yyyy")
-                              .format(booking.startDate)),
-                        ),
-                        const Divider(),
-                        ListTile(
-                          leading: const Icon(Icons.calendar_today),
-                          title: const Text('End Date'),
-                          subtitle: Text(
-                              DateFormat("dd/MM/yyyy").format(booking.endDate)),
-                        ),
-                        const Divider(),
-                        ListTile(
-                          leading: const Icon(Icons.sports),
-                          title: const Text('Activity'),
-                          subtitle: Text(booking.activity.name),
-                        ),
-                      ],
-                    ),
+              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Flexible(
+                  child: ClientInfo(
+                    client: booking.client,
                   ),
                 ),
-              )),
-            ]),
-          ],
+                Flexible(
+                    child: Card(
+                  color: Colors.blue[50],
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('Booking Info',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          const Divider(),
+                          ListTile(
+                            leading: const Icon(Icons.calendar_today),
+                            title: const Text('Start Date'),
+                            subtitle: Text(DateFormat("dd/MM/yyyy")
+                                .format(booking.startDate)),
+                          ),
+                          const Divider(),
+                          ListTile(
+                            leading: const Icon(Icons.calendar_today),
+                            title: const Text('End Date'),
+                            subtitle: Text(DateFormat("dd/MM/yyyy")
+                                .format(booking.endDate)),
+                          ),
+                          const Divider(),
+                          ListTile(
+                            leading: const Icon(Icons.sports),
+                            title: const Text('Activity'),
+                            subtitle: Text(booking.activity.name),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )),
+              ]),
+            ],
+          ),
         );
       },
       loading: () => const CircularProgressIndicator(),
