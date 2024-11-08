@@ -38,84 +38,79 @@ class _ManageSessionState extends ConsumerState<ManageSession> {
     return sessions.when(
       data: (List<Session> sessions) {
         final Session session = sessions[widget.sessionIndex];
-        return Flexible(
-          flex: 2,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Session No. ${widget.sessionIndex + 1}',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900,
-                  ),
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Session No. ${widget.sessionIndex + 1}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
-              Expanded(
-                child: Row(
-                  children: [
-                    Flexible(
-                      flex: 2,
-                      child: Column(
-                        children: [
-                          ManageSessionTimes(
-                            session: session,
-                          ),
-                          ManageSessionsAssignedCoaches(
-                            session: session,
-                          )
-                        ],
-                      ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  Flexible(
+                    flex: 2,
+                    child: Column(
+                      children: [
+                        ManageSessionTimes(
+                          session: session,
+                        ),
+                        ManageSessionsAssignedCoaches(
+                          session: session,
+                        )
+                      ],
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ManageSessionNotes(
-                            session: session,
-                          ),
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ElevatedButton.icon(
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStateProperty.all<Color>(
-                                          Colors.lightBlue),
-                                ),
-                                onPressed: () {
-                                  ref
-                                      .read(sessionsProvider(
-                                              bookingIds:
-                                                  [widget.bookingId].lock)
-                                          .notifier)
-                                      .deleteSession(
-                                        sessionId: session.id,
-                                      );
-                                  context.go(
-                                    '/adminTools/manageBookings/${widget.bookingId}',
-                                  );
-                                },
-                                label: const Text(
-                                  'Delete Session',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.white,
-                                ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ManageSessionNotes(
+                          session: session,
+                        ),
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton.icon(
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStateProperty.all<Color>(
+                                    Colors.lightBlue),
+                              ),
+                              onPressed: () {
+                                ref
+                                    .read(sessionsProvider(
+                                            bookingIds: [widget.bookingId].lock)
+                                        .notifier)
+                                    .deleteSession(
+                                      sessionId: session.id,
+                                    );
+                                context.go(
+                                  '/adminTools/manageBookings/${widget.bookingId}',
+                                );
+                              },
+                              label: const Text(
+                                'Delete Session',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
       loading: () => const CircularProgressIndicator(),
