@@ -1,6 +1,7 @@
 import 'package:dashboard/providers/resource_calendar_source_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class ResourceView extends ConsumerWidget {
@@ -23,6 +24,13 @@ class ResourceView extends ConsumerWidget {
               allowAppointmentResize: false,
               allowDragAndDrop: false,
               showDatePickerButton: true,
+              onTap: (calendarTapDetails) {
+                Appointment appointment = calendarTapDetails.appointments![0];
+                String? bookingId = appointment.location;
+                if (bookingId != null) {
+                  context.go('/adminTools/manageBookings/$bookingId');
+                }
+              },
               allowedViews: const [
                 CalendarView.timelineDay,
                 CalendarView.timelineWeek,

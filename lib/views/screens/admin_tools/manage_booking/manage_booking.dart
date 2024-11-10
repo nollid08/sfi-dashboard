@@ -113,45 +113,50 @@ class ManageBooking extends ConsumerWidget {
                                     },
                                     child: const Text('Update Booking Notes'),
                                   ),
-                                  FilledButton(
-                                    child: const Text("Delete Booking"),
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: const Text(
-                                                  'Are you sure you want to delete this booking?'),
-                                              content: const Text(
-                                                  'This action cannot be undone.'),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: const Text('Cancel'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () async {
-                                                    if (context.mounted) {
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: FilledButton(
+                                      child: const Text("Delete Booking"),
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: const Text(
+                                                    'Are you sure you want to delete this booking?'),
+                                                content: const Text(
+                                                    'This action cannot be undone.'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () {
                                                       Navigator.of(context)
                                                           .pop();
-                                                      context.go(
-                                                          '/adminTools/manageBookings');
-                                                    }
-                                                    await ref
-                                                        .read(
-                                                            singleBookingProvider(
-                                                                    booking.id)
-                                                                .notifier)
-                                                        .delete(booking.id);
-                                                  },
-                                                  child: const Text('Delete'),
-                                                )
-                                              ],
-                                            );
-                                          });
-                                    },
+                                                    },
+                                                    child: const Text('Cancel'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () async {
+                                                      if (context.mounted) {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        context.go(
+                                                            '/adminTools/manageBookings');
+                                                      }
+                                                      await ref
+                                                          .read(
+                                                              singleBookingProvider(
+                                                                      booking
+                                                                          .id)
+                                                                  .notifier)
+                                                          .delete(booking.id);
+                                                    },
+                                                    child: const Text('Delete'),
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                      },
+                                    ),
                                   ),
                                 ],
                               ),
