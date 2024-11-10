@@ -17,4 +17,16 @@ class SingleBooking extends _$SingleBooking {
       yield Booking.fromDocSnapshot(snapshot);
     }
   }
+
+  //Delete a booking
+  Future<void> delete(String id) async {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    final QuerySnapshot<Map<String, dynamic>> sessionsSnapshot =
+        await db.collection('sessions').where('bookingId', isEqualTo: id).get();
+    for (final QueryDocumentSnapshot<Map<String, dynamic>> sessionSnapshot
+        in sessionsSnapshot.docs) {
+      db.collection('sessions').doc(sessionSnapshot.id).delete();
+    }
+    await db.collection('bookings').doc(id).delete();
+  }
 }

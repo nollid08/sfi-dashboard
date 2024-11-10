@@ -1,6 +1,7 @@
 import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/client.dart';
 import 'package:dashboard/providers/booking_provider.dart';
+import 'package:dashboard/providers/single_booking_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,101 +31,144 @@ class ManageBooking extends ConsumerWidget {
                 'Booking Info',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Flexible(
-                  child: ClientInfo(
-                    client: booking.client,
-                  ),
-                ),
-                Flexible(
-                    child: Card(
-                  color: Colors.blue[50],
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text('Booking Info',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          const Divider(),
-                          ListTile(
-                            leading: const Icon(Icons.calendar_today),
-                            title: const Text('Start Date'),
-                            subtitle: Text(DateFormat("dd/MM/yyyy")
-                                .format(booking.startDate)),
-                          ),
-                          const Divider(),
-                          ListTile(
-                            leading: const Icon(Icons.calendar_today),
-                            title: const Text('End Date'),
-                            subtitle: Text(DateFormat("dd/MM/yyyy")
-                                .format(booking.endDate)),
-                          ),
-                          const Divider(),
-                          ListTile(
-                            leading: const Icon(Icons.sports),
-                            title: const Text('Activity'),
-                            subtitle: Text(booking.activity.name),
-                          ),
-                          const Text(
-                            'Booking Notes',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.w700),
-                          ),
-                          FormBuilder(
-                            key: formKey,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: FormBuilderTextField(
-                                    name: 'notes',
-                                    maxLines: 12,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Booking Notes',
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    initialValue: booking.notes,
-                                  ),
-                                ),
-                                FilledButton(
-                                  onPressed: () async {
-                                    if (formKey.currentState
-                                            ?.saveAndValidate() ??
-                                        false) {
-                                      final Map<String, dynamic> formValues =
-                                          formKey.currentState!.value;
-                                      final String newNotes =
-                                          formValues['notes'];
-                                      final String bookingId = booking.id;
-                                      await ref
-                                          .read(individualBookingProvider(
-                                                  bookingId)
-                                              .notifier)
-                                          .updateBookingNotes(
-                                            id: bookingId,
-                                            notes: newNotes,
-                                          );
-                                    }
-                                  },
-                                  child: const Text('Update Booking Notes'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: ClientInfo(
+                      client: booking.client,
                     ),
                   ),
-                )),
-              ]),
+                  Flexible(
+                      child: Card(
+                    color: Colors.blue[50],
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text('Booking Info',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            const Divider(),
+                            ListTile(
+                              leading: const Icon(Icons.calendar_today),
+                              title: const Text('Start Date'),
+                              subtitle: Text(DateFormat("dd/MM/yyyy")
+                                  .format(booking.startDate)),
+                            ),
+                            const Divider(),
+                            ListTile(
+                              leading: const Icon(Icons.calendar_today),
+                              title: const Text('End Date'),
+                              subtitle: Text(DateFormat("dd/MM/yyyy")
+                                  .format(booking.endDate)),
+                            ),
+                            const Divider(),
+                            ListTile(
+                              leading: const Icon(Icons.sports),
+                              title: const Text('Activity'),
+                              subtitle: Text(booking.activity.name),
+                            ),
+                            const Text(
+                              'Booking Notes',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w700),
+                            ),
+                            FormBuilder(
+                              key: formKey,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: FormBuilderTextField(
+                                      name: 'notes',
+                                      maxLines: 12,
+                                      decoration: const InputDecoration(
+                                        labelText: 'Booking Notes',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      initialValue: booking.notes,
+                                    ),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () async {
+                                      if (formKey.currentState
+                                              ?.saveAndValidate() ??
+                                          false) {
+                                        final Map<String, dynamic> formValues =
+                                            formKey.currentState!.value;
+                                        final String newNotes =
+                                            formValues['notes'];
+                                        final String bookingId = booking.id;
+                                        await ref
+                                            .read(individualBookingProvider(
+                                                    bookingId)
+                                                .notifier)
+                                            .updateBookingNotes(
+                                              id: bookingId,
+                                              notes: newNotes,
+                                            );
+                                      }
+                                    },
+                                    child: const Text('Update Booking Notes'),
+                                  ),
+                                  FilledButton(
+                                    child: const Text("Delete Booking"),
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                  'Are you sure you want to delete this booking?'),
+                                              content: const Text(
+                                                  'This action cannot be undone.'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text('Cancel'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    if (context.mounted) {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      context.go(
+                                                          '/adminTools/manageBookings');
+                                                    }
+                                                    await ref
+                                                        .read(
+                                                            singleBookingProvider(
+                                                                    booking.id)
+                                                                .notifier)
+                                                        .delete(booking.id);
+                                                  },
+                                                  child: const Text('Delete'),
+                                                )
+                                              ],
+                                            );
+                                          });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ))
+                ],
+              ),
             ],
           ),
         );
       },
       loading: () => const CircularProgressIndicator(),
-      error: (error, stackTrace) => Text('Error: $error'),
+      error: (error, stackTrace) => const CircularProgressIndicator(),
     );
   }
 }
