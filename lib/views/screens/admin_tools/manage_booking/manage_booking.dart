@@ -2,6 +2,7 @@ import 'package:dashboard/models/booking.dart';
 import 'package:dashboard/models/client.dart';
 import 'package:dashboard/providers/booking_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -16,7 +17,9 @@ class ManageBooking extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<Booking> booking = ref.watch(bookingProvider(id));
+    final AsyncValue<Booking> booking =
+        ref.watch(individualBookingProvider(id));
+    final formKey = GlobalKey<FormBuilderState>();
 
     return booking.when(
       data: (Booking booking) {
@@ -63,6 +66,52 @@ class ManageBooking extends ConsumerWidget {
                             leading: const Icon(Icons.sports),
                             title: const Text('Activity'),
                             subtitle: Text(booking.activity.name),
+                          ),
+                          const Text(
+                            'Booking Notes',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.w700),
+                          ),
+                          FormBuilder(
+                            key: formKey,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: FormBuilderTextField(
+                                    name: 'notes',
+                                    maxLines: 12,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Booking Notes',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    initialValue: booking.notes,
+                                  ),
+                                ),
+                                FilledButton(
+                                  onPressed: () async {
+                                    if (formKey.currentState
+                                            ?.saveAndValidate() ??
+                                        false) {
+                                      final Map<String, dynamic> formValues =
+                                          formKey.currentState!.value;
+                                      final String newNotes =
+                                          formValues['notes'];
+                                      final String bookingId = booking.id;
+                                      await ref
+                                          .read(individualBookingProvider(
+                                                  bookingId)
+                                              .notifier)
+                                          .updateBookingNotes(
+                                            id: bookingId,
+                                            notes: newNotes,
+                                          );
+                                    }
+                                  },
+                                  child: const Text('Update Booking Notes'),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

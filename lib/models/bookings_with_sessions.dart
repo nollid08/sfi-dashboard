@@ -16,6 +16,7 @@ class BookingWithSessions extends Booking {
     required super.client,
     required super.startDate,
     required super.endDate,
+    required super.notes,
     required this.sessions,
   });
 
@@ -49,6 +50,7 @@ class BookingWithSessions extends Booking {
       sessions: sessions,
       endDate: data['endDate'],
       startDate: data['startDate'],
+      notes: data['notes'],
     );
   }
 
@@ -70,6 +72,7 @@ class BookingWithSessions extends Booking {
       sessions: sessions,
       endDate: data['endDate'],
       startDate: data['startDate'],
+      notes: data['notes'],
     );
   }
 
@@ -85,6 +88,7 @@ class BookingWithSessions extends Booking {
       }).toList(),
       endDate: booking.endDate,
       startDate: booking.startDate,
+      notes: booking.notes,
     );
   }
 
@@ -97,6 +101,7 @@ class BookingWithSessions extends Booking {
     DateTime? startDate,
     DateTime? endDate,
     List<Session>? sessions,
+    String? notes,
   }) {
     return BookingWithSessions(
       id: id ?? this.id,
@@ -106,6 +111,7 @@ class BookingWithSessions extends Booking {
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       sessions: sessions ?? this.sessions,
+      notes: notes ?? this.notes,
     );
   }
 }

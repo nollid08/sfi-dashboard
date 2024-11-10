@@ -8,6 +8,7 @@ class Booking {
   final Activity activity;
   final List<String> coachesUids;
   final Client client;
+  final String? notes;
   final DateTime startDate;
   final DateTime endDate;
   Query<Map<String, dynamic>>? sessionsRef;
@@ -19,6 +20,7 @@ class Booking {
     required this.client,
     required this.startDate,
     required this.endDate,
+    this.notes,
   }) {
     sessionsRef = FirebaseFirestore.instance
         .collection('sessions')
@@ -31,6 +33,7 @@ class Booking {
       'activity': activity.toJson(),
       'coaches': coachesUids,
       'client': client.toJson(),
+      'notes': notes,
       'startDate': startDate.millisecondsSinceEpoch,
       'endDate': endDate.millisecondsSinceEpoch,
     };
@@ -43,6 +46,7 @@ class Booking {
       'client': client.toJson(),
       'startDate': startDate,
       'endDate': endDate,
+      'notes': notes,
     };
   }
 
@@ -55,6 +59,7 @@ class Booking {
     final coaches = List<String>.from(data['coaches']);
     final DateTime startDate = data['startDate'].toDate();
     final DateTime endDate = data['endDate'].toDate();
+    final String? notes = data['notes'];
     return Booking(
       id: id,
       activity: activity,
@@ -62,6 +67,7 @@ class Booking {
       client: client,
       startDate: startDate,
       endDate: endDate,
+      notes: notes,
     );
   }
 
@@ -77,6 +83,7 @@ class Booking {
     final coaches = List<String>.from(data['coaches']);
     final DateTime startDate = data['startDate'].toDate();
     final DateTime endDate = data['endDate'].toDate();
+    final String? notes = data['notes'];
     return Booking(
       id: id,
       activity: activity,
@@ -84,6 +91,7 @@ class Booking {
       client: client,
       startDate: startDate,
       endDate: endDate,
+      notes: notes,
     );
   }
 
@@ -109,6 +117,7 @@ class Booking {
     Client? client,
     DateTime? startDate,
     DateTime? endDate,
+    String? notes,
   }) {
     return Booking(
       id: id ?? this.id,
@@ -117,6 +126,7 @@ class Booking {
       client: client ?? this.client,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
+      notes: notes ?? this.notes,
     );
   }
 }

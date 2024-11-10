@@ -6,7 +6,7 @@ part of 'booking_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bookingHash() => r'677dec8cd9ec5ed2c38578cd36e51acb32fcebc6';
+String _$individualBookingHash() => r'b4d425128713109cdfe11665f1627fc46df600fb';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,27 +29,36 @@ class _SystemHash {
   }
 }
 
-/// See also [booking].
-@ProviderFor(booking)
-const bookingProvider = BookingFamily();
+abstract class _$IndividualBooking
+    extends BuildlessAutoDisposeStreamNotifier<booking_type.Booking> {
+  late final String id;
 
-/// See also [booking].
-class BookingFamily extends Family<AsyncValue<Booking>> {
-  /// See also [booking].
-  const BookingFamily();
+  Stream<booking_type.Booking> build(
+    String id,
+  );
+}
 
-  /// See also [booking].
-  BookingProvider call(
+/// See also [IndividualBooking].
+@ProviderFor(IndividualBooking)
+const individualBookingProvider = IndividualBookingFamily();
+
+/// See also [IndividualBooking].
+class IndividualBookingFamily extends Family<AsyncValue<booking_type.Booking>> {
+  /// See also [IndividualBooking].
+  const IndividualBookingFamily();
+
+  /// See also [IndividualBooking].
+  IndividualBookingProvider call(
     String id,
   ) {
-    return BookingProvider(
+    return IndividualBookingProvider(
       id,
     );
   }
 
   @override
-  BookingProvider getProviderOverride(
-    covariant BookingProvider provider,
+  IndividualBookingProvider getProviderOverride(
+    covariant IndividualBookingProvider provider,
   ) {
     return call(
       provider.id,
@@ -68,31 +77,30 @@ class BookingFamily extends Family<AsyncValue<Booking>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'bookingProvider';
+  String? get name => r'individualBookingProvider';
 }
 
-/// See also [booking].
-class BookingProvider extends AutoDisposeStreamProvider<Booking> {
-  /// See also [booking].
-  BookingProvider(
+/// See also [IndividualBooking].
+class IndividualBookingProvider extends AutoDisposeStreamNotifierProviderImpl<
+    IndividualBooking, booking_type.Booking> {
+  /// See also [IndividualBooking].
+  IndividualBookingProvider(
     String id,
   ) : this._internal(
-          (ref) => booking(
-            ref as BookingRef,
-            id,
-          ),
-          from: bookingProvider,
-          name: r'bookingProvider',
+          () => IndividualBooking()..id = id,
+          from: individualBookingProvider,
+          name: r'individualBookingProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$bookingHash,
-          dependencies: BookingFamily._dependencies,
-          allTransitiveDependencies: BookingFamily._allTransitiveDependencies,
+                  : _$individualBookingHash,
+          dependencies: IndividualBookingFamily._dependencies,
+          allTransitiveDependencies:
+              IndividualBookingFamily._allTransitiveDependencies,
           id: id,
         );
 
-  BookingProvider._internal(
+  IndividualBookingProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -105,13 +113,20 @@ class BookingProvider extends AutoDisposeStreamProvider<Booking> {
   final String id;
 
   @override
-  Override overrideWith(
-    Stream<Booking> Function(BookingRef provider) create,
+  Stream<booking_type.Booking> runNotifierBuild(
+    covariant IndividualBooking notifier,
   ) {
+    return notifier.build(
+      id,
+    );
+  }
+
+  @override
+  Override overrideWith(IndividualBooking Function() create) {
     return ProviderOverride(
       origin: this,
-      override: BookingProvider._internal(
-        (ref) => create(ref as BookingRef),
+      override: IndividualBookingProvider._internal(
+        () => create()..id = id,
         from: from,
         name: null,
         dependencies: null,
@@ -123,13 +138,14 @@ class BookingProvider extends AutoDisposeStreamProvider<Booking> {
   }
 
   @override
-  AutoDisposeStreamProviderElement<Booking> createElement() {
-    return _BookingProviderElement(this);
+  AutoDisposeStreamNotifierProviderElement<IndividualBooking,
+      booking_type.Booking> createElement() {
+    return _IndividualBookingProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is BookingProvider && other.id == id;
+    return other is IndividualBookingProvider && other.id == id;
   }
 
   @override
@@ -141,17 +157,19 @@ class BookingProvider extends AutoDisposeStreamProvider<Booking> {
   }
 }
 
-mixin BookingRef on AutoDisposeStreamProviderRef<Booking> {
+mixin IndividualBookingRef
+    on AutoDisposeStreamNotifierProviderRef<booking_type.Booking> {
   /// The parameter `id` of this provider.
   String get id;
 }
 
-class _BookingProviderElement extends AutoDisposeStreamProviderElement<Booking>
-    with BookingRef {
-  _BookingProviderElement(super.provider);
+class _IndividualBookingProviderElement
+    extends AutoDisposeStreamNotifierProviderElement<IndividualBooking,
+        booking_type.Booking> with IndividualBookingRef {
+  _IndividualBookingProviderElement(super.provider);
 
   @override
-  String get id => (origin as BookingProvider).id;
+  String get id => (origin as IndividualBookingProvider).id;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

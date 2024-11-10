@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dashboard/models/booking.dart';
+import 'package:dashboard/models/bookings_with_sessions.dart';
 import 'package:dashboard/models/session.dart';
+import 'package:dashboard/providers/booking_with_sessions_provider.dart';
+import 'package:dashboard/providers/bookings_with_sessions_provider.dart';
 import 'package:dashboard/providers/sessions_provider.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +22,11 @@ class AddBookingSession extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<List<Session>> sessions =
-        ref.watch(sessionsProvider(bookingIds: [bookingId].lock));
+    final sessions = ref.watch(singleBookingWithSessionsProvider(bookingId));
 
     return sessions.when(
-      data: (List<Session> sessions) {
+      data: (BookingWithSessions booking) {
+        final sessions = booking.sessions;
         return Center(
           child: Card(
             elevation: 5,
@@ -196,15 +200,31 @@ class AddBookingSession extends ConsumerWidget {
                               );
                               final db = FirebaseFirestore.instance;
                               final id = db.collection('sessions').doc().id;
-                              final newSession = sessions.last.copyWith(
-                                assignedCoaches: [],
-                                id: id,
-                                startTime: startDateTime,
-                                endTime: endDateTime,
-                                arrivalTime: arrivalTime,
-                                leaveTime: leaveTime,
-                                notes: null,
-                              );
+                              final newSession = sessions.isNotEmpty
+                                  ? sessions.last.copyWith(
+                                      assignedCoaches: [],
+                                      id: id,
+                                      startTime: startDateTime,
+                                      endTime: endDateTime,
+                                      arrivalTime: arrivalTime,
+                                      leaveTime: leaveTime,
+                                      notes: null,
+                                    )
+                                  : Session(
+                                      assignedCoaches: [],
+                                      id: id,
+                                      startTime: startDateTime,
+                                      endTime: endDateTime,
+                                      arrivalTime: arrivalTime,
+                                      leaveTime: leaveTime,
+                                      notes: null,
+                                      bookingId: booking.id,
+                                      activity: booking.activity,
+                                      client: booking.client,
+                                      bookingRef: db
+                                          .collection('bookings')
+                                          .doc(booking.id),
+                                    );
                               //Find the index of the new session when the sessions array is sorted by starttime, oldes first
                               final List<Session> allSessions = [
                                 ...sessions,
@@ -217,12 +237,12 @@ class AddBookingSession extends ConsumerWidget {
 
                               await ref
                                   .read(sessionsProvider(
-                                          bookingIds: [bookingId].lock)
+                                          bookingIds: [booking.id].lock)
                                       .notifier)
                                   .addSession(newSession);
                               if (context.mounted) {
                                 context.go(
-                                    '/adminTools/manageBookings/$bookingId/session/$newSessionIndex');
+                                    '/adminTools/manageBookings/${booking.id}/session/$newSessionIndex');
                               }
                             }
                           },

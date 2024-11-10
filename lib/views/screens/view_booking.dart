@@ -44,10 +44,10 @@ class ViewBookingInfo extends ConsumerWidget {
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           ),
           const Divider(),
-          const ListTile(
-            title: Text("Booking Notes:"),
+          ListTile(
+            title: const Text("Booking Notes:"),
             subtitle: Text(
-              "No notes",
+              bookingWithSessions.notes ?? 'No Notes',
             ),
           ),
           const Divider(
