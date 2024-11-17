@@ -64,7 +64,7 @@ class Leave {
 
 enum LeaveType {
   annual,
-  sick,
+  notAvailable,
   unpaid,
   other,
 }

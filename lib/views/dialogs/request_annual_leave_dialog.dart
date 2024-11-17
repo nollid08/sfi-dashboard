@@ -47,8 +47,8 @@ class RequestAnnualLeaveDialog extends ConsumerWidget {
                       child: Text('Annual Leave'),
                     ),
                     DropdownMenuItem(
-                      value: LeaveType.sick,
-                      child: Text('Sick Leave'),
+                      value: LeaveType.notAvailable,
+                      child: Text('N/A'),
                     ),
                     DropdownMenuItem(
                       value: LeaveType.other,
@@ -154,11 +154,14 @@ class RequestAnnualLeaveDialog extends ConsumerWidget {
                   formKey.currentState!.value['start_date_time'];
               final DateTime endDate =
                   formKey.currentState!.value['end_date_time'];
+              final LeaveType leaveType =
+                  formKey.currentState!.value['leaveType'];
               final leave = Leave(
                 id: FirebaseFirestore.instance.collection('leaves').doc().id,
                 startDate: startDate,
                 coachUid: coachUid,
                 endDate: endDate,
+                type: leaveType,
               );
               await ref
                   .read(leavesProvider(<String>[].lock).notifier)

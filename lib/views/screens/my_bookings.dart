@@ -25,7 +25,7 @@ class MyBookingsView extends ConsumerWidget {
         data: (bookings) {
           if (bookings.isEmpty) {
             return const Center(
-              child: Text('No Future bookings'),
+              child: Text('No bookings'),
             );
           }
           return SizedBox.expand(
